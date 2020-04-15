@@ -1,0 +1,56 @@
+package model;
+
+import java.util.LinkedList;
+import java.util.List;
+
+/**
+ * Une tournée représente une liste de clients à fournir, et donc un parcours.
+ */
+public class Tournée
+{
+    /**
+     * La liste chaînée des clients
+     */
+    private LinkedList<Client> tournée;
+
+    /**
+     * La longueur totale du parcours
+     */
+    private double longueurTotale;
+
+    /**
+     * Constructeur d'une tournée
+     * @param clients la liste des clients concernés par la tournée
+     */
+    public Tournée(LinkedList<Client> clients)
+    {
+        this.tournée = clients;
+        //todo : calculer la longueur totale (dans cette classe) et l'initialiser.
+        this.longueurTotale = 0.00;
+    }
+
+    /**
+     *
+     * @return la longueur totale de la tournée //todo : unité à définir (mètres je suppose)
+     */
+    public double getLongueurTotale()
+    {
+        return this.longueurTotale;
+    }
+
+    public void ajouterClient(Client c)
+    {
+        this.tournée.add(c);
+        // todo : recalculer la longueur totale du parcours
+        // **** A FAIRE
+        this.longueurTotale = 0.00;
+    }
+
+    public void retirerClient(Client c)
+    {
+        this.tournée.remove(c);
+        // todo : recalculer la longueur totale du parcours
+        // **** A FAIRE
+        this.longueurTotale = 0.00;
+    }
+}

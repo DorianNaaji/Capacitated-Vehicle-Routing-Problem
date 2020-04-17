@@ -2,6 +2,7 @@ package model;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Une tournée représente une liste de clients à fournir, et donc un parcours.
@@ -52,5 +53,21 @@ public class Tournée
         // todo : recalculer la longueur totale du parcours
         // **** A FAIRE
         this.longueurTotale = 0.00;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tournée tournée1 = (Tournée) o;
+        return Double.compare(tournée1.longueurTotale, longueurTotale) == 0 &&
+                Objects.equals(tournée, tournée1.tournée);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(tournée, longueurTotale);
     }
 }

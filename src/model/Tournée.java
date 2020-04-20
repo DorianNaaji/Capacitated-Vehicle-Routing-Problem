@@ -20,13 +20,21 @@ public class Tournée
     private double longueurTotale;
 
     /**
-     * Constructeur d'une tournée
+     * Constructeur d'une tournée.
      * @param clients la liste des clients concernés par la tournée
      */
     public Tournée(LinkedList<Client> clients)
     {
         this.tournée = clients;
         //todo : calculer la longueur totale (dans cette classe) et l'initialiser.
+        this.longueurTotale = 0.00;
+    }
+
+    /**
+     * Constructeur d'une tournée vide.
+     */
+    public Tournée()
+    {
         this.longueurTotale = 0.00;
     }
 

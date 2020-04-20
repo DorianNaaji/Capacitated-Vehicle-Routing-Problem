@@ -10,24 +10,25 @@ public class Client {
     private int positionY;
     private int quantite;
 
-    public Client(String informations) {
-
-        String clients[] = informations.split(";");
-
-        String numeroClientString = clients[0];
-        this.numeroClient = Integer.parseInt(numeroClientString);
-
-        String positionXString = clients[1];
-        this.positionX = Integer.parseInt(positionXString);
-
-        String positionYString = clients[2];
-        this.positionY = Integer.parseInt(positionYString);
-
-        String quantiteString = clients[3];
-        this.quantite = Integer.parseInt(quantiteString);
-
+    /**
+     * Constructeur 4-params d'un client
+     * @param no le numéro de client
+     * @param posX la position X
+     * @param posY la position Y
+     * @param qte la quantité à livrer
+     */
+    public Client(int no, int posX, int posY, int qte)
+    {
+        this.numeroClient = no;
+        this.positionX = posX;
+        this.positionY = posY;
+        this.quantite = qte;
     }
 
+    /**
+     *
+     * @return le numéro de client
+     */
     public int getNumeroClient() {
         return numeroClient;
     }
@@ -36,6 +37,10 @@ public class Client {
         this.numeroClient = numeroClient;
     }
 
+    /**
+     *
+     * @return la position X du client
+     */
     public int getPositionX() {
         return positionX;
     }
@@ -44,6 +49,10 @@ public class Client {
         this.positionX = positionX;
     }
 
+    /**
+     *
+     * @return la position Y du client
+     */
     public int getPositionY() {
         return positionY;
     }
@@ -52,6 +61,10 @@ public class Client {
         this.positionY = positionY;
     }
 
+    /**
+     *
+     * @return la quantité à livrer
+     */
     public int getQuantite() {
         return quantite;
     }
@@ -60,4 +73,14 @@ public class Client {
         this.quantite = quantite;
     }
 
+    @Override
+    public String toString()
+    {
+        return "Client{" +
+                "numeroClient=" + numeroClient +
+                ", positionX=" + positionX +
+                ", positionY=" + positionY +
+                ", quantite=" + quantite +
+                '}';
+    }
 }

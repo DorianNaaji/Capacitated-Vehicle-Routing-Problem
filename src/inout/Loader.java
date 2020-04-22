@@ -3,6 +3,7 @@ package inout;
 import customexceptions.ClientLoadException;
 import customexceptions.FileLoadException;
 import model.Client;
+import model.Entrepôt;
 import model.Fichier;
 
 import java.io.BufferedReader;
@@ -36,8 +37,12 @@ public class Loader {
         {
             for (File file : listOfFiles) {
                 if (file.isFile()) {
-                    ArrayList<Client> clientsFichierCourant = this.loadOneTxtFile(file.getName());
-                    Fichier f  = new Fichier(clientsFichierCourant, file.getName());
+                    ArrayList<Client> clientsFichierCourant = this.loadClientsFromOneTxtFile(file.getName());
+                    // Première ligne : coordonnées de l'entrepôt, le seul qui a 0 caisses à livrer et qui a pour numéro 0.
+                    // On le récupère.
+                    Entrepôt e = new Entrepôt(clientsFichierCourant.get(0).getPositionX(), clientsFichierCourant.get(0).getPositionY());
+                    clientsFichierCourant.remove(0);
+                    Fichier f  = new Fichier(clientsFichierCourant, file.getName(), e);
                     fichiers.add(f);
                 }
             }
@@ -53,7 +58,7 @@ public class Loader {
     /**
      * Importe les clients à partir d'un fichier donné
      */
-    public ArrayList<Client> loadOneTxtFile(String filename) throws FileLoadException
+    public ArrayList<Client> loadClientsFromOneTxtFile(String filename) throws FileLoadException
     {
         // on crée une liste de clients qui va contenir les clients lu dans les fichiers texte
         ArrayList<Client> clients = new ArrayList<Client>();

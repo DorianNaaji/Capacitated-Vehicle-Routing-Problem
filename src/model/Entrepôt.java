@@ -1,6 +1,8 @@
 package model;
 
-public class Entrepôt extends Client
+import model.graph.Sommet;
+
+public class Entrepôt extends Sommet
 {
     /**
      * Constructeur 2-params d'un entrepôt
@@ -11,7 +13,7 @@ public class Entrepôt extends Client
     public Entrepôt(int posX, int posY)
     {
         // quantité et numéro valent toujours 0 pour un entrepôt
-        super(0, posX, posY, 0);
+        super(posX, posY);
     }
 
     @Override

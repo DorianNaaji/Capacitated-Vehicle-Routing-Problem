@@ -18,15 +18,16 @@ public class Fichier
 
     /**
      * Constructeur 2-params pour un fichier.
-     * @param clients les clients chargés.
-     * @param nom le nom du fichier concerné.
+     * @param _clients les clients chargés.
+     * @param _nom le nom du fichier concerné.
+     * @param _départ l'entrepôt de départ.
      */
-    public Fichier(ArrayList<Client> clients, String nom, Entrepôt _départ)
+    public Fichier(ArrayList<Client> _clients, String _nom, Entrepôt _départ)
     {
-        this.clients = clients;
-        this.nomFichier = nom;
-        this.nbClientsRécupérés = this.clients.size();
+        this.clients = _clients;
+        this.nomFichier = _nom;
         this.départ = _départ;
+        this.nbClientsRécupérés = this.clients.size();
     }
 
     /**
@@ -56,6 +57,10 @@ public class Fichier
         return nbClientsRécupérés;
     }
 
+    /**
+     *
+     * @return L'entrepôt, départ et arrivée des livraisons.
+     */
     public Entrepôt getEntrepôt()
     {
         return this.départ;

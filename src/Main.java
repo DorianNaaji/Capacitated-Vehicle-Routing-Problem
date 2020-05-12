@@ -1,14 +1,17 @@
 
+import customexceptions.VehiculeCapacityOutOfBoundsException;
 import gui.CVRPWindow;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import inout.Loader;
-import model.Fichier;
+import model.*;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class Main extends Application
@@ -20,16 +23,35 @@ public class Main extends Application
         mainGui.show();
     }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) throws VehiculeCapacityOutOfBoundsException {
         // test chargement fichiers
-        chargerFichiersTest();
+       /* List<Fichier> fichiers = chargerFichiersTest();
+        int tailleFichiers = fichiers.size();
+        for (int i=0; i<tailleFichiers; i++) {
+            ArrayList<Client> clients = fichiers.get(i).getClients();
+            Itinéraire itinéraire = new Itinéraire(clients);
+            Client clicli = new Client(100, 1, 2, 3);
+            System.out.println("Avant :" + itinéraire.getNbMarchandisesALivrer());
+            itinéraire.ajouterClient(clicli);
+            System.out.println("Après :" + itinéraire.getNbMarchandisesALivrer());
+
+        }
+
+        Itinéraire t = new Itinéraire(new ArrayList<Client>());
+
+            t.ajouterClient(new Client(0, 0, 0, 50));
+            t.ajouterClient(new Client(0, 0, 0, 24));
+            t.ajouterClient(new Client(0, 0, 0, 1));
+
+*/
+
+
 
         // lancement de l'interface
         launch(args);
     }
 
-    private static void chargerFichiersTest()
+    private static List<Fichier> chargerFichiersTest()
     {
         /* Chargement des fichiers */
         ArrayList<Fichier> fichiers = null;
@@ -52,5 +74,7 @@ public class Main extends Application
                 System.out.println(f.toString());
             }
         }
+
+        return fichiers;
     }
 }

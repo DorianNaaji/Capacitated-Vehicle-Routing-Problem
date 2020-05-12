@@ -43,8 +43,8 @@ public class Main extends Application
             t.ajouterClient(new Client(0, 0, 0, 24));
             t.ajouterClient(new Client(0, 0, 0, 1));
 
+*/
 
-        */
 
 
         // lancement de l'interface

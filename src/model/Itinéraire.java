@@ -110,6 +110,11 @@ public class Itinéraire
 
     private void recalculerDistanceEtNbMarchandises() {
 
+        if(itinéraire.size() == 0) {
+            this.longueurTotale = 0;
+            this.nbMarchandisesALivrer = 0;
+        }
+
         this.longueurTotale = 0;
         this.nbMarchandisesALivrer = 0;
 

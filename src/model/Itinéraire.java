@@ -1,22 +1,25 @@
 package model;
 
+import customexceptions.EntrepôtNotFoundException;
 import customexceptions.VehiculeCapacityOutOfBoundsException;
+import model.graph.Sommet;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 
 import static utilitaires.Utilitaire.distanceEuclidienne;
 
 
 /**
- * Un itinéraire représente une liste de clients à fournir + le lieu de départ et le lieu d'arrivée, et donc un parcours.
+ * Un Itinéraire représente une liste de clients à fournir + le lieu de départ et le lieu d'arrivée, et donc un parcours.
  */
 public class Itinéraire
 {
     /**
      * La liste chaînée des clients
      */
-    private ArrayList<Client> itinéraire;
+    private LinkedList<Client> listeClientsÀLivrer;
+
+    private Entrepôt départEtArrivée;
 
     //!\ TODO ATTENTION : rajouter l'entrepot pour le calcul de l'itinéraire / changer en SOMMET les clients
 
@@ -33,20 +36,41 @@ public class Itinéraire
     private Véhicule véhicule;
 
     /**
-     * Constructeur d'un itinéraire.
-     * @param clients la liste des clients concernés par la tournée
+     * Constructeur d'un Itinéraire.
+     * @param sommets la liste des sommets concernés par la tournée
      */
-    public Itinéraire(ArrayList<Client> clients) throws VehiculeCapacityOutOfBoundsException {
-
+    public Itinéraire(Set<Sommet> sommets) throws VehiculeCapacityOutOfBoundsException, EntrepôtNotFoundException
+    {
+        // on initialise le véhicule
         this.véhicule = new Véhicule();
 
-        int quantiteDeMarchandisesTotale  = clients.stream().mapToInt(c -> c.getQuantite()).sum();
+        // Le sommet en position 0 est normalement l'entrepôt
+        if(sommets.toArray()[0].getClass() == Entrepôt.class)
+        {
+            this.départEtArrivée = (Entrepôt)sommets.toArray()[0];
+        }
+        // si on n'a pas trouvé l'entrepôt en position 0...
+        else
+        {
+            throw new EntrepôtNotFoundException("L'entrepôt n'a pas été trouvé en position 0 de l'ensemble des sommets");
+        }
 
+        this.listeClientsÀLivrer = new LinkedList<Client>();
+        // pour chaque sommet de l'ensemble
+        for (Sommet s:sommets)
+        {
+            // si c'est bien un client,
+            if(s.getClass() == Client.class)
+            {
+                // on l'ajoute à notre set de clients.
+                listeClientsÀLivrer.add((Client)s);
+            }
+        }
+
+        int quantiteDeMarchandisesTotale  = listeClientsÀLivrer.stream().mapToInt(Client::getNbMarchandisesÀLivrer).sum();
         if (quantiteDeMarchandisesTotale > véhicule.getCapacité()) {
             throw new VehiculeCapacityOutOfBoundsException("La capacité du véhicule est dépassée. (" + quantiteDeMarchandisesTotale + ")");
         }
-        this.itinéraire = clients;
-
 
         //Calcul de la longueur totale et du nombre de marchandises.
         this.recalculerDistanceEtNbMarchandises();
@@ -79,69 +103,98 @@ public class Itinéraire
     }
 
     public boolean ajouterClient(Client c) throws VehiculeCapacityOutOfBoundsException {
-        int capacité = this.nbMarchandisesALivrer;
-        ArrayList<Client> cli = this.itinéraire;
-        cli.add(c);
-        Itinéraire i = new Itinéraire(cli);
-        if (i.getNbMarchandisesALivrer() > véhicule.getCapacité()) {
-            this.itinéraire.add(c);
+
+        int quantiteDeMarchandisesTotale  = listeClientsÀLivrer.stream().mapToInt(Client::getNbMarchandisesÀLivrer).sum();
+
+        if (quantiteDeMarchandisesTotale + c.getNbMarchandisesÀLivrer() < véhicule.getCapacité())
+        {
+            this.listeClientsÀLivrer.add(c);
             this.recalculerDistanceEtNbMarchandises();
             return true;
         }
-       else {
-           return false;
+        else
+        {
+            return false;
         }
-
-
-        //todo : Ne pas oublier l'entrepôt
-        // Recalcul de la longueur totale du parcours
-
     }
 
     public void retirerClient(Client c)
     {
-        this.itinéraire.remove(c);
-        // todo : Ne pas oublier l'entrepôt
-        //  Recalculer la longueur totale du parcours
-
+        this.listeClientsÀLivrer.remove(c);
         this.recalculerDistanceEtNbMarchandises();
-
     }
 
     private void recalculerDistanceEtNbMarchandises() {
 
-        if(itinéraire.size() == 0) {
+        // si la liste contient un seul élément
+        if(listeClientsÀLivrer.size() == 0) {
             this.longueurTotale = 0;
             this.nbMarchandisesALivrer = 0;
         }
+        // si elle en contient 1
+        else if(listeClientsÀLivrer.size() == 1)
+        {
 
-        this.longueurTotale = 0;
-        this.nbMarchandisesALivrer = 0;
+            // distance entre l'entrepôt et le client, puis entre le client et l'entrepôt.
+            this.longueurTotale = distanceEuclidienne(
+                    this.départEtArrivée.getPositionX(),
+                    this.départEtArrivée.getPositionY(),
+                    this.listeClientsÀLivrer.get(0).getPositionX(),
+                    this.listeClientsÀLivrer.get(0).getPositionY()) * 2;
 
-        for (int i = 0; i < itinéraire.size() - 1; i++) {
-            longueurTotale += distanceEuclidienne(itinéraire.get(i).getPositionX(), itinéraire.get(i).getPositionY(), itinéraire.get(i+1).getPositionX(), itinéraire.get(i+1).getPositionY());
-            this.nbMarchandisesALivrer += itinéraire.get(i).getQuantite();
+            this.nbMarchandisesALivrer = this.listeClientsÀLivrer.get(0).getNbMarchandisesÀLivrer();
         }
+        // sinon...
+        else
+        {
+            // calcul de la distance entre le premier client et l'entrepôt
+            this.longueurTotale += distanceEuclidienne(
+                    this.départEtArrivée.getPositionX(),
+                    this.départEtArrivée.getPositionY(),
+                    this.listeClientsÀLivrer.get(0).getPositionX(),
+                    this.listeClientsÀLivrer.get(0).getPositionY());
+
+            //calcul de la distance entre chaque clients de la liste
+            for (int i = 0; i < listeClientsÀLivrer.size() - 1; i++) {
+                longueurTotale += distanceEuclidienne(listeClientsÀLivrer.get(i).getPositionX(), listeClientsÀLivrer.get(i).getPositionY(), listeClientsÀLivrer.get(i+1).getPositionX(), listeClientsÀLivrer.get(i+1).getPositionY());
+                this.nbMarchandisesALivrer += listeClientsÀLivrer.get(i).getNbMarchandisesÀLivrer();
+            }
+
+
+            // calcul de la distance entre le dernier client et l'entrepôt.
+            this.longueurTotale += distanceEuclidienne(
+                    this.listeClientsÀLivrer.get(this.listeClientsÀLivrer.size() - 1).getPositionX(),
+                    this.listeClientsÀLivrer.get(this.listeClientsÀLivrer.size() - 1).getPositionY(),
+                    this.départEtArrivée.getPositionX(),
+                    this.départEtArrivée.getPositionY());
+        }
+
+
+
 
         //On ajoute le nombre de marchandises du dernier client car la boucle précédente s'arrête à l'avant dernier client
         //todo : a enlever puisque dernier sommet correspond à l'entrepôt
-        this.nbMarchandisesALivrer += itinéraire.get(itinéraire.size() - 1).getQuantite();
+        //this.nbMarchandisesALivrer += listeClientsÀLivrer.get(listeClientsÀLivrer.size() - 1).getNbMarchandisesÀLivrer();
 
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Itinéraire that = (Itinéraire) o;
         return Double.compare(that.longueurTotale, longueurTotale) == 0 &&
                 nbMarchandisesALivrer == that.nbMarchandisesALivrer &&
-                Objects.equals(itinéraire, that.itinéraire);
+                Objects.equals(listeClientsÀLivrer, that.listeClientsÀLivrer) &&
+                Objects.equals(départEtArrivée, that.départEtArrivée) &&
+                Objects.equals(véhicule, that.véhicule);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(itinéraire, longueurTotale, nbMarchandisesALivrer);
+    public int hashCode()
+    {
+        return Objects.hash(listeClientsÀLivrer, départEtArrivée, longueurTotale, nbMarchandisesALivrer, véhicule);
     }
 }
 

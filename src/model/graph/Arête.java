@@ -21,14 +21,21 @@ public class Arête
 
     /**
      * Constructeur à deux paramètres pour une Arête.
-     * @param s1 le sommet d'où part l'arête
-     * @param s2 le sommet où arrive l'arête
+     * @param s1 le sommet d'où part l'arête.
+     * @param s2 le sommet où arrive l'arête.
      */
     public Arête(Sommet s1, Sommet s2)
     {
         this.sommet1 = s1;
         this.sommet2 = s2;
-        //todo : calculer la distance entre sommet 1 et sommet 2.
+        // Le coût est la distance entre les deux arêtes
+        this.coût = utilitaires.Utilitaire.distanceEuclidienne
+        (
+            this.sommet1.getPositionX(),
+            this.sommet1.getPositionY(),
+            this.sommet2.getPositionX(),
+            this.sommet2.getPositionY()
+        );
     }
 
 

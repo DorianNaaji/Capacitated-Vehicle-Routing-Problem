@@ -33,6 +33,7 @@ public class GrapheNonOrientéComplet
     public GrapheNonOrientéComplet(Fichier _fichierInitial)
     {
         this.fichierInitial = _fichierInitial;
+        this.sommets = new HashSet<Sommet>();
         // V0 est l'entrepôt,
         this.sommets.add(this.fichierInitial.getEntrepôt());
         // et on a de V1 à Vn les clients.

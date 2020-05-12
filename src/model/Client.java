@@ -37,7 +37,7 @@ public class Client extends Sommet
      * Récupère la quantité à livrer.
      * @return la quantité à livrer.
      */
-    public int getQuantite() {
+    public int getNbMarchandisesÀLivrer() {
         return quantite;
     }
 

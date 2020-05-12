@@ -1,6 +1,5 @@
 package model;
 
-import java.util.List;
 import java.util.Set;
 
 public class Solution
@@ -9,7 +8,7 @@ public class Solution
      * Un ensemble de tournées. Il n'existe pas deux tournées similaires, d'où l'utilisation d'un java.util.Set.
      * L'idée sera de fusionner des tournées entres elles pour optimiser la solution finale.
      */
-    private Set<Tournée> tournées;
+    private Set<Itinéraire> tournées;
 
     /**
      * La somme de la longueur totale de toute les tournées.
@@ -26,7 +25,7 @@ public class Solution
      * Initialise un objet de type Solution
      * @param _tournées L'ensemble des tournées pour une solution
      */
-    public Solution(Set<Tournée> _tournées)
+    public Solution(Set<Itinéraire> _tournées)
     {
         // initialise l'attribut
         this.tournées = _tournées;
@@ -39,7 +38,7 @@ public class Solution
      * Ajoute une tournée à l'ensemble des solutions
      * @param t la tournée à ajouter
      */
-    public void ajouterTournée(Tournée t)
+    public void ajouterTournée(Itinéraire t)
     {
         // si l'ensemble ne contient pas la tournée à ajouter
         if(!this.tournées.contains(t))
@@ -58,7 +57,7 @@ public class Solution
     }
 
 
-    public void retirnerTournée(Tournée t)
+    public void retirnerTournée(Itinéraire t)
     {
         // si l'ensemble contient bien la tournée à retirer
         if(this.tournées.contains(t))
@@ -78,7 +77,7 @@ public class Solution
     private double calculerLongueurGlobale()
     {
         double optimisationGlobale = 0.00;
-        for(Tournée t : this.tournées)
+        for(Itinéraire t : this.tournées)
         {
             optimisationGlobale += t.getLongueurTotale();
         }

@@ -5,10 +5,9 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import inout.Loader;
 import model.*;
+import model.graph.GrapheNonOrientéComplet;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,7 +44,19 @@ public class Main extends Application
 
 */
 
+        List<Fichier> fichiers = chargerFichiersTest();
+        Fichier f0 = fichiers.get(0);
+        ArrayList<Client> subList = new ArrayList<Client>();
+        subList.add(f0.getClients().get(0));
+        subList.add(f0.getClients().get(1));
+        subList.add(f0.getClients().get(2));
+        subList.add(f0.getClients().get(3));
+        //subList.add(f0.getClients().get(4));
 
+        Fichier f = new Fichier(subList, f0.getNomFichier(), f0.getEntrepôt());
+
+        GrapheNonOrientéComplet gnoc = new GrapheNonOrientéComplet(f);
+        System.out.println();
 
         // lancement de l'interface
         launch(args);

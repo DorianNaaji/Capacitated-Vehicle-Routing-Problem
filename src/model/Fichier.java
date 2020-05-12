@@ -22,12 +22,19 @@ public class Fichier
      * @param _nom le nom du fichier concerné.
      * @param _départ l'entrepôt de départ.
      */
-    public Fichier(ArrayList<Client> _clients, String _nom, Entrepôt _départ)
+    public Fichier(ArrayList<Client> _clients, String _nom, Entrepôt _départ) throws IllegalArgumentException
     {
         this.clients = _clients;
         this.nomFichier = _nom;
         this.départ = _départ;
-        this.nbClientsRécupérés = this.clients.size();
+        if(_clients != null)
+        {
+            this.nbClientsRécupérés = this.clients.size();
+        }
+        else
+        {
+            throw new IllegalArgumentException("La liste des clients ne peut être nulle");
+        }
     }
 
     /**

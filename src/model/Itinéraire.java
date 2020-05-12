@@ -37,29 +37,24 @@ public class Itinéraire
     private Véhicule véhicule;
 
     /**
-     * Constructeur d'un Itinéraire.
-     * @param sommets la liste des sommets concernés par la tournée
+     * Constructeur d'un Itinéraire. Les sommets peuvent être récupérés dans l'attribut "sommets" de la classe
+     * GrapheNonOrientéComplet.
+     * @param sommets les sommets de l'itinéraire, comprenant l'entrepôt et l'ensemble des clients à livrer.
+     * @throws VehiculeCapacityOutOfBoundsException
+     * @throws EntrepôtNotFoundException
+     * @see model.graph.GrapheNonOrientéComplet
      */
     public Itinéraire(Set<Sommet> sommets) throws VehiculeCapacityOutOfBoundsException, EntrepôtNotFoundException, SetOfSommetsIsEmptyException {
-        // on initialise le véhicule
-        this.véhicule = new Véhicule();
-
         //Si la collection de sommets est vide
         if(sommets.isEmpty()) {
             throw new SetOfSommetsIsEmptyException("La collection de sommets est vide.");
         }
-        // Le sommet en position 0 est normalement l'entrepôt
-        else if (sommets.toArray()[0].getClass() == Entrepôt.class)
-        {
-            this.départEtArrivée = (Entrepôt)sommets.toArray()[0];
-        }
-        // si on n'a pas trouvé l'entrepôt en position 0...
-        else
-        {
-            throw new EntrepôtNotFoundException("L'entrepôt n'a pas été trouvé en position 0 de l'ensemble des sommets.");
-        }
+
+        // on initialise le véhicule
+        this.véhicule = new Véhicule();
 
         this.listeClientsÀLivrer = new LinkedList<Client>();
+
         // pour chaque sommet de l'ensemble
         for (Sommet s:sommets)
         {
@@ -68,6 +63,17 @@ public class Itinéraire
             {
                 // on l'ajoute à notre set de clients.
                 listeClientsÀLivrer.add((Client)s);
+            }
+            if(s.getClass() == Entrepôt.class)
+            {
+                this.départEtArrivée = (Entrepôt)s;
+            }
+        }
+        // si l'on n'a pas trouvé l'entrepôt...
+        if(this.départEtArrivée == null)
+        {
+            {
+                throw new EntrepôtNotFoundException("L'entrepôt n'a pas été trouvé en position 0 de l'ensemble des sommets");
             }
         }
 
@@ -80,10 +86,6 @@ public class Itinéraire
         this.recalculerDistanceEtNbMarchandises();
     }
 
-    public Itinéraire()  {
-
-
-    }
 
     /**
      *
@@ -193,6 +195,24 @@ public class Itinéraire
             this.nbMarchandisesALivrer = listeClientsÀLivrer.stream().mapToInt(Client::getNbMarchandisesÀLivrer).sum();
         }
 
+    }
+
+    /**
+     * Récupère l'entrepôt de départ de l'itinéraire.
+     * @return le sommet de départ.
+     */
+    public Sommet getEntrepôt()
+    {
+        return this.départEtArrivée;
+    }
+
+    /**
+     * Récupère la liste des clients à livrer.
+     * @return la liste chaînée des clients à livrer.
+     */
+    public LinkedList<Client> getListeClientsÀLivrer()
+    {
+        return this.listeClientsÀLivrer;
     }
 
     @Override

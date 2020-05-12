@@ -94,9 +94,6 @@ public class Arête
     @Override
     public String toString()
     {
-        return "Arête{" +
-                "sommet1=" + this.sommet1 +
-                ", sommet2=" + this.sommet2 +
-                '}';
+        return "Arête{ [" + this.sommet1 + "] <=> [" + this.sommet2 + "]}";
     }
 }

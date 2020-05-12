@@ -50,15 +50,46 @@ public class GrapheNonOrientéComplet
     {
         HashSet<Arête> arêtes = new HashSet<Arête>();
         ArrayList<Sommet> except = new ArrayList<Sommet>();
-        for(Sommet s1:this.sommets)
+        Sommet[] sommets = this.sommets.toArray(new Sommet[this.sommets.size()]);
+        // on va de i à tailleSommets-1
+        for(int i = 0 ; i < this.sommets.size() - 1; i++)
         {
-            except.add(s1);
-            for(Sommet s2:this.sommets.stream().filter(except::contains).collect(Collectors.toSet()))
+            // on va de i à tailleSommets-1
+            for(int j = i + 1; j < this.sommets.size(); j++)
             {
-                Arête ar = new Arête(s1, s2);
-                arêtes.add(ar);
+                Sommet sommet1 = sommets[i];
+                Sommet sommet2 = sommets[j];
+                // on crée l'arête allant du sommet1 au sommet2
+                arêtes.add(new Arête(sommets[i], sommets[j]));
             }
         }
         return arêtes;
+    }
+
+    /**
+     * Récupère l'ensemble des sommets.
+     * @return les sommets du graphe.
+     */
+    public Set<Sommet> getSommets()
+    {
+        return sommets;
+    }
+
+    /**
+     * Récupère l'ensemble des arêtes du graphe.
+     * @return les arêtes du graphe.
+     */
+    public Set<Arête> getArêtes()
+    {
+        return arêtes;
+    }
+
+    /**
+     * Récupère le fichier initial duquel a été construit le graphe non orienté complet courant.
+     * @return le fichier initial.
+     */
+    public Fichier getFichierInitial()
+    {
+        return fichierInitial;
     }
 }

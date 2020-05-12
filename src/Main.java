@@ -1,7 +1,9 @@
 
 import customexceptions.VehiculeCapacityOutOfBoundsException;
 import gui.CVRPWindow;
+import gui.CVRPWindowController;
 import javafx.application.Application;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import inout.Loader;
 import model.*;
@@ -20,6 +22,15 @@ public class Main extends Application
     {
         CVRPWindow mainGui = new CVRPWindow(primaryStage);
         mainGui.show();
+
+        /* tests d'affichage */
+        List<Fichier> fichiers = chargerFichiersTest();
+        Fichier f0 = fichiers.get(0);
+        Fichier f0réduit = new Fichier(new ArrayList<>(f0.getClients().subList(0, 5)), f0.getNomFichier() + "_modifié", f0.getEntrepôt());
+        GrapheNonOrientéComplet gnoc = new GrapheNonOrientéComplet(f0réduit);
+        Itinéraire i = new Itinéraire(gnoc.getSommets());
+        mainGui.getController().drawItinéraire(i, Color.CORNFLOWERBLUE);
+        System.out.println("start ended");
     }
 
     public static void main(String[] args) throws VehiculeCapacityOutOfBoundsException {
@@ -44,20 +55,6 @@ public class Main extends Application
 
 */
 
-        List<Fichier> fichiers = chargerFichiersTest();
-        Fichier f0 = fichiers.get(0);
-        ArrayList<Client> subList = new ArrayList<Client>();
-        subList.add(f0.getClients().get(0));
-        subList.add(f0.getClients().get(1));
-        subList.add(f0.getClients().get(2));
-        subList.add(f0.getClients().get(3));
-        //subList.add(f0.getClients().get(4));
-
-        Fichier f = new Fichier(subList, f0.getNomFichier(), f0.getEntrepôt());
-
-        GrapheNonOrientéComplet gnoc = new GrapheNonOrientéComplet(f);
-        System.out.println();
-
         // lancement de l'interface
         launch(args);
     }
@@ -80,10 +77,12 @@ public class Main extends Application
         if(fichiers != null)
         {
             System.out.println(fichiers.size() + " fichiers ont été chargés");
+            /*
             for(Fichier f : fichiers)
             {
                 System.out.println(f.toString());
             }
+            */
         }
 
         return fichiers;

@@ -1,6 +1,7 @@
 package model;
 
 import customexceptions.EntrepôtNotFoundException;
+import customexceptions.SetOfSommetsIsEmptyException;
 import customexceptions.VehiculeCapacityOutOfBoundsException;
 import model.graph.Sommet;
 
@@ -39,20 +40,23 @@ public class Itinéraire
      * Constructeur d'un Itinéraire.
      * @param sommets la liste des sommets concernés par la tournée
      */
-    public Itinéraire(Set<Sommet> sommets) throws VehiculeCapacityOutOfBoundsException, EntrepôtNotFoundException
-    {
+    public Itinéraire(Set<Sommet> sommets) throws VehiculeCapacityOutOfBoundsException, EntrepôtNotFoundException, SetOfSommetsIsEmptyException {
         // on initialise le véhicule
         this.véhicule = new Véhicule();
 
+        //Si la collection de sommets est vide
+        if(sommets.isEmpty()) {
+            throw new SetOfSommetsIsEmptyException("La collection de sommets est vide.");
+        }
         // Le sommet en position 0 est normalement l'entrepôt
-        if(sommets.toArray()[0].getClass() == Entrepôt.class)
+        else if (sommets.toArray()[0].getClass() == Entrepôt.class)
         {
             this.départEtArrivée = (Entrepôt)sommets.toArray()[0];
         }
         // si on n'a pas trouvé l'entrepôt en position 0...
         else
         {
-            throw new EntrepôtNotFoundException("L'entrepôt n'a pas été trouvé en position 0 de l'ensemble des sommets");
+            throw new EntrepôtNotFoundException("L'entrepôt n'a pas été trouvé en position 0 de l'ensemble des sommets.");
         }
 
         this.listeClientsÀLivrer = new LinkedList<Client>();
@@ -102,28 +106,49 @@ public class Itinéraire
         this.nbMarchandisesALivrer = nbMarchandisesALivrer;
     }
 
+    /**
+     * Méthode permettant d'ajouter un client à un itinéraire. Elle permet également de recalculer la longueur totale de l'itinéraire
+     * et le nombre total de marchandises à livrer.
+     * @param c
+     * @return true si la quantité de marchandises totale ne dépasse pas la capacité maximum d'un véhicule, false sinon
+     * @throws VehiculeCapacityOutOfBoundsException
+     */
     public boolean ajouterClient(Client c) throws VehiculeCapacityOutOfBoundsException {
 
+        // quantité de marchandises totale à livrer avant l'ajout du nouveau client
         int quantiteDeMarchandisesTotale  = listeClientsÀLivrer.stream().mapToInt(Client::getNbMarchandisesÀLivrer).sum();
 
-        if (quantiteDeMarchandisesTotale + c.getNbMarchandisesÀLivrer() < véhicule.getCapacité())
+        // si la quantité de marchandises totale à livrer en tenant également compte de celle du nouveau client
+        // est inférieure ou égale à la capacité totale d'un véhicule
+        if (quantiteDeMarchandisesTotale + c.getNbMarchandisesÀLivrer() <= véhicule.getCapacité())
         {
+            // on ajoute alors le client à la liste chaînée
             this.listeClientsÀLivrer.add(c);
+            // on recalcul alors la longueur d'un itinéraire et le nombre de marchandises à livrer
             this.recalculerDistanceEtNbMarchandises();
             return true;
         }
+        // sinon...
         else
         {
             return false;
         }
     }
 
+    /**
+     * Méthode permettant de retirer un client à un itinéraire. Elle permet également de recalculer la longueur totale de l'itinéraire
+     * et le nombre total de marchandises à livrer.
+     * @param c
+     */
     public void retirerClient(Client c)
     {
         this.listeClientsÀLivrer.remove(c);
         this.recalculerDistanceEtNbMarchandises();
     }
 
+    /**
+     * Méthode permettant de calculer la longueur totale de l'itinéraire et le nombre total de marchandises à livrer.
+     */
     private void recalculerDistanceEtNbMarchandises() {
 
         // si la liste contient un seul élément
@@ -134,7 +159,6 @@ public class Itinéraire
         // si elle en contient 1
         else if(listeClientsÀLivrer.size() == 1)
         {
-
             // distance entre l'entrepôt et le client, puis entre le client et l'entrepôt.
             this.longueurTotale = distanceEuclidienne(
                     this.départEtArrivée.getPositionX(),
@@ -148,7 +172,7 @@ public class Itinéraire
         else
         {
             // calcul de la distance entre le premier client et l'entrepôt
-            this.longueurTotale += distanceEuclidienne(
+            this.longueurTotale = distanceEuclidienne(
                     this.départEtArrivée.getPositionX(),
                     this.départEtArrivée.getPositionY(),
                     this.listeClientsÀLivrer.get(0).getPositionX(),
@@ -157,9 +181,7 @@ public class Itinéraire
             //calcul de la distance entre chaque clients de la liste
             for (int i = 0; i < listeClientsÀLivrer.size() - 1; i++) {
                 longueurTotale += distanceEuclidienne(listeClientsÀLivrer.get(i).getPositionX(), listeClientsÀLivrer.get(i).getPositionY(), listeClientsÀLivrer.get(i+1).getPositionX(), listeClientsÀLivrer.get(i+1).getPositionY());
-                this.nbMarchandisesALivrer += listeClientsÀLivrer.get(i).getNbMarchandisesÀLivrer();
             }
-
 
             // calcul de la distance entre le dernier client et l'entrepôt.
             this.longueurTotale += distanceEuclidienne(
@@ -167,14 +189,9 @@ public class Itinéraire
                     this.listeClientsÀLivrer.get(this.listeClientsÀLivrer.size() - 1).getPositionY(),
                     this.départEtArrivée.getPositionX(),
                     this.départEtArrivée.getPositionY());
+
+            this.nbMarchandisesALivrer = listeClientsÀLivrer.stream().mapToInt(Client::getNbMarchandisesÀLivrer).sum();
         }
-
-
-
-
-        //On ajoute le nombre de marchandises du dernier client car la boucle précédente s'arrête à l'avant dernier client
-        //todo : a enlever puisque dernier sommet correspond à l'entrepôt
-        //this.nbMarchandisesALivrer += listeClientsÀLivrer.get(listeClientsÀLivrer.size() - 1).getNbMarchandisesÀLivrer();
 
     }
 

@@ -1,7 +1,7 @@
 package algorithms;
 
 import customexceptions.EntrepôtNotFoundException;
-import customexceptions.SetOfSommetsIsEmptyException;
+import customexceptions.ListOfClientsIsEmptyException;
 import customexceptions.VehiculeCapacityOutOfBoundsException;
 import model.*;
 import model.graph.Sommet;
@@ -31,7 +31,7 @@ public class GénérateurSolutionsAléatoire
      * Génère une solution aléatoire à partir du fichier ayant permis la construction du présent générateur.
      * @return une solution générée aléatoirement.
      */
-    public Solution générerUneSolutionAléatoire() throws EntrepôtNotFoundException, VehiculeCapacityOutOfBoundsException, SetOfSommetsIsEmptyException {
+    public Solution générerUneSolutionAléatoire() throws EntrepôtNotFoundException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException {
 
       /*  Set<Sommet> sommets = new HashSet<>();
         Set<Sommet> sommets2 = new HashSet<>();
@@ -75,11 +75,11 @@ public class GénérateurSolutionsAléatoire
 
         Random random = new Random();
 
-        ArrayList<Client> clients = this.fichierConcerné.getClients();
+        ArrayList<Client> clients = new ArrayList<>(this.fichierConcerné.getClients());
         Entrepôt entrepôt = this.fichierConcerné.getEntrepôt();
-        Set<Itinéraire> itinéraires = new HashSet<>();
-        Set<Sommet> sommets = new HashSet<>();
-        Itinéraire itinéraire = new Itinéraire(sommets);
+        ArrayList<Itinéraire> itinéraires = new ArrayList<>();
+        LinkedList<Client> sommets = new LinkedList<>();
+        Itinéraire itinéraire = new Itinéraire(entrepôt);
 
 
         while (clients.size() > 0) {

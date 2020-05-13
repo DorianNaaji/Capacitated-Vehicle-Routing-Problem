@@ -70,6 +70,19 @@ public class Itinéraire
         this.recalculerDistanceEtNbMarchandises();
     }
 
+    /**
+     * Constructeur d'un itinéraire. Initialise un Itinéraire possédant une liste chaînée de Clients vide.
+     * @param e l'entrepôt, point de départ et point d'arrivée de notre itinéraire.
+     */
+    public Itinéraire(Entrepôt e) {
+        // on initialise le véhicule
+        this.véhicule = new Véhicule();
+        this.entrepôt = e;
+        this.listeClientsÀLivrer = new LinkedList<>();
+
+        //Calcul de la longueur totale et du nombre de marchandises.
+        this.recalculerDistanceEtNbMarchandises();
+    }
 
     /**
      *
@@ -124,7 +137,7 @@ public class Itinéraire
     /**
      * Méthode permettant de retirer un client à un itinéraire. Elle permet également de recalculer la longueur totale de l'itinéraire
      * et le nombre total de marchandises à livrer.
-     * @param c
+     * @param c le client à retirer.
      */
     public void retirerClient(Client c)
     {

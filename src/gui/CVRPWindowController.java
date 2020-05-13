@@ -181,6 +181,21 @@ public class CVRPWindowController
      */
     public void drawSolution(Solution s)
     {
-        //todo réaliser l'affichage d'une solution
+        // En théorie, on a un véhicule par itinéraire donc la solution utilisera autant de véhicules
+        // qu'il y a d'éléments dans l'ensemble des itinéraires.
+        int nbCouleursÀUtiliser = s.getItinéraires().size();
+
+        for(int indexItinéraire = 0, indexCouleur = 0 ; indexItinéraire < nbCouleursÀUtiliser; indexItinéraire++, indexCouleur++)
+        {
+            // on dessine l'itinéraire à l'index i, avec la ième couleur du tableau de couleurs
+            this.drawItinéraire((Itinéraire)s.getItinéraires().toArray()[indexItinéraire], this.couleursDisponibles[indexItinéraire]);
+            // si on n'a pas assez de couleurs disponibles (+ de 10 itinéraires), on reset les couleurs
+            // -> il faudra des itinéraires avec potentiellement deux fois la même couleur.
+            if(indexCouleur == nbCouleursÀUtiliser - 1)
+            {
+                indexCouleur = 0;
+            }
+        }
     }
+
 }

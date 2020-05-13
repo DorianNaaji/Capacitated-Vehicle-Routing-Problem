@@ -2,6 +2,8 @@ package model;
 
 import model.graph.Sommet;
 
+import java.util.Objects;
+
 /**
  * Classe représentant un client tel que défini par les fichiers .txt fournis.
  */
@@ -39,6 +41,23 @@ public class Client extends Sommet
      */
     public int getNbMarchandisesÀLivrer() {
         return quantite;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Client client = (Client) o;
+        return numeroClient == client.numeroClient &&
+                quantite == client.quantite;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(super.hashCode(), numeroClient, quantite);
     }
 
     @Override

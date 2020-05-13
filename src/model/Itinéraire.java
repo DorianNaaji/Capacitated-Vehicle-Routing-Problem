@@ -1,7 +1,7 @@
 package model;
 
 import customexceptions.EntrepôtNotFoundException;
-import customexceptions.SetOfSommetsIsEmptyException;
+import customexceptions.ListOfClientsIsEmptyException;
 import customexceptions.VehiculeCapacityOutOfBoundsException;
 import model.graph.Sommet;
 
@@ -20,9 +20,10 @@ public class Itinéraire
      */
     private LinkedList<Client> listeClientsÀLivrer;
 
-    private Entrepôt départEtArrivée;
-
-    //!\ TODO ATTENTION : rajouter l'entrepot pour le calcul de l'itinéraire / changer en SOMMET les clients
+    /**
+     * L'entrepôt est à la fois le départ et l'arrivée de l'itinéraire.
+     */
+    private Entrepôt entrepôt;
 
     /**
      * La longueur totale du parcours
@@ -34,48 +35,31 @@ public class Itinéraire
      */
     private int nbMarchandisesALivrer;
 
+    /**
+     * Le véhicule utilisé pour l'itinéraire courant.
+     */
     private Véhicule véhicule;
 
     /**
-     * Constructeur d'un Itinéraire. Les sommets peuvent être récupérés dans l'attribut "sommets" de la classe
-     * GrapheNonOrientéComplet.
-     * @param sommets les sommets de l'itinéraire, comprenant l'entrepôt et l'ensemble des clients à livrer.
-     * @throws VehiculeCapacityOutOfBoundsException
-     * @throws EntrepôtNotFoundException
-     * @see model.graph.GrapheNonOrientéComplet
+     * Constructeur d'un itinéraire. Il prend en paramètre une liste chaînée de clients, qui correspond à l'ordre
+     * des clients à livrer. L'entrepôt doit également être spécifié. Il sera le point de départ et l'arrivée de l'itinéraire
+     * @param clients la liste chaînée des clients à livrer.
+     * @param e l'entrepôt, point de départ et point d'arrivée de notre itinéraire.
+     * @throws ListOfClientsIsEmptyException dans le cas où la liste de clients est vide.
+     * @throws VehiculeCapacityOutOfBoundsException dans le cas où le nombre de marchandises à livrer pour l'itinéraire
+     * dépasse la capacité totale du véhicule.
      */
-    public Itinéraire(Set<Sommet> sommets) throws VehiculeCapacityOutOfBoundsException, EntrepôtNotFoundException, SetOfSommetsIsEmptyException {
-        //Si la collection de sommets est vide
-        if(sommets.isEmpty()) {
-            throw new SetOfSommetsIsEmptyException("La collection de sommets est vide.");
+    public Itinéraire(LinkedList<Client> clients, Entrepôt e) throws ListOfClientsIsEmptyException, VehiculeCapacityOutOfBoundsException
+    {
+        if(clients.isEmpty())
+        {
+            throw new ListOfClientsIsEmptyException("La collection de sommets est vide.");
         }
 
         // on initialise le véhicule
         this.véhicule = new Véhicule();
-
-        this.listeClientsÀLivrer = new LinkedList<Client>();
-
-        // pour chaque sommet de l'ensemble
-        for (Sommet s:sommets)
-        {
-            // si c'est bien un client,
-            if(s.getClass() == Client.class)
-            {
-                // on l'ajoute à notre set de clients.
-                listeClientsÀLivrer.add((Client)s);
-            }
-            if(s.getClass() == Entrepôt.class)
-            {
-                this.départEtArrivée = (Entrepôt)s;
-            }
-        }
-        // si l'on n'a pas trouvé l'entrepôt...
-        if(this.départEtArrivée == null)
-        {
-            {
-                throw new EntrepôtNotFoundException("L'entrepôt n'a pas été trouvé en position 0 de l'ensemble des sommets");
-            }
-        }
+        this.listeClientsÀLivrer = clients;
+        this.entrepôt = e;
 
         int quantiteDeMarchandisesTotale  = listeClientsÀLivrer.stream().mapToInt(Client::getNbMarchandisesÀLivrer).sum();
         if (quantiteDeMarchandisesTotale > véhicule.getCapacité()) {
@@ -111,7 +95,7 @@ public class Itinéraire
     /**
      * Méthode permettant d'ajouter un client à un itinéraire. Elle permet également de recalculer la longueur totale de l'itinéraire
      * et le nombre total de marchandises à livrer.
-     * @param c
+     * @param c le client à ajouter.
      * @return true si la quantité de marchandises totale ne dépasse pas la capacité maximum d'un véhicule, false sinon
      * @throws VehiculeCapacityOutOfBoundsException
      */
@@ -163,8 +147,8 @@ public class Itinéraire
         {
             // distance entre l'entrepôt et le client, puis entre le client et l'entrepôt.
             this.longueurTotale = distanceEuclidienne(
-                    this.départEtArrivée.getPositionX(),
-                    this.départEtArrivée.getPositionY(),
+                    this.entrepôt.getPositionX(),
+                    this.entrepôt.getPositionY(),
                     this.listeClientsÀLivrer.get(0).getPositionX(),
                     this.listeClientsÀLivrer.get(0).getPositionY()) * 2;
 
@@ -175,8 +159,8 @@ public class Itinéraire
         {
             // calcul de la distance entre le premier client et l'entrepôt
             this.longueurTotale = distanceEuclidienne(
-                    this.départEtArrivée.getPositionX(),
-                    this.départEtArrivée.getPositionY(),
+                    this.entrepôt.getPositionX(),
+                    this.entrepôt.getPositionY(),
                     this.listeClientsÀLivrer.get(0).getPositionX(),
                     this.listeClientsÀLivrer.get(0).getPositionY());
 
@@ -189,8 +173,8 @@ public class Itinéraire
             this.longueurTotale += distanceEuclidienne(
                     this.listeClientsÀLivrer.get(this.listeClientsÀLivrer.size() - 1).getPositionX(),
                     this.listeClientsÀLivrer.get(this.listeClientsÀLivrer.size() - 1).getPositionY(),
-                    this.départEtArrivée.getPositionX(),
-                    this.départEtArrivée.getPositionY());
+                    this.entrepôt.getPositionX(),
+                    this.entrepôt.getPositionY());
 
             this.nbMarchandisesALivrer = listeClientsÀLivrer.stream().mapToInt(Client::getNbMarchandisesÀLivrer).sum();
         }
@@ -203,7 +187,7 @@ public class Itinéraire
      */
     public Sommet getEntrepôt()
     {
-        return this.départEtArrivée;
+        return this.entrepôt;
     }
 
     /**
@@ -224,14 +208,14 @@ public class Itinéraire
         return Double.compare(that.longueurTotale, longueurTotale) == 0 &&
                 nbMarchandisesALivrer == that.nbMarchandisesALivrer &&
                 Objects.equals(listeClientsÀLivrer, that.listeClientsÀLivrer) &&
-                Objects.equals(départEtArrivée, that.départEtArrivée) &&
+                Objects.equals(entrepôt, that.entrepôt) &&
                 Objects.equals(véhicule, that.véhicule);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(listeClientsÀLivrer, départEtArrivée, longueurTotale, nbMarchandisesALivrer, véhicule);
+        return Objects.hash(listeClientsÀLivrer, entrepôt, longueurTotale, nbMarchandisesALivrer, véhicule);
     }
 }
 

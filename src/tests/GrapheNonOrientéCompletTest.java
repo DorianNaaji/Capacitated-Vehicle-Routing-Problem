@@ -13,6 +13,7 @@ import java.util.List;
 
 /**
  * Tests pour la classe GrapheNonOrientéComplet.
+ * @deprecated n'est pas utile.
  */
 public class GrapheNonOrientéCompletTest
 {

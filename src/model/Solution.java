@@ -5,33 +5,26 @@ import java.util.Set;
 public class Solution
 {
     /**
-     * Un ensemble de tournées. Il n'existe pas deux tournées similaires, d'où l'utilisation d'un java.util.Set.
-     * L'idée sera de fusionner des tournées entres elles pour optimiser la solution finale.
+     * Un ensemble d'itinéraires . Il n'existe pas deux itinéraires similaires, d'où l'utilisation d'un java.util.Set.
      */
-    private Set<Itinéraire> tournées;
+    private Set<Itinéraire> itinéraires;
 
     /**
-     * La somme de la longueur totale de toute les tournées.
+     * La somme de la longueur totale de tous les itinéraires.
      */
     private double optimisationGlobale;
 
-    /**
-     * Le nombre de véhicules nécessaires pour réaliser l'ensemble des tournées.
-     * todo : calculer le nombre de véhicule nécessaire pour la solution donnée (lorsqu'on aura les algos)
-     */
-    private int nbVéhicules;
 
     /**
      * Initialise un objet de type Solution
-     * @param _tournées L'ensemble des tournées pour une solution
+     * @param _itinéraires L'ensemble des itinéraires pour une solution
      */
-    public Solution(Set<Itinéraire> _tournées)
+    public Solution(Set<Itinéraire> _itinéraires)
     {
         // initialise l'attribut
-        this.tournées = _tournées;
+        this.itinéraires = _itinéraires;
         // calcul de la longueur globale de la tournée
-        this.calculerLongueurGlobale();
-        //todo : initialiser les véhicules (à faire lorsqu'on aura les algos)
+        this.optimisationGlobale = this.calculerLongueurGlobale();
     }
 
     /**
@@ -41,17 +34,17 @@ public class Solution
     public void ajouterTournée(Itinéraire t)
     {
         // si l'ensemble ne contient pas la tournée à ajouter
-        if(!this.tournées.contains(t))
+        if(!this.itinéraires.contains(t))
         {
             // on ajoute la tournée à l'ensemble
-            this.tournées.add(t);
+            this.itinéraires.add(t);
             // on ajoute la longueur totale de la tournée à la longueur globale de la solution.
             this.optimisationGlobale += t.getLongueurTotale();
         }
         // si elle est déjà dans la tournée, exception car cas unexpected.
         else
         {
-            throw new IllegalArgumentException("La tournée est déjà présente dans l'ensemble des tournées");
+            throw new IllegalArgumentException("La tournée est déjà présente dans l'ensemble des itinéraires");
         }
         //todo : voir si d'autres opérations sont nécessaires lors de l'ajout d'une tournée
     }
@@ -60,10 +53,10 @@ public class Solution
     public void retirnerTournée(Itinéraire t)
     {
         // si l'ensemble contient bien la tournée à retirer
-        if(this.tournées.contains(t))
+        if(this.itinéraires.contains(t))
         {
             // on la retire
-            this.tournées.remove(t);
+            this.itinéraires.remove(t);
             // et on soustrait la longueur totale de la tournée à la longueur globale de la solution.
             this.optimisationGlobale -= t.getLongueurTotale();
         }
@@ -71,16 +64,34 @@ public class Solution
     }
 
     /**
-     * Calcule la longueur globale de l'ensemble des tournées
-     * @return la longueur totale des tournées de l'ensemble.
+     * Calcule la longueur globale de l'ensemble des itinéraires
+     * @return la longueur totale des itinéraires de l'ensemble.
      */
     private double calculerLongueurGlobale()
     {
         double optimisationGlobale = 0.00;
-        for(Itinéraire t : this.tournées)
+        for(Itinéraire t : this.itinéraires)
         {
             optimisationGlobale += t.getLongueurTotale();
         }
         return optimisationGlobale;
+    }
+
+    /**
+     * Récupère l'ensemble des itinéraires de la solution courante.
+     * @return les itinéraires.
+     */
+    public Set<Itinéraire> getItinéraires()
+    {
+        return this.itinéraires;
+    }
+
+    /**
+     * Récupère la distance à parcourir pour effectuer l'ensemble des itinéraires.
+     * @return la somme de la longueur des itinéraires.
+     */
+    public double getOptimisationGlobale()
+    {
+        return this.optimisationGlobale;
     }
 }

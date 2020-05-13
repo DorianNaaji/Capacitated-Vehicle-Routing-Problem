@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 /**
  * Cette classe représente un graphe non orienté complet, dans l'optique de gérer
  * sommets et arêtes.
+ * @deprecated N'est pas utile dans le projet.
  */
 public class GrapheNonOrientéComplet
 {

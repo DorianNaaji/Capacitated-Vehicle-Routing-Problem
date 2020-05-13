@@ -1,9 +1,8 @@
 
 import customexceptions.EntrepôtNotFoundException;
-import customexceptions.SetOfSommetsIsEmptyException;
+import customexceptions.ListOfClientsIsEmptyException;
 import customexceptions.VehiculeCapacityOutOfBoundsException;
 import gui.CVRPWindow;
-import gui.CVRPWindowController;
 import javafx.application.Application;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -11,7 +10,7 @@ import inout.Loader;
 import model.*;
 import model.graph.Sommet;
 import model.graph.GrapheNonOrientéComplet;
-import java.io.File;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -30,13 +29,17 @@ public class Main extends Application
         List<Fichier> fichiers = chargerFichiersTest();
         Fichier f0 = fichiers.get(0);
         Fichier f0réduit = new Fichier(new ArrayList<>(f0.getClients().subList(0, 5)), f0.getNomFichier() + "_modifié", f0.getEntrepôt());
-        GrapheNonOrientéComplet gnoc = new GrapheNonOrientéComplet(f0réduit);
-        Itinéraire i = new Itinéraire(gnoc.getSommets());
+
+        LinkedList<Client> clientsTest = new LinkedList<>(f0réduit.getClients());
+        Entrepôt entrepôtTest = f0réduit.getEntrepôt();
+        Itinéraire i = new Itinéraire(clientsTest, entrepôtTest);
+
         mainGui.getController().drawItinéraire(i, Color.CORNFLOWERBLUE);
         System.out.println("start ended");
     }
 
-    public static void main(String[] args) throws EntrepôtNotFoundException, VehiculeCapacityOutOfBoundsException, SetOfSommetsIsEmptyException {
+    public static void main(String[] args) throws EntrepôtNotFoundException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException
+    {
         // test chargement fichiers
        /* List<Fichier> fichiers = chargerFichiersTest();
         int tailleFichiers = fichiers.size();
@@ -49,12 +52,11 @@ public class Main extends Application
             System.out.println("Après :" + itinéraire.getNbMarchandisesALivrer());
         } */
 
-        HashSet<Sommet> sommets = new HashSet<>();
+        LinkedList<Client> clients = new LinkedList<Client>();
         Entrepôt entrepôt = new Entrepôt(3,3);
         Client premierClient = new Client(0, 1, 2, 4);
-        sommets.add(entrepôt);
-        sommets.add(premierClient);
-        Itinéraire itinéraire = new Itinéraire(sommets);
+        clients.add(premierClient);
+        Itinéraire itinéraire = new Itinéraire(clients, entrepôt);
         Client deuxiemeClient = new Client(2, 4, 5, 9);
         itinéraire.ajouterClient(deuxiemeClient);
         Client troisiemeClient = new Client(2, 1, 8, 12);

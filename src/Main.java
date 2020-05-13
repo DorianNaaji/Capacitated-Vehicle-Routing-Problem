@@ -71,35 +71,6 @@ public class Main extends Application
             System.out.println("Après :" + itinéraire.getNbMarchandisesALivrer());
         } */
 
-        LinkedList<Client> clients = new LinkedList<Client>();
-        Entrepôt entrepôt = new Entrepôt(3,3);
-        Client premierClient = new Client(0, 1, 2, 4);
-        clients.add(premierClient);
-        Itinéraire itinéraire = new Itinéraire(clients, entrepôt);
-        Client deuxiemeClient = new Client(2, 4, 5, 9);
-        itinéraire.ajouterClient(deuxiemeClient);
-        Client troisiemeClient = new Client(2, 1, 8, 12);
-        itinéraire.ajouterClient(troisiemeClient);
-        //1 Entrepôt + 3 Clients : Ce que l'on doit avoir : longueur totale = 16,1065 et nbMarchandises à livrer = 25 // OK !
-        itinéraire.retirerClient(troisiemeClient);
-        //1 Entrepôt + 2 Clients : Ce que l'on doit avoir : longueur totale = 8,714776 et nbMarchandises à livrer = 13 // OK !
-        itinéraire.retirerClient(deuxiemeClient);
-        //1 Entrepôt + 1 Client : Ce que l'on doit avoir : longueur totale = 4.4721359 et nbMarchandises à livrer = 4 // OK !
-        itinéraire.ajouterClient(deuxiemeClient);
-        itinéraire.ajouterClient(troisiemeClient);
-        itinéraire.retirerClient(deuxiemeClient);
-        //1 Entrepôt + 2 Clients : Ce que l'on doit avoir : longueur totale = 13.62123 et nbMarchandises à livrer = 16 // OK !
-        Client quatrièmeClient = new Client(4, 3, 8, 84);
-        itinéraire.ajouterClient(quatrièmeClient);
-        //1 Entrepôt + 3 Clients : Ce que l'on doit avoir : longueur totale = 15,236067 et nbMarchandises à livrer = 100 // OK !
-        Client cinquiemeClient = new Client(5, 3, 7, 2);
-        itinéraire.ajouterClient(cinquiemeClient);
-        //Même résultat que précédemment car on veut ajouter un client mais nbMarchandises > 100
-        // donc on ne l'ajoute pas à l'itinéraire (la liste chaînée listeClientsÀLivrer)
-        Client clientItin2 = new Client(1, 2, 4, 12);
-
-
-
         launch(args);
 
     }

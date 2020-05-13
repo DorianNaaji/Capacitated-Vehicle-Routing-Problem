@@ -33,9 +33,14 @@ public class Main extends Application
         Fichier f0 = fichiers.get(0);
         Fichier f0réduit = new Fichier(new ArrayList<>(f0.getClients().subList(0, 5)), f0.getNomFichier() + "_modifié", f0.getEntrepôt());
 
-        /* tests de génération de solutions aléatoires */
-        //GénérateurSolutionsAléatoire générateurSolutionsAléatoire = new GénérateurSolutionsAléatoire(f0réduit);
-        //Solution solution = générateurSolutionsAléatoire.générerUneSolutionAléatoire();
+        /* tests de génération de solutions aléatoires sur le premier fichier */
+        GénérateurSolutionsAléatoire générateurSolutionsAléatoire = new GénérateurSolutionsAléatoire(f0);
+        Solution solution = générateurSolutionsAléatoire.générerUneSolutionAléatoire();
+
+        /* tests de génération de solutions aléatoires sur le deuxième fichier */
+        Fichier f1 = fichiers.get(1);
+        GénérateurSolutionsAléatoire générateurSolutionsAléatoire2 = new GénérateurSolutionsAléatoire(f1);
+        ArrayList<Solution> solutions = générateurSolutionsAléatoire2.générerXSolutionsAléatoire(3);
 
 
         /* tests d'affichage */
@@ -43,6 +48,10 @@ public class Main extends Application
         Entrepôt entrepôtTest = f0réduit.getEntrepôt();
         Itinéraire i = new Itinéraire(clientsTest, entrepôtTest);
         mainGui.getController().drawItinéraire(i, Color.CORNFLOWERBLUE);
+
+        /* tests d'affichage d'une solution aléatoire*/
+        //mainGui.getController().drawSolution(solution);
+
 
         
         System.out.println("start ended");

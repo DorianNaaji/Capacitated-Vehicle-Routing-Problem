@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 public class Solution
@@ -7,7 +8,7 @@ public class Solution
     /**
      * Un ensemble d'itinéraires . Il n'existe pas deux itinéraires similaires, d'où l'utilisation d'un java.util.Set.
      */
-    private Set<Itinéraire> itinéraires;
+    private ArrayList<Itinéraire> itinéraires;
 
     /**
      * La somme de la longueur totale de tous les itinéraires.
@@ -19,7 +20,7 @@ public class Solution
      * Initialise un objet de type Solution
      * @param _itinéraires L'ensemble des itinéraires pour une solution
      */
-    public Solution(Set<Itinéraire> _itinéraires)
+    public Solution(ArrayList<Itinéraire> _itinéraires)
     {
         // initialise l'attribut
         this.itinéraires = _itinéraires;
@@ -81,7 +82,7 @@ public class Solution
      * Récupère l'ensemble des itinéraires de la solution courante.
      * @return les itinéraires.
      */
-    public Set<Itinéraire> getItinéraires()
+    public ArrayList<Itinéraire> getItinéraires()
     {
         return this.itinéraires;
     }

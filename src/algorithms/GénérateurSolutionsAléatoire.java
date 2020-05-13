@@ -33,75 +33,49 @@ public class GénérateurSolutionsAléatoire
      */
     public Solution générerUneSolutionAléatoire() throws EntrepôtNotFoundException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException {
 
-      /*  Set<Sommet> sommets = new HashSet<>();
-        Set<Sommet> sommets2 = new HashSet<>();
-        Random random = new Random();
-        Entrepôt entrepôt = this.fichierConcerné.getEntrepôt();
-        int premierIndexAléatoire = random.nextInt(fichierConcerné.getClients().size());
-        ArrayList<Client> clients = this.fichierConcerné.getClients();
-        sommets.add(entrepôt);
-        sommets2.add(entrepôt);
-        //sommets.add(clients.get(premierIndexAléatoire));
-        //clients.remove(premierIndexAléatoire);
-        //wgile boolean : if ajouter client rien else
-        Itinéraire itinéraire1 = new Itinéraire(sommets);
-        Itinéraire itinéraire2 = new Itinéraire(sommets2);
-        while (clients.size() > 0) {
-            int indexAléatoire = random.nextInt(fichierConcerné.getClients().size());
-            //sommets.add(clients.get(indexAléatoire));
-            boolean ajoutClient = itinéraire1.ajouterClient(clients.get(indexAléatoire));
-            //clients.remove(indexAléatoire);
-
-            if(ajoutClient = false) {
-
-                itinéraire1.ajouterClient(clients.get(indexAléatoire));
-                clients.remove(indexAléatoire);
-
-            } else {
-                Itinéraire it = new Itinéraire(sommets);
-                sommets.add(clients.get(indexAléatoire));
-                clients.remove(indexAléatoire);
-            }
-
-        }
-
-        Set<Itinéraire> itinéraires = new HashSet<>();
-        itinéraires.add(itinéraire1);
-        //itinéraires.add(itinéraire2);
-        Solution solution = new Solution(itinéraires);
-        System.out.println("oOOOOO");*/
-
-        //wgile boolean : if ajouter client rien else
-
         Random random = new Random();
 
+        // création d'une liste contenant les clients présents dans le fichier
         ArrayList<Client> clients = new ArrayList<>(this.fichierConcerné.getClients());
+        // récupération de l'entrêpot du fichier
         Entrepôt entrepôt = this.fichierConcerné.getEntrepôt();
-        ArrayList<Itinéraire> itinéraires = new ArrayList<>();
-        LinkedList<Client> sommets = new LinkedList<>();
+        // création d'un premier itinéraire sans client (il y a seulement l'entrepôt dans l'itinéraire)
         Itinéraire itinéraire = new Itinéraire(entrepôt);
+        // on crée une liste d'Itinéraire
+        ArrayList<Itinéraire> itinéraires = new ArrayList<>();
+        // on ajoute itinéraire à la liste d'Itinéraire
+        itinéraires.add(itinéraire);
 
-
+        // tant qu'il reste des clients dans le fichier
         while (clients.size() > 0) {
-            int premierIndexAléatoire = random.nextInt(fichierConcerné.getClients().size());
-            boolean ajoutClient = itinéraire.ajouterClient(clients.get(premierIndexAléatoire));
-            if(ajoutClient) {
-                sommets.add(clients.get(premierIndexAléatoire));
-                clients.remove(premierIndexAléatoire);
+
+            // on crée un index aléatoire
+            int indexAléatoire = random.nextInt(clients.size());
+
+            // si nous pouvons ajouter un client choisi aléatoirement dans la liste de clients au dernier Itinéraire ajouté à la liste d'itinéraires
+            // (si en ajoutant le client la capacité du véhicule ne dépasse pas 100)
+            if (itinéraires.get(itinéraires.size() - 1).ajouterClient(clients.get(indexAléatoire))) {
+                // on supprime le client de la liste pour s'occuper des clients restants
+                clients.remove(indexAléatoire);
             }
+            // sinon...
             else {
-
-
+                // on crée un nouvel itinéraire sans client (il y a seulement l'entrepôt dans l'itinéraire)
+                Itinéraire nouvelItinéraire = new Itinéraire(entrepôt);
+                // on ajoute le client au nouvel itinéraire
+                nouvelItinéraire.getListeClientsÀLivrer().add(clients.get(indexAléatoire));
+                // on supprime le client de la liste pour s'occuper des clients restants
+                clients.remove(indexAléatoire);
+                // on ajoute le nouvel itinéraire à la liste d'itinéraires
+                itinéraires.add(nouvelItinéraire);
             }
 
         }
 
+        // création d'une solution générée aléatoirement contenant les itinéraires
+        Solution solution = new Solution(itinéraires);
 
-
-
-        //todo : générer une solution aléatoire.
-        // Il faut se mettre d'accord sur ce qu'est une solution aléatoire ?
-        return null;
+        return solution;
     }
 
     /**
@@ -109,13 +83,14 @@ public class GénérateurSolutionsAléatoire
      * @param X le nombre de solutions aléatoires à créer.
      * @return une liste de X solutions générées aléatoirement.
      */
- /*   public ArrayList<Solution> générerXSolutionsAléatoire(int X)
-    {
+    public ArrayList<Solution> générerXSolutionsAléatoire(int X) throws EntrepôtNotFoundException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException {
         ArrayList<Solution> solutionsAléatoires = new ArrayList<Solution>();
+
+        // tant que l'index est inférieur à X, on boucle sur la méthode générerUneSolutionAléatoire()
         for(int i = 0; i < X; i++)
         {
             solutionsAléatoires.add(this.générerUneSolutionAléatoire());
         }
         return solutionsAléatoires;
-    }*/
+    }
 }

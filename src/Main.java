@@ -75,17 +75,9 @@ public class Main extends Application
         itinéraire.ajouterClient(cinquiemeClient);
         //Même résultat que précédemment car on veut ajouter un client mais nbMarchandises > 100
         // donc on ne l'ajoute pas à l'itinéraire (la liste chaînée listeClientsÀLivrer)
-        }
-
-        Itinéraire t = new Itinéraire(new ArrayList<Client>());
-
-            t.ajouterClient(new Client(0, 0, 0, 50));
-            t.ajouterClient(new Client(0, 0, 0, 24));
-            t.ajouterClient(new Client(0, 0, 0, 1));
-
-            
-        // lancement de l'interface
+        
         launch(args);
+
     }
 
     private static List<Fichier> chargerFichiersTest()

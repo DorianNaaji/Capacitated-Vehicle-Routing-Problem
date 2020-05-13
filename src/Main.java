@@ -1,4 +1,5 @@
 
+import algorithms.GénérateurSolutionsAléatoire;
 import customexceptions.EntrepôtNotFoundException;
 import customexceptions.SetOfSommetsIsEmptyException;
 import customexceptions.VehiculeCapacityOutOfBoundsException;
@@ -30,10 +31,16 @@ public class Main extends Application
         List<Fichier> fichiers = chargerFichiersTest();
         Fichier f0 = fichiers.get(0);
         Fichier f0réduit = new Fichier(new ArrayList<>(f0.getClients().subList(0, 5)), f0.getNomFichier() + "_modifié", f0.getEntrepôt());
+
+        //GénérateurSolutionsAléatoire générateurSolutionsAléatoire = new GénérateurSolutionsAléatoire(f0réduit);
+        //Solution solution = générateurSolutionsAléatoire.générerUneSolutionAléatoire();
+
+
         GrapheNonOrientéComplet gnoc = new GrapheNonOrientéComplet(f0réduit);
         Itinéraire i = new Itinéraire(gnoc.getSommets());
         mainGui.getController().drawItinéraire(i, Color.CORNFLOWERBLUE);
         System.out.println("start ended");
+
     }
 
     public static void main(String[] args) throws EntrepôtNotFoundException, VehiculeCapacityOutOfBoundsException, SetOfSommetsIsEmptyException {
@@ -75,7 +82,10 @@ public class Main extends Application
         itinéraire.ajouterClient(cinquiemeClient);
         //Même résultat que précédemment car on veut ajouter un client mais nbMarchandises > 100
         // donc on ne l'ajoute pas à l'itinéraire (la liste chaînée listeClientsÀLivrer)
-        
+        Client clientItin2 = new Client(1, 2, 4, 12);
+
+
+
         launch(args);
 
     }

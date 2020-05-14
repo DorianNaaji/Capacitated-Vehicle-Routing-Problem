@@ -50,6 +50,9 @@ public class Main extends Application
         /* tests de transformation de d'itinéraire dans une solution (insertion décalage) */
         transformateurDeSolutions.insertionDécalage(solution.getItinéraires().get(0));
 
+        /* tests de transformation de d'itinéraire dans une solution (inversion) */
+        transformateurDeSolutions.inversion(solution.getItinéraires().get(0));
+
         /* tests d'affichage */
         LinkedList<Client> clientsTest = new LinkedList<>(f0réduit.getClients());
         Entrepôt entrepôtTest = f0réduit.getEntrepôt();

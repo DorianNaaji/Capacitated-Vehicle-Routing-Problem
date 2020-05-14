@@ -46,8 +46,25 @@ public class TransformateurDeSolutions implements ITransformateur
     @Override
     public void insertionDécalage(Itinéraire i1)
     {
-        //todo (voir doc de la méthode)
-        throw new NotImplementedException();
+        // nombre de clients dans l'itinéraire
+        int nbClients = i1.getListeClientsÀLivrer().size();
+        Random random = new Random();
+        // génération d'un premier index aléatoire (de 0 à nbClients-1)
+        int premierIndexAléatoire = random.nextInt(nbClients);
+        // récupération du client positionné au premierIndexAléatoire
+        Client clientAReplacer = i1.getListeClientsÀLivrer().get(premierIndexAléatoire);
+        // on retire le client pioché aléatoirement de l'itinéraire
+        i1.retirerClient(clientAReplacer);
+        // génération d'un deuxième index aléatoire (de 0 à nbClients-1)
+        int deuxièmeIndexAléatoire = random.nextInt(nbClients);
+        // tant que les deux index aléatoires sont identiques...
+        while (premierIndexAléatoire == deuxièmeIndexAléatoire) {
+            // on regénère le deuxième index aléatoire
+            deuxièmeIndexAléatoire = random.nextInt((nbClients));
+        }
+        // on ajoute le client pioché aléatoirement à une position aléatoire et les éléments après le deuxièmeIndexAléatoire se décalent
+        i1.getListeClientsÀLivrer().add(deuxièmeIndexAléatoire, clientAReplacer);
+
     }
 
     @Override

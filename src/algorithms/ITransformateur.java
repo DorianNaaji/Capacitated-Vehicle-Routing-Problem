@@ -16,7 +16,7 @@ public interface ITransformateur
     public void transformationLocale(Itinéraire i1);
 
     /**
-     * Effectue unne opération d'insertion décalage d'un client sur un itinéraire.
+     * Effectue une opération d'insertion décalage d'un client sur un itinéraire.
      * Un client à une position i est pioché aléatoirement dans i1, retiré de i1, puis ajouté
      * à une position i+delta ou i-delta, delta étant aléatoirement généré.
      * @param i1 l'itinéraire sur lequel sera effectué l'insertion décalage.

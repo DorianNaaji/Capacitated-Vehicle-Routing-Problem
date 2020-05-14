@@ -45,9 +45,10 @@ public class Main extends Application
 
         /* tests de transformation de d'itinéraire dans une solution (transformation locale) */
         TransformateurDeSolutions transformateurDeSolutions = new TransformateurDeSolutions(solution);
-        transformateurDeSolutions.transformationLocale(solution.getItinéraires().get(0));
+        //transformateurDeSolutions.transformationLocale(solution.getItinéraires().get(0));
 
-
+        /* tests de transformation de d'itinéraire dans une solution (insertion décalage) */
+        transformateurDeSolutions.insertionDécalage(solution.getItinéraires().get(0));
 
         /* tests d'affichage */
         LinkedList<Client> clientsTest = new LinkedList<>(f0réduit.getClients());

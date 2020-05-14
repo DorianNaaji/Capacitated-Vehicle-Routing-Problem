@@ -79,14 +79,9 @@ public class ItinéraireTest {
         //1 Entrepôt + 3 Clients : Ce que l'on doit avoir : longueur totale = 15,236067 et nbMarchandises à livrer = 100 // OK !
         Client cinquiemeClient = new Client(5, 3, 7, 2);
         itinéraire.ajouterClient(cinquiemeClient);
-        double longueurTotaleExpected6 = utilitaires.Utilitaire.distanceEuclidienne(entrepôt.getPositionX(), entrepôt.getPositionY(), premierClient.getPositionX(), premierClient.getPositionY());
-        longueurTotaleExpected6 += utilitaires.Utilitaire.distanceEuclidienne(premierClient.getPositionX(), premierClient.getPositionY(), troisiemeClient.getPositionX(), troisiemeClient.getPositionY());
-        longueurTotaleExpected6 += utilitaires.Utilitaire.distanceEuclidienne(troisiemeClient.getPositionX(), troisiemeClient.getPositionY(), quatrièmeClient.getPositionX(), quatrièmeClient.getPositionY());
-        longueurTotaleExpected6 += utilitaires.Utilitaire.distanceEuclidienne(quatrièmeClient.getPositionX(), quatrièmeClient.getPositionY(), entrepôt.getPositionX(), entrepôt.getPositionY());
-        Assert.assertEquals(longueurTotaleExpected6,itinéraire.getLongueurTotale(),0.001);
+        Assert.assertEquals(longueurTotaleExpected5,itinéraire.getLongueurTotale(),0.001);
         System.out.println("= Test 6 longueur totale passed ✅ (1 entrepôt + 3 clients) =");
-        int nbMarchandisesExpected6 = premierClient.getNbMarchandisesÀLivrer() + troisiemeClient.getNbMarchandisesÀLivrer() + quatrièmeClient.getNbMarchandisesÀLivrer();
-        Assert.assertEquals(nbMarchandisesExpected6, itinéraire.getNbMarchandisesALivrer());
+        Assert.assertEquals(nbMarchandisesExpected5, itinéraire.getNbMarchandisesALivrer());
         System.out.println("= Test 6 nombre de marchandises total passed ✅ (1 entrepôt + 3 clients) =");
         //Même résultat que précédemment car on veut ajouter un client mais nbMarchandises > 100
         // donc on ne l'ajoute pas à l'itinéraire (la liste chaînée listeClientsÀLivrer)

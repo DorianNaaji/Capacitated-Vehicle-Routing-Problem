@@ -5,6 +5,7 @@ import java.util.Objects;
 /**
  * Représente une arête d'un graphe non orienté, avec un sommet1 et un sommet2.
  */
+@Deprecated
 public class Arête
 {
     /**

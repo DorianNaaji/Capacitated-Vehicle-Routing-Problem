@@ -18,6 +18,18 @@ public class Sommet
         this.positionY = posY;
     }
 
+    public double CalculCoût(Sommet voisin)
+    {
+        // Le coût est la distance entre deux sommets voisins.
+        return utilitaires.Utilitaire.distanceEuclidienne
+        (
+            this.getPositionX(),
+            this.getPositionY(),
+            voisin.getPositionX(),
+            voisin.getPositionY()
+        );
+    }
+
     /**
      * Récupère la position X du sommet dans le plan.
      * @return la position X du sommet dans le plan.

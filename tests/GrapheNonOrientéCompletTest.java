@@ -1,5 +1,3 @@
-package tests;
-
 import customexceptions.FileLoadException;
 import inout.Loader;
 import model.Client;

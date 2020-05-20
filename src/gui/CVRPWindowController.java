@@ -7,6 +7,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.util.Pair;
 import model.Client;
 import model.Entrepôt;
@@ -153,6 +156,26 @@ public class CVRPWindowController
     }
 
     /**
+     * Affiche le coût entre les deux sommets, à mi-chemin entre le départ et l'arrivée.
+     * @param départ le sommet de départ.
+     * @param arrivée le sommet d'arrivée.
+     */
+    private void drawCoût(Sommet départ, Sommet arrivée)
+    {
+        Pair<Integer, Integer> xyDépart = this.normaliserXY(départ.getPositionX(), départ.getPositionY());
+        Pair<Integer, Integer> xyArrivée = this.normaliserXY(arrivée.getPositionX(), arrivée.getPositionY());
+
+        int xMilieu = (xyDépart.getKey() + xyArrivée.getKey())/2;
+        int yMilieu = (xyDépart.getValue() + xyArrivée.getValue())/2;
+
+        // on crée un nouveau test.
+        Text t = new Text(xMilieu, yMilieu, String.format("%.2f",départ.CalculCoût(arrivée)));
+        t.setFill(Color.RED);
+        t.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        this.mainPane.getChildren().add(t);
+    }
+
+    /**
      * Dessine un itinéraire dans une couleur donnée.
      * @param itinéraire l'itinéraire à dessiner
      * @param c la couleur des points de l'itinéraire
@@ -163,15 +186,22 @@ public class CVRPWindowController
         this.drawClient(itinéraire.getListeClientsÀLivrer().get(0), c);
         // flèche de l'entrepôt au premier client
         this.drawFlèche(itinéraire.getEntrepôt(), itinéraire.getListeClientsÀLivrer().get(0));
+        // coût, de l'entrepôt au premier client.
+        this.drawCoût(itinéraire.getEntrepôt(), itinéraire.getListeClientsÀLivrer().get(0));
 
         // flèche de chaque client précédent au client courant
         for(int i = 1; i < itinéraire.getListeClientsÀLivrer().size(); i++)
         {
             this.drawClient(itinéraire.getListeClientsÀLivrer().get(i), c);
             this.drawFlèche(itinéraire.getListeClientsÀLivrer().get(i - 1), itinéraire.getListeClientsÀLivrer().get(i));
+            this.drawCoût(itinéraire.getListeClientsÀLivrer().get(i - 1), itinéraire.getListeClientsÀLivrer().get(i));
         }
         // flèche du client final à l'entrepôt
         this.drawFlèche(itinéraire.getListeClientsÀLivrer().get(itinéraire.getListeClientsÀLivrer().size() - 1), itinéraire.getEntrepôt());
+        // coût, de l'entrepôt au premier client.
+        this.drawCoût(itinéraire.getListeClientsÀLivrer().get(itinéraire.getListeClientsÀLivrer().size() - 1), itinéraire.getEntrepôt());
+
+
     }
 
     /**

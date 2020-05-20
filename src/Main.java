@@ -1,6 +1,5 @@
 
 import algorithms.GénérateurSolutionsAléatoire;
-import algorithms.TransformateurDeSolutions;
 import customexceptions.EntrepôtNotFoundException;
 import customexceptions.ListOfClientsIsEmptyException;
 import customexceptions.VehiculeCapacityOutOfBoundsException;
@@ -28,25 +27,10 @@ public class Main extends Application
         /* chargement de fichiers */
         List<Fichier> fichiers = chargerFichiers();
         Fichier f0 = fichiers.get(0);
-
+        
         /* tests de génération de solutions aléatoires sur le premier fichier */
         GénérateurSolutionsAléatoire générateurSolutionsAléatoire = new GénérateurSolutionsAléatoire(f0);
         Solution solution = générateurSolutionsAléatoire.générerUneSolutionAléatoire();
-
-        /* tests de génération de solutions aléatoires sur le deuxième fichier */
-        Fichier f1 = fichiers.get(1);
-        GénérateurSolutionsAléatoire générateurSolutionsAléatoire2 = new GénérateurSolutionsAléatoire(f1);
-        ArrayList<Solution> solutions = générateurSolutionsAléatoire2.générerXSolutionsAléatoire(3);
-
-        /* tests de transformation de d'itinéraire dans une solution (transformation locale) */
-        TransformateurDeSolutions transformateurDeSolutions = new TransformateurDeSolutions(solution);
-        //transformateurDeSolutions.transformationLocale(solution.getItinéraires().get(0));
-
-        /* tests de transformation de d'itinéraire dans une solution (insertion décalage) */
-        transformateurDeSolutions.insertionDécalage(solution.getItinéraires().get(0));
-
-        /* tests de transformation de d'itinéraire dans une solution (inversion) */
-        transformateurDeSolutions.inversion(solution.getItinéraires().get(0));
 
         /* tests d'affichage d'une solution aléatoire*/
         mainGui.getController().drawSolution(solution);
@@ -58,7 +42,7 @@ public class Main extends Application
         launch(args);
     }
 
-    private static List<Fichier> chargerFichiers()
+    public static List<Fichier> chargerFichiers()
     {
         /* Chargement des fichiers */
         ArrayList<Fichier> fichiers = null;

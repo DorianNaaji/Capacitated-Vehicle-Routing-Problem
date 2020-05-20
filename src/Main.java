@@ -10,11 +10,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import inout.Loader;
 import model.*;
-import model.graph.Sommet;
-import model.graph.GrapheNonOrientéComplet;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,7 +27,7 @@ public class Main extends Application
 
 
         /* chargement de fichiers */
-        List<Fichier> fichiers = chargerFichiersTest();
+        List<Fichier> fichiers = chargerFichiers();
         Fichier f0 = fichiers.get(0);
         Fichier f0réduit = new Fichier(new ArrayList<>(f0.getClients().subList(0, 5)), f0.getNomFichier() + "_modifié", f0.getEntrepôt());
 
@@ -61,31 +58,16 @@ public class Main extends Application
 
         /* tests d'affichage d'une solution aléatoire*/
         //mainGui.getController().drawSolution(solution);
-
-
         
         System.out.println("start ended");
     }
 
     public static void main(String[] args) throws EntrepôtNotFoundException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException
     {
-        // test chargement fichiers
-       /* List<Fichier> fichiers = chargerFichiersTest();
-        int tailleFichiers = fichiers.size();
-        for (int i=0; i<tailleFichiers; i++) {
-            ArrayList<Client> clients = fichiers.get(i).getClients();
-            Itinéraire itinéraire = new Itinéraire(clients);
-            Client clicli = new Client(100, 1, 2, 3);
-            System.out.println("Avant :" + itinéraire.getNbMarchandisesALivrer());
-            itinéraire.ajouterClient(clicli);
-            System.out.println("Après :" + itinéraire.getNbMarchandisesALivrer());
-        } */
-
         launch(args);
-
     }
 
-    private static List<Fichier> chargerFichiersTest()
+    private static List<Fichier> chargerFichiers()
     {
         /* Chargement des fichiers */
         ArrayList<Fichier> fichiers = null;

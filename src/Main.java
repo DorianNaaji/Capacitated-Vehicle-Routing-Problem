@@ -1,6 +1,5 @@
 
 import algorithms.GénérateurSolutionsAléatoire;
-import algorithms.TransformateurDeSolutions;
 import customexceptions.EntrepôtNotFoundException;
 import customexceptions.ListOfClientsIsEmptyException;
 import customexceptions.VehiculeCapacityOutOfBoundsException;
@@ -26,28 +25,9 @@ public class Main extends Application
         mainGui.show();
 
         /* chargement de fichiers */
-        List<Fichier> fichiers = chargerFichiersTest();
+        List<Fichier> fichiers = chargerFichiers();
         Fichier f0 = fichiers.get(0);
         Fichier f0réduit = new Fichier(new ArrayList<>(f0.getClients().subList(0, 5)), f0.getNomFichier() + "_modifié", f0.getEntrepôt());
-
-        /* tests de génération de solutions aléatoires sur le premier fichier */
-        GénérateurSolutionsAléatoire générateurSolutionsAléatoire = new GénérateurSolutionsAléatoire(f0);
-        Solution solution = générateurSolutionsAléatoire.générerUneSolutionAléatoire();
-
-        /* tests de génération de solutions aléatoires sur le deuxième fichier */
-        Fichier f1 = fichiers.get(1);
-        GénérateurSolutionsAléatoire générateurSolutionsAléatoire2 = new GénérateurSolutionsAléatoire(f1);
-        ArrayList<Solution> solutions = générateurSolutionsAléatoire2.générerXSolutionsAléatoire(3);
-
-        /* tests de transformation de d'itinéraire dans une solution (transformation locale) */
-        TransformateurDeSolutions transformateurDeSolutions = new TransformateurDeSolutions(solution);
-        //transformateurDeSolutions.transformationLocale(solution.getItinéraires().get(0));
-
-        /* tests de transformation de d'itinéraire dans une solution (insertion décalage) */
-        transformateurDeSolutions.insertionDécalage(solution.getItinéraires().get(0));
-
-        /* tests de transformation de d'itinéraire dans une solution (inversion) */
-        transformateurDeSolutions.inversion(solution.getItinéraires().get(0));
 
         /* tests d'affichage */
         LinkedList<Client> clientsTest = new LinkedList<>(f0réduit.getClients());
@@ -81,7 +61,7 @@ public class Main extends Application
 
     }
 
-    private static List<Fichier> chargerFichiersTest()
+    public static List<Fichier> chargerFichiers()
     {
         /* Chargement des fichiers */
         ArrayList<Fichier> fichiers = null;

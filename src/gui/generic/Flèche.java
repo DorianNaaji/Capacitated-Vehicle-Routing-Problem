@@ -13,6 +13,8 @@ public class Flèche extends Path
 
     private static final double defaultArrowHeadSize = 10.0;
 
+
+
     /**
      * Construit une flèche javafx.
      * @param startX position X de départ de la flèche.
@@ -26,7 +28,7 @@ public class Flèche extends Path
     {
         super();
         strokeProperty().bind(fillProperty());
-        setFill(c);
+        this.setFill(c);
 
         //Line
         this.getElements().add(new MoveTo(startX, startY));

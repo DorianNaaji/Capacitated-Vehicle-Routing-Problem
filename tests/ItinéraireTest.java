@@ -1,5 +1,3 @@
-package tests;
-
 import customexceptions.ListOfClientsIsEmptyException;
 import customexceptions.VehiculeCapacityOutOfBoundsException;
 import model.Client;

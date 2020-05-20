@@ -10,11 +10,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import inout.Loader;
 import model.*;
-import model.graph.Sommet;
-import model.graph.GrapheNonOrientéComplet;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,7 +24,6 @@ public class Main extends Application
         CVRPWindow mainGui = new CVRPWindow(primaryStage);
         // affichage de la fenêtre principale
         mainGui.show();
-
 
         /* chargement de fichiers */
         List<Fichier> fichiers = chargerFichiersTest();

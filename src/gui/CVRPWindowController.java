@@ -31,7 +31,7 @@ public class CVRPWindowController
     @FXML
     public void initialize()
     {
-        System.out.println("CVRPWindowController started");
+        //System.out.println("CVRPWindowController started");
         this.couleursDisponibles = this.get10CouleursArray();
         this.hauteurFenêtre = (int)this.mainPane.getPrefHeight();
         this.largeurFenêtre = (int)this.mainPane.getPrefWidth();
@@ -66,12 +66,12 @@ public class CVRPWindowController
         couleurs[1] = Color.BLUEVIOLET;
         couleurs[2] = Color.BROWN;
         couleurs[3] = Color.CORAL;
-        couleurs[4] = Color.CYAN;
+        couleurs[4] = Color.DEEPPINK;
         couleurs[5] = Color.DARKSEAGREEN;
-        couleurs[6] = Color.DARKGREEN;
-        couleurs[7] = Color.DARKMAGENTA;
-        couleurs[8] = Color.DEEPPINK;
-        couleurs[9] = Color.GOLD;
+        couleurs[6] = Color.GOLD;
+        couleurs[7] = Color.DARKGREEN;
+        couleurs[8] = Color.DARKMAGENTA;
+        couleurs[9] = Color.CYAN;
         //Color.DARKBLUE;
         return couleurs;
     }
@@ -93,6 +93,7 @@ public class CVRPWindowController
         c.setStrokeWidth(1);
         c.setStroke(Color.BLACK);
         this.mainPane.getChildren().add(c);
+
     }
 
 
@@ -138,8 +139,22 @@ public class CVRPWindowController
         Pair<Integer, Integer> xyDépart = this.normaliserXY(départ.getPositionX(), départ.getPositionY());
         Pair<Integer, Integer> xyArrivée = this.normaliserXY(arrivée.getPositionX(), arrivée.getPositionY());
         // on décale le départ et l'arrivée de 4 pixels pour une flèche plus smooth et qui ne déborde pas sur les points.
-        Flèche flèche = new Flèche(xyDépart.getKey() + 4, xyDépart.getValue(), xyArrivée.getKey() - 4, xyArrivée.getValue() - 4, c);
-        this.mainPane.getChildren().add(flèche);
+        double angle = Math.atan2((xyArrivée.getValue() - xyDépart.getValue()), (xyArrivée.getKey() - xyDépart.getValue()));
+        //System.out.println(angle);
+        if(angle < 0)
+        {
+            Flèche flèche = new Flèche(xyDépart.getKey(), xyDépart.getValue(), xyArrivée.getKey() + 4, xyArrivée.getValue() + 8, c);
+            this.mainPane.getChildren().add(flèche);
+
+        }
+        else
+        {
+            Flèche flèche = new Flèche(xyDépart.getKey(), xyDépart.getValue(), xyArrivée.getKey() - 4, xyArrivée.getValue() - 8 , c);
+            this.mainPane.getChildren().add(flèche);
+
+        }
+        //Flèche flèche = new Flèche(xyDépart.getKey(), xyDépart.getValue(), xyArrivée.getKey() - 4, xyArrivée.getValue() - 4, c);
+        //this.mainPane.getChildren().add(flèche);
     }
 
     /**
@@ -185,21 +200,21 @@ public class CVRPWindowController
         this.drawEntrepôt(itinéraire.getEntrepôt());
         this.drawClient(itinéraire.getListeClientsÀLivrer().get(0), c);
         // flèche de l'entrepôt au premier client
-        this.drawFlèche(itinéraire.getEntrepôt(), itinéraire.getListeClientsÀLivrer().get(0));
+        this.drawFlèche(itinéraire.getEntrepôt(), itinéraire.getListeClientsÀLivrer().get(0), c);
         // coût, de l'entrepôt au premier client.
-        this.drawCoût(itinéraire.getEntrepôt(), itinéraire.getListeClientsÀLivrer().get(0));
+        //this.drawCoût(itinéraire.getEntrepôt(), itinéraire.getListeClientsÀLivrer().get(0));
 
         // flèche de chaque client précédent au client courant
         for(int i = 1; i < itinéraire.getListeClientsÀLivrer().size(); i++)
         {
             this.drawClient(itinéraire.getListeClientsÀLivrer().get(i), c);
-            this.drawFlèche(itinéraire.getListeClientsÀLivrer().get(i - 1), itinéraire.getListeClientsÀLivrer().get(i));
-            this.drawCoût(itinéraire.getListeClientsÀLivrer().get(i - 1), itinéraire.getListeClientsÀLivrer().get(i));
+            this.drawFlèche(itinéraire.getListeClientsÀLivrer().get(i - 1), itinéraire.getListeClientsÀLivrer().get(i), c);
+            //this.drawCoût(itinéraire.getListeClientsÀLivrer().get(i - 1), itinéraire.getListeClientsÀLivrer().get(i));
         }
         // flèche du client final à l'entrepôt
-        this.drawFlèche(itinéraire.getListeClientsÀLivrer().get(itinéraire.getListeClientsÀLivrer().size() - 1), itinéraire.getEntrepôt());
+        this.drawFlèche(itinéraire.getListeClientsÀLivrer().get(itinéraire.getListeClientsÀLivrer().size() - 1), itinéraire.getEntrepôt(), c);
         // coût, de l'entrepôt au premier client.
-        this.drawCoût(itinéraire.getListeClientsÀLivrer().get(itinéraire.getListeClientsÀLivrer().size() - 1), itinéraire.getEntrepôt());
+        //this.drawCoût(itinéraire.getListeClientsÀLivrer().get(itinéraire.getListeClientsÀLivrer().size() - 1), itinéraire.getEntrepôt());
 
 
     }

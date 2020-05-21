@@ -5,15 +5,14 @@ import algorithms.TransformateurDeSolutions;
 import customexceptions.EntrepôtNotFoundException;
 import customexceptions.ListOfClientsIsEmptyException;
 import customexceptions.VehiculeCapacityOutOfBoundsException;
+import algorithms.TransformateurItinéraire;
 import gui.CVRPWindow;
 import javafx.application.Application;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import inout.Loader;
 import model.*;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -45,13 +44,13 @@ public class Main extends Application
             solutionOptimisée.ajouterTournée(itinéraireOptimisé);
         }*/
 
-
         /* tests d'affichage d'une solution aléatoire*/
         mainGui.getController().drawSolution(solutionOptimisée);
         System.out.println("start ended");
+
     }
 
-    public static void main(String[] args) throws EntrepôtNotFoundException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException
+    public static void main(String[] args)
     {
         launch(args);
     }
@@ -70,18 +69,6 @@ public class Main extends Application
             System.err.println("Une erreur est survenue. Impossible de continuer l'exécution du programme : ");
             e.printStackTrace();
         }
-
-        if(fichiers != null)
-        {
-            System.out.println(fichiers.size() + " fichiers ont été chargés");
-            /*
-            for(Fichier f : fichiers)
-            {
-                System.out.println(f.toString());
-            }
-            */
-        }
-
         return fichiers;
     }
 }

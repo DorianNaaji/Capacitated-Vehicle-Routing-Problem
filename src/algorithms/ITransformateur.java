@@ -1,5 +1,9 @@
 package algorithms;
 
+import customexceptions.DeuxOptAlgorithmException;
+import customexceptions.ItinéraireTooSmallException;
+import customexceptions.ListOfClientsIsEmptyException;
+import customexceptions.VehiculeCapacityOutOfBoundsException;
 import model.Itinéraire;
 
 /**
@@ -35,6 +39,7 @@ public interface ITransformateur
      * Effectue une transformation 2-opt sur un itinéraire donné.
      * La transformation 2-opt échange deux arêtes disjointes. Voir trello en ligne.
      * @param i1 l'itinéraire sur lequel effectuer la transformation 2-opt
+     * @return le nouvel itinéraire
      */
-    public void transformation2opt(Itinéraire i1);
+    public Itinéraire transformation2opt(Itinéraire i1) throws ItinéraireTooSmallException, DeuxOptAlgorithmException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException;
 }

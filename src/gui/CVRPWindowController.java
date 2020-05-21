@@ -31,7 +31,7 @@ public class CVRPWindowController
     @FXML
     public void initialize()
     {
-        System.out.println("CVRPWindowController started");
+        //System.out.println("CVRPWindowController started");
         this.couleursDisponibles = this.get10CouleursArray();
         this.hauteurFenêtre = (int)this.mainPane.getPrefHeight();
         this.largeurFenêtre = (int)this.mainPane.getPrefWidth();
@@ -140,7 +140,7 @@ public class CVRPWindowController
         Pair<Integer, Integer> xyArrivée = this.normaliserXY(arrivée.getPositionX(), arrivée.getPositionY());
         // on décale le départ et l'arrivée de 4 pixels pour une flèche plus smooth et qui ne déborde pas sur les points.
         double angle = Math.atan2((xyArrivée.getValue() - xyDépart.getValue()), (xyArrivée.getKey() - xyDépart.getValue()));
-        System.out.println(angle);
+        //System.out.println(angle);
         if(angle < 0)
         {
             Flèche flèche = new Flèche(xyDépart.getKey(), xyDépart.getValue(), xyArrivée.getKey() + 4, xyArrivée.getValue() + 8, c);

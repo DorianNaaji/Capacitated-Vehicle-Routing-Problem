@@ -1,18 +1,13 @@
 
 import algorithms.GénérateurSolutionsAléatoire;
-import algorithms.TransformateurDeSolutions;
-import customexceptions.EntrepôtNotFoundException;
-import customexceptions.ListOfClientsIsEmptyException;
-import customexceptions.VehiculeCapacityOutOfBoundsException;
+import algorithms.TransformateurItinéraire;
 import gui.CVRPWindow;
 import javafx.application.Application;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import inout.Loader;
 import model.*;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -39,21 +34,21 @@ public class Main extends Application
         ArrayList<Solution> solutions = générateurSolutionsAléatoire2.générerXSolutionsAléatoire(3);
 
         /* tests de transformation de d'itinéraire dans une solution (transformation locale) */
-        TransformateurDeSolutions transformateurDeSolutions = new TransformateurDeSolutions(solution);
-        //transformateurDeSolutions.transformationLocale(solution.getItinéraires().get(0));
+        TransformateurItinéraire transformateurItinéraire = new TransformateurItinéraire();
+        //TransformateurItinéraire.transformationLocale(solution.getItinéraires().get(0));
 
         /* tests de transformation de d'itinéraire dans une solution (insertion décalage) */
-        transformateurDeSolutions.insertionDécalage(solution.getItinéraires().get(0));
+        transformateurItinéraire.insertionDécalage(solution.getItinéraires().get(0));
 
         /* tests de transformation de d'itinéraire dans une solution (inversion) */
-        transformateurDeSolutions.inversion(solution.getItinéraires().get(0));
+        transformateurItinéraire.inversion(solution.getItinéraires().get(0));
 
         /* tests d'affichage d'une solution aléatoire*/
         mainGui.getController().drawSolution(solution);
-        System.out.println("start ended");
+        //System.out.println("start ended");
     }
 
-    public static void main(String[] args) throws EntrepôtNotFoundException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException
+    public static void main(String[] args)
     {
         launch(args);
     }
@@ -72,18 +67,6 @@ public class Main extends Application
             System.err.println("Une erreur est survenue. Impossible de continuer l'exécution du programme : ");
             e.printStackTrace();
         }
-
-        if(fichiers != null)
-        {
-            System.out.println(fichiers.size() + " fichiers ont été chargés");
-            /*
-            for(Fichier f : fichiers)
-            {
-                System.out.println(f.toString());
-            }
-            */
-        }
-
         return fichiers;
     }
 }

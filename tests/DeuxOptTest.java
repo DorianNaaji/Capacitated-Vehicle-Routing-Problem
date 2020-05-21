@@ -37,12 +37,11 @@ public class DeuxOptTest extends Application
     @Test
     public void transformation2OptTest() throws Exception
     {
-        TransformateurItinéraire tds = new TransformateurItinéraire();
         int bound = 5000;
         for(int i = 0; i < bound; i ++)
         {
             Itinéraire itinéraire = this.constructItinéraire();
-            Itinéraire newItinéraire = tds.transformation2opt(itinéraire);
+            Itinéraire newItinéraire = TransformateurItinéraire.transformation2opt(itinéraire);
             String itinéraireString = this.convertItinéraireToString(newItinéraire);
             Assert.assertTrue(Stream.of(this.cheminsPossibles).anyMatch(s -> s.equals(itinéraireString)));
         }

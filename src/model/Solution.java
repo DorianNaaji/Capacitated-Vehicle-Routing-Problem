@@ -114,4 +114,9 @@ public class Solution
     {
         return this.optimisationGlobale;
     }
+
+    public void setOptimisationGlobale(double optimisationGlobale)
+    {
+        this.optimisationGlobale = optimisationGlobale;
+    }
 }

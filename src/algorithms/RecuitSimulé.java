@@ -1,21 +1,18 @@
 package algorithms;
 
+import customexceptions.ItinéraireTooSmallException;
+import customexceptions.ListOfClientsIsEmptyException;
+import customexceptions.VehiculeCapacityOutOfBoundsException;
 import model.Itinéraire;
 import model.Solution;
 
 import java.util.Random;
 
-public class OptimisateurDeSolutions implements IOptimisateur {
-    //todo:le rôle de l'optimisateur est d'optimiser des solutions. Il implémentera par exemple Tabou ou recuit.
-    // Il effectuera des transformations sur les solutions jusqu'à amélioration des solutions.
+public class RecuitSimulé
+{
 
-    private Solution solution;
-
-    public OptimisateurDeSolutions(Solution s) {
-        this.solution = s;
-    }
-
-    public Solution recuitSimulé(Solution solutionInitiale, double températureInitiale, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature) {
+    public static Solution recuitSimulé(Solution solutionInitiale, double températureInitiale, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation) throws VehiculeCapacityOutOfBoundsException, ItinéraireTooSmallException, ListOfClientsIsEmptyException
+    {
 
         Random random = new Random();
 
@@ -42,12 +39,25 @@ public class OptimisateurDeSolutions implements IOptimisateur {
                     transformateurDeSolutions.inversion(solutionBase.getItinéraires().get(a));
                 }*/
 
-
+                // On choisit un itinéraire aléatoirement.
                 int indexAléatoire = random.nextInt(solutionBase.getItinéraires().size());
+                switch(transformation)
+               {
+                   case TransformationLocale:
+                       TransformateurItinéraire.transformationLocale(solutionBase.getItinéraires().get(indexAléatoire));
+                       break;
+                   case InsertionDécalage:
+                       TransformateurItinéraire.insertionDécalage(solutionBase.getItinéraires().get(indexAléatoire));
+                       break;
+                   case Inversion:
+                       TransformateurItinéraire.inversion(solutionBase.getItinéraires().get(indexAléatoire));
+                       break;
+                   case Transformation2Opt:
+                       solutionBase.getItinéraires().set(indexAléatoire, TransformateurItinéraire.transformation2opt(solutionBase.getItinéraires().get(indexAléatoire)));
+                       break;
+               }
+
                 // création d'une solution voisine à partir de solutionBase
-                TransformateurItinéraire transformateurDeSolutions = new TransformateurItinéraire();
-                transformateurDeSolutions.transformationLocale(solutionBase.getItinéraires().get(indexAléatoire));
-                //transformateurDeSolutions.transformationLocale(solutionBase.getItinéraires().get(1));
                 solutionBase.recalculerLongueurGlobale();
 
                 // on copie le contenu de solutionBase dans solutionVoisine
@@ -77,7 +87,7 @@ public class OptimisateurDeSolutions implements IOptimisateur {
           //  température *= coefficientDeDiminuationTempérature;
 
         }
-        System.out.println(meilleureSolution.getOptimisationGlobale());
+        //System.out.println(meilleureSolution.getOptimisationGlobale());
         return meilleureSolution;
     }
 
@@ -109,8 +119,7 @@ public class OptimisateurDeSolutions implements IOptimisateur {
                     transformateurDeSolutions.inversion(solutionBase.getItinéraires().get(a));
                 }*/
 
-                TransformateurItinéraire transformateurDeSolutions = new TransformateurItinéraire();
-                transformateurDeSolutions.transformationLocale(itinéraireBase);
+                TransformateurItinéraire.transformationLocale(itinéraireBase);
 
 
                 // on copie le contenu de solutionBase dans solutionVoisine

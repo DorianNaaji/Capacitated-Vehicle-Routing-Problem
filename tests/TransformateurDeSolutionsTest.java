@@ -64,8 +64,7 @@ public class TransformateurDeSolutionsTest {
         LinkedList<Client> clientsItinéraire3AvantTransformation = new LinkedList<>(itinéraire3.getListeClientsÀLivrer());
 
         /* tests de transformationd'itinéraire dans une solution (transformation locale) */
-        TransformateurItinéraire transformateurDeSolutions = new TransformateurItinéraire();
-        transformateurDeSolutions.transformationLocale(itinéraire1);
+        TransformateurItinéraire.transformationLocale(itinéraire1);
         // On récupère la taille de l'itinéraire 1 après la transformation locale
         int nbClientsItinéraire1AprèsTransformation = itinéraire1.getListeClientsÀLivrer().size();
         // Liste chaînée contenant les clients à livrer de l'itinéraire 1 après la transformation
@@ -78,7 +77,7 @@ public class TransformateurDeSolutionsTest {
         System.out.println("= Test passed (méthode de transformation locale) ✅ L'itinéraire 1 est bien changé =");
 
         /* tests de transformation d'itinéraire dans une solution (insertion décalage) */
-        transformateurDeSolutions.insertionDécalage(itinéraire2);
+        TransformateurItinéraire.insertionDécalage(itinéraire2);
         // On récupère la taille de l'itinéraire 2 après la transformation locale
         int nbClientsItinéraire2AprèsTransformation = itinéraire2.getListeClientsÀLivrer().size();
         // Liste chaînée contenant les clients à livrer de l'itinéraire 2 après la transformation
@@ -91,7 +90,7 @@ public class TransformateurDeSolutionsTest {
         System.out.println("= Test passed (méthode d'insertion décalage) ✅ L'itinéraire 2 est bien changé =");
 
         /* tests de transformation de d'itinéraire dans une solution (inversion) */
-        transformateurDeSolutions.inversion(itinéraire3);
+        TransformateurItinéraire.inversion(itinéraire3);
         // On récupère la taille de l'itinéraire 3 après la transformation locale
         int nbClientsItinéraire3AprèsTransformation = itinéraire3.getListeClientsÀLivrer().size();
         // Liste chaînée contenant les clients à livrer de l'itinéraire 3 après la transformation

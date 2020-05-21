@@ -53,7 +53,14 @@ public class RecuitSimulé
                        TransformateurItinéraire.inversion(solutionBase.getItinéraires().get(indexAléatoire));
                        break;
                    case Transformation2Opt:
-                       solutionBase.getItinéraires().set(indexAléatoire, TransformateurItinéraire.transformation2opt(solutionBase.getItinéraires().get(indexAléatoire)));
+                       try
+                       {
+                           solutionBase.getItinéraires().set(indexAléatoire, TransformateurItinéraire.transformation2opt(solutionBase.getItinéraires().get(indexAléatoire)));
+                       }
+                       catch(ItinéraireTooSmallException e)
+                       {
+                           TransformateurItinéraire.insertionDécalage(solutionBase.getItinéraires().get(indexAléatoire));
+                       }
                        break;
                }
 
@@ -91,7 +98,8 @@ public class RecuitSimulé
         return meilleureSolution;
     }
 
-    public Itinéraire recuitSimuléIt(Itinéraire itinéraireInitial, double températureInitiale, int changementDeTempérature, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature) throws CloneNotSupportedException {
+    public static Itinéraire recuitSimuléIt(Itinéraire itinéraireInitial, double températureInitiale, int changementDeTempérature, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation) throws VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException
+    {
 
         Random random = new Random();
 
@@ -119,7 +127,30 @@ public class RecuitSimulé
                     transformateurDeSolutions.inversion(solutionBase.getItinéraires().get(a));
                 }*/
 
-                TransformateurItinéraire.transformationLocale(itinéraireBase);
+                switch(transformation)
+                {
+                    case TransformationLocale:
+                        TransformateurItinéraire.transformationLocale(itinéraireBase);
+
+                        break;
+                    case InsertionDécalage:
+                        TransformateurItinéraire.insertionDécalage(itinéraireBase);
+                        break;
+                    case Inversion:
+                        TransformateurItinéraire.inversion(itinéraireBase);
+                        break;
+                    case Transformation2Opt:
+                        try
+                        {
+                            itinéraireBase = TransformateurItinéraire.transformation2opt(itinéraireBase);
+                        }
+                        catch(ItinéraireTooSmallException e)
+                        {
+                            //todo : décider de la meilleure transfo après le 2-opt
+                            TransformateurItinéraire.insertionDécalage(itinéraireBase);
+                        }
+                        break;
+                }
 
 
                 // on copie le contenu de solutionBase dans solutionVoisine
@@ -149,7 +180,7 @@ public class RecuitSimulé
             //  température *= coefficientDeDiminuationTempérature;
 
         }
-        System.out.println(meilleurItinéraire.getLongueurTotale());
+        //System.out.println(meilleurItinéraire.getLongueurTotale());
         return meilleurItinéraire;
     }
 }

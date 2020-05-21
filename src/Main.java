@@ -23,41 +23,58 @@ public class Main extends Application
 
         /* chargement de fichiers */
         List<Fichier> fichiers = chargerFichiers();
-        Fichier f0 = fichiers.get(0);
+        Fichier f0 = fichiers.get(16);
 
         /* tests de génération de solutions aléatoires sur le premier fichier */
         GénérateurSolutionsAléatoire générateurSolutionsAléatoire = new GénérateurSolutionsAléatoire(f0);
-        ArrayList<Solution> solutionsAléatoires = générateurSolutionsAléatoire.générerXSolutionsAléatoire(10);
+        ArrayList<Solution> solutionsAléatoires = générateurSolutionsAléatoire.générerXSolutionsAléatoire(1);
 
-//        //Solution s = générateurSolutionsAléatoire.générerUneSolutionAléatoire();
-//        RecuitSimulé ods = new RecuitSimulé(solutionsAléatoires.get(0));
-//        Solution optimisée = ods.recuitSimulé(solutionsAléatoires.get(0), 200, 1000, 0.95);
-//        mainGui.getController().drawSolution(optimisée);
+
 
         Solution best = new Solution();
         best.setOptimisationGlobale(Double.MAX_VALUE);
+
+        // ###### TEST AVEC recuitSimulé ###### //
+        /*
         for(int i = 0; i < solutionsAléatoires.size(); i++)
         {
             Solution solutionCourante = solutionsAléatoires.get(i);
             Solution solutionOptimisée = RecuitSimulé.recuitSimulé(solutionCourante,
-                    100,
-                    100,
+                    1000,
+                    1000,
                     0.99,
-                    Transformation.Inversion);
+                    Transformation.Transformation2Opt);
 
             if(solutionOptimisée.getOptimisationGlobale() < best.getOptimisationGlobale())
             {
                 best = solutionOptimisée;
             }
         }
+        */
 
-        /*Solution solutionOptimisée = new Solution();
-        for (int i = 0; i < solution.getItinéraires().size(); i++) {
-            Itinéraire itinéraireOptimisé = optimisateurDeSolutions.recuitSimuléIt(solution.getItinéraires().get(i), 200, 100, 10000, 0.95);
-            solutionOptimisée.ajouterTournée(itinéraireOptimisé);
-        }*/
+        // ###### TEST AVEC recuitSimuléIt ###### //
+        for(int i = 0; i < solutionsAléatoires.size(); i++)
+        {
+            Solution solutionOptimisée = new Solution();
+            for (int j = 0; j < solutionsAléatoires.get(i).getItinéraires().size(); j++) {
+
+                Itinéraire itinéraireOptimisé = RecuitSimulé.recuitSimuléIt(solutionsAléatoires.get(i).getItinéraires().get(j),
+                        200,
+                        100,
+                        500,
+                        0.95,
+                        Transformation.Transformation2Opt);
+                solutionOptimisée.ajouterTournée(itinéraireOptimisé);
+            }
+            if(solutionOptimisée.getOptimisationGlobale() < best.getOptimisationGlobale())
+            {
+                best = solutionOptimisée;
+            }
+        }
+
         mainGui.getController().drawSolution(best);
         System.out.println(best.getOptimisationGlobale());
+
 
     }
 

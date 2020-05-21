@@ -45,7 +45,7 @@ public class OptimisateurDeSolutions implements IOptimisateur {
 
                 int indexAléatoire = random.nextInt(solutionBase.getItinéraires().size());
                 // création d'une solution voisine à partir de solutionBase
-                TransformateurDeSolutions transformateurDeSolutions = new TransformateurDeSolutions(solutionBase);
+                TransformateurItinéraire transformateurDeSolutions = new TransformateurItinéraire();
                 transformateurDeSolutions.transformationLocale(solutionBase.getItinéraires().get(indexAléatoire));
                 //transformateurDeSolutions.transformationLocale(solutionBase.getItinéraires().get(1));
                 solutionBase.recalculerLongueurGlobale();
@@ -109,7 +109,7 @@ public class OptimisateurDeSolutions implements IOptimisateur {
                     transformateurDeSolutions.inversion(solutionBase.getItinéraires().get(a));
                 }*/
 
-                TransformateurDeSolutions transformateurDeSolutions = new TransformateurDeSolutions(solution);
+                TransformateurItinéraire transformateurDeSolutions = new TransformateurItinéraire();
                 transformateurDeSolutions.transformationLocale(itinéraireBase);
 
 

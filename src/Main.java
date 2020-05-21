@@ -1,7 +1,6 @@
 
 import algorithms.GénérateurSolutionsAléatoire;
 import algorithms.OptimisateurDeSolutions;
-import algorithms.TransformateurDeSolutions;
 import customexceptions.EntrepôtNotFoundException;
 import customexceptions.ListOfClientsIsEmptyException;
 import customexceptions.VehiculeCapacityOutOfBoundsException;

@@ -1,5 +1,5 @@
 import algorithms.GénérateurSolutionsAléatoire;
-import algorithms.TransformateurDeSolutions;
+import algorithms.TransformateurItinéraire;
 import customexceptions.EntrepôtNotFoundException;
 import customexceptions.ListOfClientsIsEmptyException;
 import customexceptions.VehiculeCapacityOutOfBoundsException;
@@ -64,7 +64,7 @@ public class TransformateurDeSolutionsTest {
         LinkedList<Client> clientsItinéraire3AvantTransformation = new LinkedList<>(itinéraire3.getListeClientsÀLivrer());
 
         /* tests de transformationd'itinéraire dans une solution (transformation locale) */
-        TransformateurDeSolutions transformateurDeSolutions = new TransformateurDeSolutions(solution);
+        TransformateurItinéraire transformateurDeSolutions = new TransformateurItinéraire();
         transformateurDeSolutions.transformationLocale(itinéraire1);
         // On récupère la taille de l'itinéraire 1 après la transformation locale
         int nbClientsItinéraire1AprèsTransformation = itinéraire1.getListeClientsÀLivrer().size();

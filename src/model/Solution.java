@@ -1,5 +1,7 @@
 package model;
 
+import model.graph.Sommet;
+
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -24,8 +26,25 @@ public class Solution
     {
         // initialise l'attribut
         this.itinéraires = _itinéraires;
+
         // calcul de la longueur globale de la tournée
-        this.optimisationGlobale = this.calculerLongueurGlobale();
+        this.recalculerLongueurGlobale();
+    }
+
+    public Solution() {
+        this.itinéraires = new ArrayList<>();
+        this.optimisationGlobale = 0;
+    }
+
+    public Solution(Solution s) {
+        this.itinéraires = new ArrayList<Itinéraire>();
+        for(Itinéraire i: s.getItinéraires()) {
+            this.itinéraires.add(new Itinéraire(i));
+            //this.optimisationGlobale += i.getLongueurTotale();
+        }
+        //this.recalculerLongueurGlobale();
+
+        this.optimisationGlobale = s.getOptimisationGlobale();
     }
 
     /**
@@ -68,14 +87,14 @@ public class Solution
      * Calcule la longueur globale de l'ensemble des itinéraires
      * @return la longueur totale des itinéraires de l'ensemble.
      */
-    private double calculerLongueurGlobale()
+    public void recalculerLongueurGlobale()
     {
-        double optimisationGlobale = 0.00;
+        double optimisationGlobaleRecalculée = 0.00;
         for(Itinéraire t : this.itinéraires)
         {
-            optimisationGlobale += t.getLongueurTotale();
+            optimisationGlobaleRecalculée += t.getLongueurTotale();
         }
-        return optimisationGlobale;
+        this.optimisationGlobale = optimisationGlobaleRecalculée;
     }
 
     /**

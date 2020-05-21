@@ -40,6 +40,22 @@ public class Itinéraire
      */
     private Véhicule véhicule;
 
+    public Itinéraire(Itinéraire itinéraire) {
+       // this.longueurTotale = itinéraire.longueurTotale;
+        //this.nbMarchandisesALivrer = itinéraire.nbMarchandisesALivrer;
+        this.listeClientsÀLivrer = new LinkedList<Client>();
+        this.entrepôt = new Entrepôt(itinéraire.getEntrepôt().getPositionX(), itinéraire.getEntrepôt().getPositionY());
+        for (Client c : itinéraire.getListeClientsÀLivrer()) {
+            this.listeClientsÀLivrer.add(new Client(c.getNumeroClient(), c.getPositionX(), c.getPositionY(), c.getNbMarchandisesÀLivrer()));
+        }
+        this.recalculerDistanceEtNbMarchandises();
+        //this.longueurTotale = itinéraire.getLongueurTotale();
+        //this.nbMarchandisesALivrer = itinéraire.getNbMarchandisesALivrer();
+
+        //this.recalculerDistanceEtNbMarchandises();
+        //this.longueurTotale = itinéraire.longueurTotale;
+    }
+
     /**
      * Constructeur d'un itinéraire. Il prend en paramètre une liste chaînée de clients, qui correspond à l'ordre
      * des clients à livrer. L'entrepôt doit également être spécifié. Il sera le point de départ et l'arrivée de l'itinéraire
@@ -90,6 +106,7 @@ public class Itinéraire
      */
     public double getLongueurTotale()
     {
+        this.recalculerDistanceEtNbMarchandises();
         return this.longueurTotale;
     }
 
@@ -230,6 +247,7 @@ public class Itinéraire
     {
         return Objects.hash(listeClientsÀLivrer, entrepôt, longueurTotale, nbMarchandisesALivrer, véhicule);
     }
+
 }
 
 

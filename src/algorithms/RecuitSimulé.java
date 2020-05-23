@@ -59,13 +59,13 @@ public class RecuitSimulé
                 int indexAléatoire2 = random.nextInt(solutionBase.getItinéraires().size());
                 switch(transformation)
                {
-                   case TransformationLocale:
+                   case TransformationÉchange:
                        if (isMétaTransformation) {
                            TransformateurEntreItinéraires.transformationLocale(solutionBase.getItinéraires().get(indexAléatoire1),
                                    solutionBase.getItinéraires().get(indexAléatoire2));
                        }
                        else {
-                           TransformateurItinéraire.transformationLocale(solutionBase.getItinéraires().get(indexAléatoire1));
+                           TransformateurItinéraire.transformationÉchange(solutionBase.getItinéraires().get(indexAléatoire1));
                        }
 
                        break;
@@ -159,8 +159,8 @@ public class RecuitSimulé
 
                 switch(transformation)
                 {
-                    case TransformationLocale:
-                        TransformateurItinéraire.transformationLocale(itinéraireBase);
+                    case TransformationÉchange:
+                        TransformateurItinéraire.transformationÉchange(itinéraireBase);
 
                         break;
                     case InsertionDécalage:

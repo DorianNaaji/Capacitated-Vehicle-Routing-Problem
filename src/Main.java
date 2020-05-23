@@ -58,7 +58,7 @@ public class Main extends Application
             Solution solutionOptimisée = new Solution();
             for (int j = 0; j < solutionsAléatoires.get(i).getItinéraires().size(); j++) {
 
-                Itinéraire itinéraireOptimisé = RecuitSimulé.recuitSimuléIt(solutionsAléatoires.get(i).getItinéraires().get(j),
+                Itinéraire itinéraireOptimisé = RecuitSimulé.recuitSimuléItinéraire(solutionsAléatoires.get(i).getItinéraires().get(j),
                         200,
                         100,
                         500,

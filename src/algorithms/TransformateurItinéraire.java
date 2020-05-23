@@ -26,7 +26,7 @@ public class TransformateurItinéraire
      * Transforme localement une solution, en échangeant de place deux clients choisis arbitrairement parmi itinéraire.
      * @param itinéraire l'itinéraire au sein duquel la transformation sera effectuée.
      */
-    public static void transformationLocale(Itinéraire itinéraire)
+    public static void transformationÉchange(Itinéraire itinéraire)
     {
         // nombre de clients dans l'itinéraire
         int nbClients = itinéraire.getListeClientsÀLivrer().size();

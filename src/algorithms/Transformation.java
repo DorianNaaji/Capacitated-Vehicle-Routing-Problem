@@ -6,7 +6,7 @@ package algorithms;
  */
 public enum Transformation
 {
-    TransformationLocale,
+    TransformationÉchange,
     InsertionDécalage,
     Inversion,
     Transformation2Opt,

@@ -1,4 +1,3 @@
-import algorithms.GénérateurSolutionsAléatoire;
 import algorithms.TransformateurItinéraire;
 import customexceptions.EntrepôtNotFoundException;
 import customexceptions.ListOfClientsIsEmptyException;
@@ -9,7 +8,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 public class TransformateurDeSolutionsTest {
 
@@ -64,7 +62,7 @@ public class TransformateurDeSolutionsTest {
         LinkedList<Client> clientsItinéraire3AvantTransformation = new LinkedList<>(itinéraire3.getListeClientsÀLivrer());
 
         /* tests de transformationd'itinéraire dans une solution (transformation locale) */
-        TransformateurItinéraire.transformationLocale(itinéraire1);
+        TransformateurItinéraire.transformationÉchange(itinéraire1);
         // On récupère la taille de l'itinéraire 1 après la transformation locale
         int nbClientsItinéraire1AprèsTransformation = itinéraire1.getListeClientsÀLivrer().size();
         // Liste chaînée contenant les clients à livrer de l'itinéraire 1 après la transformation

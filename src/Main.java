@@ -33,12 +33,12 @@ public class Main extends Application
         /* ------------------------------ PARAMÈTRES ------------------------------ */
         /* les paramètres de bases relatifs à la génération et au fichier */
         Fichier fx = fichiers.get(0);
-        int nbSolutionsAléatoiresInitiales = 10;
+        int nbSolutionsAléatoiresInitiales = 5;
         Génération typeDeGénération = Génération.ALÉATOIRE;
         int seuilCapacitéMaxItinéraireGénération = 70;
         /* paramètres de transformation */
-        Transformation typeDeTransformation = Transformation.Transformation2Opt;
-        boolean utilisationDeMétaTransformations = false;
+        Transformation typeDeTransformation = Transformation.TransformationÉchange;
+        boolean utilisationDeMétaTransformations = true;
         /* ------------------------------ PARAMÈTRES ------------------------------ */
 
 
@@ -49,12 +49,13 @@ public class Main extends Application
         // décommenter le test voulu et éventuellement modifier les paramètres.
 
         // affichage
-        System.out.println("---DÉBUT DU TEST---");
+        System.out.println("---DÉBUT DU TEST---\n");
         ZonedDateTime now = ZonedDateTime.now();
 
         /* ---------------- test avec recuitSimulé  ---------------- */
 
-        /*
+
+
         Solution best = testRecuit(fx,
                         nbSolutionsAléatoiresInitiales,
                         typeDeGénération,
@@ -62,10 +63,12 @@ public class Main extends Application
                         200,
                         500,
                         0.99,
-                        typeDeTransformation);
-         */
+                        typeDeTransformation,
+                        utilisationDeMétaTransformations);
+
 
         /* ---------- test avec recuitSimuléItinéraires -----------  */
+
 
         /*
         Solution best = testRecuitItinéraire(fx,
@@ -75,9 +78,9 @@ public class Main extends Application
                         200,
                         500,
                         0.99,
-                        utilisationDeMétaTransformations,
                         typeDeTransformation);
-        */
+         */
+
 
         /* ------------------- test avec tabou ------------------- */
 
@@ -87,6 +90,7 @@ public class Main extends Application
             typeDeRechercheVoisinage = TypeDeRechercheVoisinage.COMPLEXE;
         }
 
+        /*
         Solution best = testTabou(fx,
                         nbSolutionsAléatoiresInitiales,
                         typeDeGénération,
@@ -96,16 +100,19 @@ public class Main extends Application
                         50,
                         typeDeTransformation,
                         typeDeRechercheVoisinage);
+        */
+
+
 
         /*                             FIN ZONE DE TESTS                                  */
         /* ------------------------------------------------------------------------------ */
 
 
         mainGui.getController().drawSolution(best);
-        System.out.println("MEILLEURE : " + best.getOptimisationGlobale());
 
-        long seconds = now.until(ZonedDateTime.now(), ChronoUnit.SECONDS);
-        System.out.println("-FIN DU TEST en " + seconds + " secondes. -");
+        long millis = now.until(ZonedDateTime.now(), ChronoUnit.MILLIS);
+        double sec = (double)millis/1000;
+        System.out.println("\n---FIN DU TEST en " + sec + " secondes. ---");
         System.out.println("Meilleure solution : " + best.getOptimisationGlobale());
     }
 
@@ -118,11 +125,12 @@ public class Main extends Application
      * @param températureInitiale todo
      * @param nombreDeVoisinsParTempérature todo
      * @param coefficientDeDiminutionTempérature todo
+     * @param isMétaTransformations Indique si des méta-transformations sont utilisées ou non
      * @param typeDeTransformation le type de transformation à utiliser pour le recuit.
      * @return la meilleure solution trouvée
      * @throws Exception en cas d'erreurs diverses...
      */
-    private static Solution testRecuit(Fichier fichier, int nbSolutionsInitiales, Génération typeGénération, int seuil, int températureInitiale, int nombreDeVoisinsParTempérature, double coefficientDeDiminutionTempérature, Transformation typeDeTransformation) throws Exception
+    private static Solution testRecuit(Fichier fichier, int nbSolutionsInitiales, Génération typeGénération, int seuil, int températureInitiale, int nombreDeVoisinsParTempérature, double coefficientDeDiminutionTempérature, Transformation typeDeTransformation,  boolean isMétaTransformations) throws Exception
     {
         Solution best = new Solution();
         best.setOptimisationGlobale(Double.MAX_VALUE);
@@ -136,7 +144,8 @@ public class Main extends Application
                                         températureInitiale,
                                         nombreDeVoisinsParTempérature,
                                         coefficientDeDiminutionTempérature,
-                                        typeDeTransformation);
+                                        typeDeTransformation,
+                                        isMétaTransformations);
 
             if(solutionOptimisée.getOptimisationGlobale() < best.getOptimisationGlobale())
             {
@@ -155,13 +164,11 @@ public class Main extends Application
      * @param seuil le seuil (optionnel) qui correspond à la capacité maximale qui ne doit pas être dépassée par les itinéraires des solutions lors de leur génération. Laisser à 0 si le type de génération est aléatoire ou proche en proche.
      * @param températureInitiale todo
      * @param nombreDeVoisinsParTempérature todo
-     * @param coefficientDeDiminutionTempérature todo
-     * @param isMétaTransformations Indique si des méta-transformations sont utilisées ou non todo
      * @param typeDeTransformation le type de transformation à utiliser pour le recuit.
      * @return la meilleure solution trouvée
      * @throws Exception en cas d'erreurs diverses...
      */
-    private static Solution testRecuitItinéraire(Fichier fichier, int nbSolutionsInitiales, Génération typeGénération, int seuil, int températureInitiale, int nombreDeVoisinsParTempérature, double coefficientDeDiminutionTempérature, boolean isMétaTransformations, Transformation typeDeTransformation) throws Exception
+    private static Solution testRecuitItinéraire(Fichier fichier, int nbSolutionsInitiales, Génération typeGénération, int seuil, int températureInitiale, int nombreDeVoisinsParTempérature, double coefficientDeDiminutionTempérature, Transformation typeDeTransformation) throws Exception
     {
         System.out.println("-RECUIT SUR ITINÉRAIRES-");
 

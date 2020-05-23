@@ -142,8 +142,8 @@ public class TransformateurItinéraire
                 case InsertionDécalage:
                     TransformateurItinéraire.insertionDécalage(_itinéraire);
                     return _itinéraire;
-                case TransformationLocale:
-                    TransformateurItinéraire.transformationLocale(_itinéraire);
+                case TransformationÉchange:
+                    TransformateurItinéraire.transformationÉchange(_itinéraire);
                     return _itinéraire;
                 default:
                     throw new ItinéraireTooSmallException(_itinéraire);

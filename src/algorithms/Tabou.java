@@ -121,8 +121,8 @@ public class Tabou
             {
                 switch(transfo)
                 {
-                    case TransformationLocale:
-                        TransformateurItinéraire.transformationLocale(itinéraire);
+                    case TransformationÉchange:
+                        TransformateurItinéraire.transformationÉchange(itinéraire);
                         break;
                     case InsertionDécalage:
                         TransformateurItinéraire.insertionDécalage(itinéraire);
@@ -135,7 +135,7 @@ public class Tabou
                         //todo : décider de la meilleure transfo après le 2-opt
                         int  indexOfitinéraireModif = voisin.getItinéraires().indexOf(itinéraire);
                         Itinéraire itinéraireModif = voisin.getItinéraires().get(indexOfitinéraireModif);
-                        itinéraireModif = TransformateurItinéraire.transformation2opt(itinéraireModif, Transformation.TransformationLocale);
+                        itinéraireModif = TransformateurItinéraire.transformation2opt(itinéraireModif, Transformation.TransformationÉchange);
                         voisin.getItinéraires().set(indexOfitinéraireModif, itinéraireModif);
                         break;
                     default:

@@ -26,9 +26,8 @@ public class RecuitSimulé
      * @throws ItinéraireTooSmallException
      * @throws ListOfClientsIsEmptyException
      */
-    public static Solution recuitSimulé(Solution solutionInitiale, double températureInitiale, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation, boolean isMétaTransformation) throws VehiculeCapacityOutOfBoundsException, ItinéraireTooSmallException, ListOfClientsIsEmptyException)
+    public static Solution recuitSimulé(Solution solutionInitiale, double températureInitiale, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation, boolean isMétaTransformation) throws VehiculeCapacityOutOfBoundsException, ItinéraireTooSmallException, ListOfClientsIsEmptyException, UnhandledTransformationException
     {
-
         Random random = new Random();
 
         double température = températureInitiale;
@@ -81,13 +80,26 @@ public class RecuitSimulé
 
                        break;
                    case Inversion:
-                       TransformateurItinéraire.inversion(solutionBase.getItinéraires().get(indexAléatoire1));
+                       if (!isMétaTransformation) {
+                           TransformateurItinéraire.inversion(solutionBase.getItinéraires().get(indexAléatoire1));
+
+                       }
+                       else
+                       {
+                           throw new UnsupportedOperationException();
+                       }
                        break;
                    case Transformation2Opt:
-                       // En backup du 2-opt, on utilise une insertion décalage
-                       //todo : décider de la meilleure transfo après le 2-opt
-                       solutionBase.getItinéraires().set(indexAléatoire,
-                               TransformateurItinéraire.transformation2opt(solutionBase.getItinéraires().get(indexAléatoire), Transformation.TransformationLocale));
+                       // En backup du 2-opt, on utilise une transformation échange
+                       if(!isMétaTransformation)
+                       {
+                           solutionBase.getItinéraires().set(indexAléatoire1,
+                                   TransformateurItinéraire.transformation2opt(solutionBase.getItinéraires().get(indexAléatoire1), Transformation.TransformationÉchange));
+                       }
+                       else
+                       {
+                           throw new UnsupportedOperationException();
+                       }
                        break;
                    default:
                        throw new UnhandledTransformationException(transformation, RecuitSimulé.class);
@@ -172,7 +184,7 @@ public class RecuitSimulé
                     case Transformation2Opt:
                         // En backup du 2-opt, on utilise une insertion décalage
                         //todo : décider de la meilleure transfo après le 2-opt
-                        itinéraireBase = TransformateurItinéraire.transformation2opt(itinéraireBase, Transformation.TransformationLocale);
+                        itinéraireBase = TransformateurItinéraire.transformation2opt(itinéraireBase, Transformation.TransformationÉchange);
                         break;
                     default:
                         throw new UnhandledTransformationException(transformation, RecuitSimulé.class);

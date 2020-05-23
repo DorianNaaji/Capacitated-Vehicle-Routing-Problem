@@ -188,10 +188,11 @@ public class Main extends Application
 
                 Itinéraire itinéraireOptimisé = RecuitSimulé.recuitSimuléItinéraire(solutionCourante.getItinéraires().get(j),
                                                 températureInitiale,
-                                                //todo
-                                                100,
                                                 nombreDeVoisinsParTempérature,
                                                 coefficientDeDiminutionTempérature,
+                                                200,
+                                                500,
+                                                0.95,
                                                 typeDeTransformation);
                                                 solutionOptimisée.ajouterTournée(itinéraireOptimisé);
             }

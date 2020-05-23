@@ -2,6 +2,7 @@ package algorithms;
 
 import customexceptions.ItinéraireTooSmallException;
 import customexceptions.ListOfClientsIsEmptyException;
+import customexceptions.UnhandledTransformationException;
 import customexceptions.VehiculeCapacityOutOfBoundsException;
 import model.Itinéraire;
 import model.Solution;
@@ -11,7 +12,7 @@ import java.util.Random;
 public class RecuitSimulé
 {
 
-    public static Solution recuitSimulé(Solution solutionInitiale, double températureInitiale, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation) throws VehiculeCapacityOutOfBoundsException, ItinéraireTooSmallException, ListOfClientsIsEmptyException
+    public static Solution recuitSimulé(Solution solutionInitiale, double températureInitiale, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation) throws VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException, ItinéraireTooSmallException, UnhandledTransformationException
     {
 
         Random random = new Random();
@@ -53,15 +54,14 @@ public class RecuitSimulé
                        TransformateurItinéraire.inversion(solutionBase.getItinéraires().get(indexAléatoire));
                        break;
                    case Transformation2Opt:
-                       try
-                       {
-                           solutionBase.getItinéraires().set(indexAléatoire, TransformateurItinéraire.transformation2opt(solutionBase.getItinéraires().get(indexAléatoire)));
-                       }
-                       catch(ItinéraireTooSmallException e)
-                       {
-                           TransformateurItinéraire.insertionDécalage(solutionBase.getItinéraires().get(indexAléatoire));
-                       }
+                       // En backup du 2-opt, on utilise une insertion décalage
+                       //todo : décider de la meilleure transfo après le 2-opt
+                       solutionBase.getItinéraires().set(indexAléatoire,
+                               TransformateurItinéraire.transformation2opt(solutionBase.getItinéraires().get(indexAléatoire), Transformation.TransformationLocale));
                        break;
+                   default:
+                       throw new UnhandledTransformationException(transformation, RecuitSimulé.class);
+
                }
 
                 // création d'une solution voisine à partir de solutionBase
@@ -98,7 +98,7 @@ public class RecuitSimulé
         return meilleureSolution;
     }
 
-    public static Itinéraire recuitSimuléIt(Itinéraire itinéraireInitial, double températureInitiale, int changementDeTempérature, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation) throws VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException
+    public static Itinéraire recuitSimuléIt(Itinéraire itinéraireInitial, double températureInitiale, int changementDeTempérature, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation) throws VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException, ItinéraireTooSmallException, UnhandledTransformationException
     {
 
         Random random = new Random();
@@ -140,18 +140,13 @@ public class RecuitSimulé
                         TransformateurItinéraire.inversion(itinéraireBase);
                         break;
                     case Transformation2Opt:
-                        try
-                        {
-                            itinéraireBase = TransformateurItinéraire.transformation2opt(itinéraireBase);
-                        }
-                        catch(ItinéraireTooSmallException e)
-                        {
-                            //todo : décider de la meilleure transfo après le 2-opt
-                            TransformateurItinéraire.insertionDécalage(itinéraireBase);
-                        }
+                        // En backup du 2-opt, on utilise une insertion décalage
+                        //todo : décider de la meilleure transfo après le 2-opt
+                        itinéraireBase = TransformateurItinéraire.transformation2opt(itinéraireBase, Transformation.TransformationLocale);
                         break;
+                    default:
+                        throw new UnhandledTransformationException(transformation, RecuitSimulé.class);
                 }
-
 
                 // on copie le contenu de solutionBase dans solutionVoisine
                 Itinéraire itinéraireVoisin = new Itinéraire(itinéraireBase);

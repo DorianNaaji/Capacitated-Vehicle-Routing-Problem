@@ -66,7 +66,6 @@ public class Solution
         {
             throw new IllegalArgumentException("La tournée est déjà présente dans l'ensemble des itinéraires");
         }
-        //todo : voir si d'autres opérations sont nécessaires lors de l'ajout d'une tournée
     }
 
 
@@ -80,7 +79,6 @@ public class Solution
             // et on soustrait la longueur totale de la tournée à la longueur globale de la solution.
             this.optimisationGlobale -= t.getLongueurTotale();
         }
-        // todo : voir si d'autres opérations sont nécessaires lorsqu'on retire une tournée.
     }
 
     /**

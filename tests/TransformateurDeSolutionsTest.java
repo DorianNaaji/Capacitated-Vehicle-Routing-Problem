@@ -1,4 +1,3 @@
-import algorithms.GénérateurSolutionsAléatoire;
 import algorithms.TransformateurItinéraire;
 import customexceptions.EntrepôtNotFoundException;
 import customexceptions.ListOfClientsIsEmptyException;
@@ -9,7 +8,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 public class TransformateurDeSolutionsTest {
 

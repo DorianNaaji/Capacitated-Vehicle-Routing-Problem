@@ -22,7 +22,6 @@ public class GrapheNonOrientéCompletTest
     @Test
     public void TestNbArêtesGrapheNonOrientéComplet() throws FileLoadException
     {
-        System.out.println("=== GrapheNonOrientéCompletTest ===");
         Loader loader = new Loader();
         List<Fichier> fichiers = loader.chargerTousLesFichiers();
         Fichier f0 = fichiers.get(0);
@@ -50,7 +49,7 @@ public class GrapheNonOrientéCompletTest
         int nbSommets = i + 1;
         int nbArêtesExpected2 = (nbSommets*(nbSommets-1))/2;
         Assert.assertEquals(nbArêtesExpected2, gnoc2.getArêtes().size());
-        System.out.println("= Test passed ✅ =");
+        System.out.println("= GrapheNonOrientéCompletTest passed ✅ =");
     }
 
 }

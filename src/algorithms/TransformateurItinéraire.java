@@ -1,9 +1,6 @@
 package algorithms;
 
-import customexceptions.DeuxOptAlgorithmException;
-import customexceptions.ItinéraireTooSmallException;
-import customexceptions.ListOfClientsIsEmptyException;
-import customexceptions.VehiculeCapacityOutOfBoundsException;
+import customexceptions.*;
 import javafx.util.Pair;
 import model.Client;
 import model.Entrepôt;
@@ -120,17 +117,37 @@ public class TransformateurItinéraire
         }
     }
 
+
     /**
+     /**
      * Effectue une transformation 2-opt sur un itinéraire donné.
-     * La transformation 2-opt échange deux arêtes disjointes. Voir trello en ligne.
-     * @param _itinéraire l'itinéraire sur lequel effectuer la transformation 2-opt
+     * La transformation 2-opt échange deux arêtes disjointes.
+     * @param _itinéraire l'itinéraire sur lequel effectuer la transformation 2-opt.
+     * @param backUpTransformation La transformation à effectuer si le 2-opt  est impossible sur l'itinéraire "_itinéraire"
+     * @throws VehiculeCapacityOutOfBoundsException si la capacité des véhicules est dépassée.
+     * @throws ListOfClientsIsEmptyException si un itinéraire est créé avec une liste vide.
+     * @return l'itinéraire transformé.
      */
-    public static Itinéraire transformation2opt(Itinéraire _itinéraire) throws ItinéraireTooSmallException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException
+    public static Itinéraire transformation2opt(Itinéraire _itinéraire, Transformation backUpTransformation) throws ItinéraireTooSmallException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException
     {
         // s'il y a 3 clients ou moins dans la liste, ce ne sera pas possible
         if(_itinéraire.getListeClientsÀLivrer().size() < 4)
         {
-            throw new ItinéraireTooSmallException(_itinéraire);
+            //throw new ItinéraireTooSmallException(_itinéraire);
+            switch(backUpTransformation)
+            {
+                case Inversion:
+                    TransformateurItinéraire.inversion(_itinéraire);
+                    return _itinéraire;
+                case InsertionDécalage:
+                    TransformateurItinéraire.insertionDécalage(_itinéraire);
+                    return _itinéraire;
+                case TransformationLocale:
+                    TransformateurItinéraire.transformationLocale(_itinéraire);
+                    return _itinéraire;
+                default:
+                    throw new ItinéraireTooSmallException(_itinéraire);
+            }
         }
 
         LinkedList<Client> nouvelleListeClients = new LinkedList<>();

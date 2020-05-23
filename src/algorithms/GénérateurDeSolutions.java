@@ -6,8 +6,12 @@ import customexceptions.VehiculeCapacityOutOfBoundsException;
 import model.*;
 import model.graph.Sommet;
 import sun.management.snmp.jvminstr.JvmRTBootClassPathEntryImpl;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
+
+import static algorithms.Génération.ALÉATOIRE;
+import static algorithms.Génération.ALÉATOIRE_SEUIL;
 
 /**
  * Classe dont le but est de générer des solutions aléatoires.
@@ -18,11 +22,11 @@ import java.util.*;
  * — chaque itinéraire généré par la solution n'a pas un nombre de marchandises à livrer supérieure à la capacité de véhicule.
  * — tous les clients du fichier concerné par le générateur de solution aléatoire sont livrés grâce à la solution générée.
  */
-public class GénérateurSolutionsAléatoire
+public class GénérateurDeSolutions
 {
     private Fichier fichierConcerné;
 
-    public GénérateurSolutionsAléatoire(Fichier fichier)
+    public GénérateurDeSolutions(Fichier fichier)
     {
         this.fichierConcerné = fichier;
     }
@@ -73,23 +77,56 @@ public class GénérateurSolutionsAléatoire
         }
 
         // création d'une solution générée aléatoirement contenant les itinéraires
-        Solution solution = new Solution(itinéraires);
+        return new Solution(itinéraires);
+    }
 
-        return solution;
+    /**
+     * Génère une solution aléatoire qui ne dépasse pas une limite fixée pour le nombre de marchandises à livrer
+     * de chaque itinériare.
+     * @param limite le seuil au-délà duquel l'ajout de clients dans un itinéraire sera stoppé.
+     * @return une solution
+     */
+    public Solution générerUneSolutionAléatoire(int limite)
+    {
+        //todo
+        throw new NotImplementedException();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Solution générerUneSolutionProcheEnProche()
+    {
+        //todo
+        throw new NotImplementedException();
     }
 
     /**
      * Génère X solutions aléatoire, X étant défini par l'utilisateur.
      * @param X le nombre de solutions aléatoires à créer.
+     * @param typeGénération le type de génération à suivre.
+     * @param seuil le sueil fixé pour la génération de solution aléatoire avec seuil.
      * @return une liste de X solutions générées aléatoirement.
      */
-    public ArrayList<Solution> générerXSolutionsAléatoire(int X) throws EntrepôtNotFoundException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException {
+    public ArrayList<Solution> générerXSolutionsAléatoire(int X, Génération typeGénération, int seuil) throws EntrepôtNotFoundException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException {
         ArrayList<Solution> solutionsAléatoires = new ArrayList<Solution>();
 
         // tant que l'index est inférieur à X, on boucle sur la méthode générerUneSolutionAléatoire()
         for(int i = 0; i < X; i++)
         {
-            solutionsAléatoires.add(this.générerUneSolutionAléatoire());
+            switch(typeGénération)
+            {
+                case ALÉATOIRE:
+                    solutionsAléatoires.add(this.générerUneSolutionAléatoire());
+                    break;
+                case ALÉATOIRE_SEUIL:
+                    solutionsAléatoires.add(this.générerUneSolutionAléatoire(seuil));
+                    break;
+                case PROCHE_EN_PROCHE:
+                    solutionsAléatoires.add(this.générerUneSolutionProcheEnProche());
+                    break;
+            }
         }
         return solutionsAléatoires;
     }

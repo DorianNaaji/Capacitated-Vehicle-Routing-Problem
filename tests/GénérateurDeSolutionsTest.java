@@ -1,4 +1,4 @@
-import algorithms.GénérateurSolutionsAléatoire;
+import algorithms.GénérateurDeSolutions;
 import customexceptions.EntrepôtNotFoundException;
 import customexceptions.ListOfClientsIsEmptyException;
 import customexceptions.VehiculeCapacityOutOfBoundsException;
@@ -8,10 +8,10 @@ import model.Solution;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class GénérateurSolutionsAléatoireTest {
+public class GénérateurDeSolutionsTest
+{
 
     @Test
     public void testGénérateurSolutionsAléatoire() throws EntrepôtNotFoundException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException {
@@ -24,8 +24,8 @@ public class GénérateurSolutionsAléatoireTest {
         int sommeNbClientsDansChaqueItinéraire = 0;
 
         /* tests de génération de solutions aléatoires sur le premier fichier */
-        GénérateurSolutionsAléatoire générateurSolutionsAléatoire = new GénérateurSolutionsAléatoire(f0);
-        Solution solution = générateurSolutionsAléatoire.générerUneSolutionAléatoire();
+        GénérateurDeSolutions générateurDeSolutions = new GénérateurDeSolutions(f0);
+        Solution solution = générateurDeSolutions.générerUneSolutionAléatoire();
 
         // pour chaque itinéraire de la solution, on vérifie si le nombre de marchandises à livrer est bien inférieur ou égal à 100
         for (int i = 0; i < solution.getItinéraires().size(); i++) {

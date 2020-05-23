@@ -133,7 +133,7 @@ public class Main extends Application
      * @return la meilleure solution trouvée
      * @throws Exception en cas d'erreurs diverses...
      */
-    private static Solution testRecuit(Fichier fichier, int nbSolutionsInitiales, Génération typeGénération, int seuil, int températureInitiale, int nombreDeVoisinsParTempérature, double coefficientDeDiminutionTempérature, Transformation typeDeTransformation,  boolean isMétaTransformations) throws Exception
+    private static Solution testRecuit(Fichier fichier, int nbSolutionsInitiales, Génération typeGénération, int seuil, double températureInitiale, double nombreDeVoisinsParTempérature, double coefficientDeDiminutionTempérature, Transformation typeDeTransformation,  boolean isMétaTransformations) throws Exception
     {
         Solution best = new Solution();
         best.setOptimisationGlobale(Double.MAX_VALUE);
@@ -171,7 +171,7 @@ public class Main extends Application
      * @return la meilleure solution trouvée
      * @throws Exception en cas d'erreurs diverses...
      */
-    private static Solution testRecuitItinéraire(Fichier fichier, int nbSolutionsInitiales, Génération typeGénération, int seuil, int températureInitiale, int nombreDeVoisinsParTempérature, double coefficientDeDiminutionTempérature, Transformation typeDeTransformation) throws Exception
+    private static Solution testRecuitItinéraire(Fichier fichier, int nbSolutionsInitiales, Génération typeGénération, int seuil, double températureInitiale, double nombreDeVoisinsParTempérature, double coefficientDeDiminutionTempérature, Transformation typeDeTransformation) throws Exception
     {
         System.out.println("-RECUIT SUR ITINÉRAIRES-");
 
@@ -190,9 +190,6 @@ public class Main extends Application
                                                 températureInitiale,
                                                 nombreDeVoisinsParTempérature,
                                                 coefficientDeDiminutionTempérature,
-                                                200,
-                                                500,
-                                                0.95,
                                                 typeDeTransformation);
                                                 solutionOptimisée.ajouterTournée(itinéraireOptimisé);
             }

@@ -183,7 +183,6 @@ public class Main extends Application
 
                 Itinéraire itinéraireOptimisé = RecuitSimulé.recuitSimuléItinéraire(solutionCourante.getItinéraires().get(j),
                                                 200,
-                                                100,
                                                 500,
                                                 0.95,
                                                 typeDeTransformation);

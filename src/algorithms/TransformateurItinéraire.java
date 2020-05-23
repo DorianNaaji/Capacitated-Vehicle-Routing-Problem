@@ -25,6 +25,7 @@ public class TransformateurItinéraire
      */
     public static void transformationÉchange(Itinéraire itinéraire)
     {
+
         // nombre de clients dans l'itinéraire
         int nbClients = itinéraire.getListeClientsÀLivrer().size();
         Random random = new Random();
@@ -32,10 +33,15 @@ public class TransformateurItinéraire
         int premierIndexAléatoire = random.nextInt(nbClients);
         // génération d'un deuxième index aléatoire (de 0 à nbClients-1)
         int deuxièmeIndexAléatoire = random.nextInt(nbClients);
-        // tant que les deux index aléatoires sont identiques...
-        while (premierIndexAléatoire == deuxièmeIndexAléatoire) {
-            // on regénère le deuxième index aléatoire
-            deuxièmeIndexAléatoire = random.nextInt((nbClients));
+
+        // si la liste contient un unique client, on n'apporte aucune modification.
+        if(itinéraire.getListeClientsÀLivrer().size() != 1)
+        {
+            // tant que les deux index aléatoires sont identiques...
+            while (premierIndexAléatoire == deuxièmeIndexAléatoire) {
+                // on regénère le deuxième index aléatoire
+                deuxièmeIndexAléatoire = random.nextInt((nbClients));
+            }
         }
         // on échange le client positionné au premierIndexAléatoire avec celui positionné au deuxièmeIndexAléatoire
         Collections.swap(itinéraire.getListeClientsÀLivrer(), premierIndexAléatoire, deuxièmeIndexAléatoire);
@@ -60,10 +66,15 @@ public class TransformateurItinéraire
         itinéraire.retirerClient(clientAReplacer);
         // génération d'un deuxième index aléatoire (de 0 à nbClients-1)
         int deuxièmeIndexAléatoire = random.nextInt(nbClients);
-        // tant que les deux index aléatoires sont identiques...
-        while (premierIndexAléatoire == deuxièmeIndexAléatoire) {
-            // on regénère le deuxième index aléatoire
-            deuxièmeIndexAléatoire = random.nextInt((nbClients));
+        // si la liste contient un unique client, on n'apporte aucune modification.
+        if(itinéraire.getListeClientsÀLivrer().size() != 1)
+        {
+            // tant que les deux index aléatoires sont identiques...
+            while (premierIndexAléatoire == deuxièmeIndexAléatoire)
+            {
+                // on regénère le deuxième index aléatoire
+                deuxièmeIndexAléatoire = random.nextInt((nbClients));
+            }
         }
         // on ajoute le client pioché aléatoirement à une position aléatoire et les éléments après le deuxièmeIndexAléatoire se décalent
         itinéraire.getListeClientsÀLivrer().add(deuxièmeIndexAléatoire, clientAReplacer);
@@ -84,11 +95,18 @@ public class TransformateurItinéraire
         int premierIndexAléatoire = random.nextInt(nbClients);
         // génération d'un deuxième index aléatoire (de 0 à nbClients-1)
         int deuxièmeIndexAléatoire = random.nextInt(nbClients);
-        // tant que les deux index aléatoires sont identiques...
-        while (premierIndexAléatoire == deuxièmeIndexAléatoire) {
-            // on regénère un deuxième index aléatoire
-            deuxièmeIndexAléatoire = random.nextInt(nbClients);
+
+
+        // si la liste contient un unique client, on n'apporte aucune modification.
+        if(itinéraire.getListeClientsÀLivrer().size() != 1)
+        {
+            // tant que les deux index aléatoires sont identiques...
+            while (premierIndexAléatoire == deuxièmeIndexAléatoire) {
+                // on regénère un deuxième index aléatoire
+                deuxièmeIndexAléatoire = random.nextInt(nbClients);
+            }
         }
+
         LinkedList<Client> listeDeClientsÀInverser;
         // si le premierIndexAléatoire est inférieur au deuxièmeIndexAléatoire
         if (premierIndexAléatoire < deuxièmeIndexAléatoire) {
@@ -191,6 +209,7 @@ public class TransformateurItinéraire
 
             int décalage = 0;
             for (int c = deuxièmeIndexAléatoire; c <= premierIndexAléatoire; c++) {
+
                 nouvelleListeClients.add(_itinéraire.getListeClientsÀLivrer().get(premierIndexAléatoire - décalage));
                 décalage++;
             }
@@ -199,9 +218,6 @@ public class TransformateurItinéraire
                 nouvelleListeClients.add(_itinéraire.getListeClientsÀLivrer().get(j));
             }
         }
-
-
-
         return new Itinéraire(nouvelleListeClients , (Entrepôt) entrepôt);
     }
 }

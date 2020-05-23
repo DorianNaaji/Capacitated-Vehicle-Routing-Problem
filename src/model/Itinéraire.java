@@ -40,6 +40,11 @@ public class Itinéraire
      */
     private Véhicule véhicule;
 
+    public Véhicule getVéhicule()
+    {
+        return véhicule;
+    }
+
     public Itinéraire(Itinéraire itinéraire) {
        // this.longueurTotale = itinéraire.longueurTotale;
         //this.nbMarchandisesALivrer = itinéraire.nbMarchandisesALivrer;

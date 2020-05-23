@@ -44,6 +44,7 @@ public class Tabou
             // duquel on enlève l'ensemble des transformations (solutions) interdites
             voisinage.removeAll(listeTabou);
 
+
             // et on récupère la meilleure solution de ce voisinage
             Solution meilleureSolutionVoisine = new Solution();
             meilleureSolutionVoisine.setOptimisationGlobale(Double.MAX_VALUE);
@@ -55,6 +56,7 @@ public class Tabou
                 }
             }
 
+            //System.out.println(meilleureSolutionVoisine.getOptimisationGlobale());
             double fitnessCourante = meilleureSolutionVoisine.getOptimisationGlobale();
             // la différence de fitness
             double deltaF =  fitnessCourante - fitnessMinimale;
@@ -78,8 +80,8 @@ public class Tabou
                 solutionMin = meilleureSolutionVoisine;
                 fitnessMinimale = fitnessCourante;
                 // copie de la meilleure solution voisine
-                solutionSwap = new Solution(meilleureSolutionVoisine);
-                //System.out.println("Itération " + i + " : " + fitnessMinimale);
+                //solutionSwap = new Solution(meilleureSolutionVoisine);
+                System.out.println("Itération " + i + " : " + fitnessMinimale);
             }
         }
         return solutionMin;
@@ -135,26 +137,23 @@ public class Tabou
         for(int i = 0; i < nbSolutionsVoisines; i++)
         {
             Solution voisin = new Solution(solutionInitiale);
-            for(Itinéraire itinéraire:voisin.getItinéraires())
+            for(int j = 0; j < voisin.getItinéraires().size(); j++)
             {
+                Itinéraire it = voisin.getItinéraires().get(j);
                 switch(transfo)
                 {
                     case TransformationÉchange:
-                        TransformateurItinéraire.transformationÉchange(itinéraire);
+                        TransformateurItinéraire.transformationÉchange(it);
                         break;
                     case InsertionDécalage:
-                        TransformateurItinéraire.insertionDécalage(itinéraire);
+                        TransformateurItinéraire.insertionDécalage(it);
                         break;
                     case Inversion:
-                        TransformateurItinéraire.inversion(itinéraire);
+                        TransformateurItinéraire.inversion(it);
                         break;
                     case Transformation2Opt:
                         // En backup du 2-opt, on utilise une insertion décalage
-                        //todo : décider de la meilleure transfo après le 2-opt
-                        int  indexOfitinéraireModif = voisin.getItinéraires().indexOf(itinéraire);
-                        Itinéraire itinéraireModif = voisin.getItinéraires().get(indexOfitinéraireModif);
-                        itinéraireModif = TransformateurItinéraire.transformation2opt(itinéraireModif, Transformation.TransformationÉchange);
-                        voisin.getItinéraires().set(indexOfitinéraireModif, itinéraireModif);
+                        voisin.getItinéraires().set(voisin.getItinéraires().indexOf(it), TransformateurItinéraire.transformation2opt(it, Transformation.TransformationÉchange));
                         break;
                     default:
                         throw new UnhandledTransformationException(transfo, Tabou.class);
@@ -190,21 +189,14 @@ public class Tabou
             Solution voisin = new Solution(solutionInitiale);
             for (Itinéraire itinéraireVoisin : voisin.getItinéraires())
             {
-                if(transfo == Transformation.TransformationÉchange || transfo == Transformation.InsertionDécalage)
+                // Uniquement la méta-transformation échange est supportée pour l'instant...
+                if(transfo == Transformation.TransformationÉchange)
                 {
                     if(r.nextBoolean() && solutionSwap != null)
                     {
-                        boolean isÉchange = (transfo == Transformation.TransformationÉchange);
                         for(Itinéraire itinéraireSwap:solutionSwap.getItinéraires())
                         {
-                            if(isÉchange)
-                            {
-                                TransformateurEntreItinéraires.transformationÉchange(itinéraireVoisin, itinéraireSwap);
-                            }
-                            else
-                            {
-                                TransformateurEntreItinéraires.insertionDécalage(itinéraireVoisin, itinéraireSwap);
-                            }
+                            TransformateurEntreItinéraires.métaTransformationÉchange(itinéraireVoisin, itinéraireSwap, 40);
                         }
                     }
                     // sinon, 2 opt en backup
@@ -215,12 +207,16 @@ public class Tabou
                         itinéraireModif = TransformateurItinéraire.transformation2opt(itinéraireModif, Transformation.TransformationÉchange);
                         voisin.getItinéraires().set(indexOfitinéraireModif, itinéraireModif);
                     }
+                    voisin.recalculerLongueurGlobale();
                 }
                 else
                 {
-                    throw new UnsupportedOperationException();
+                    throw new UnhandledTransformationException(transfo, Tabou.class, "La méthode 2opt n'est pas disponible " +
+                            " pour la méthode getSolutionsVoisinesComplexSearch(). La recherche complexe effectue des méta transformations." +
+                            " Utiliser plutôt TransformationÉchange en paramètre.");
                 }
             }
+            solutionsVoisines.add(voisin);
         }
         return solutionsVoisines;
     }

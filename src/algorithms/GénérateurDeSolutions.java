@@ -7,6 +7,7 @@ import model.*;
 import model.graph.Sommet;
 import sun.management.snmp.jvminstr.JvmRTBootClassPathEntryImpl;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import utilitaires.Utilitaire;
 
 import java.util.*;
 
@@ -86,20 +87,90 @@ public class GénérateurDeSolutions
      * @param limite le seuil au-délà duquel l'ajout de clients dans un itinéraire sera stoppé.
      * @return une solution
      */
-    public Solution générerUneSolutionAléatoire(int limite)
+    public Solution générerUneSolutionAléatoire(int limite) throws VehiculeCapacityOutOfBoundsException
     {
-        //todo
-        throw new NotImplementedException();
+        Random r = new Random();
+        ArrayList<Client> clients = new ArrayList<>(this.fichierConcerné.getClients());
+        Entrepôt entrepôt = this.fichierConcerné.getEntrepôt();
+        Itinéraire itinéraire = new Itinéraire(entrepôt);
+        ArrayList<Itinéraire> itinéraires = new ArrayList<>();
+        itinéraires.add(itinéraire);
+        while (clients.size() > 0)
+        {
+            int indexAléatoire = r.nextInt(clients.size());
+            if(clients.get(indexAléatoire).getNbMarchandisesÀLivrer() + itinéraires.get(itinéraires.size() - 1).getNbMarchandisesALivrer() < limite)
+            {
+                itinéraires.get(itinéraires.size() - 1).ajouterClient(clients.get(indexAléatoire));
+                clients.remove(indexAléatoire);
+            }
+            else
+            {
+                Itinéraire nouvelItinéraire = new Itinéraire(entrepôt);
+                nouvelItinéraire.getListeClientsÀLivrer().add(clients.get(indexAléatoire));
+                clients.remove(indexAléatoire);
+                itinéraires.add(nouvelItinéraire);
+            }
+        }
+        return new Solution(itinéraires);
     }
 
     /**
-     *
-     * @return
+     * Permet de retourne une solution contenant des itinéraires avec des clients proches ;
+     * on pioche un client, puis on prend les clients les plus proche jusqu'à remplir un itinéraire.
+     * On fait cela pour tous les clients puis on renvoie la solution.
+     * @return Une solution avec des clients proches géographiquement parlant.
      */
-    public Solution générerUneSolutionProcheEnProche()
+    public Solution générerUneSolutionProcheEnProche() throws VehiculeCapacityOutOfBoundsException
     {
-        //todo
-        throw new NotImplementedException();
+        Random r = new Random();
+        ArrayList<Client> clients = new ArrayList<>(this.fichierConcerné.getClients());
+        Entrepôt entrepôt = this.fichierConcerné.getEntrepôt();
+        ArrayList<Itinéraire> itinéraires = new ArrayList<>();
+        Itinéraire itinéraire = new Itinéraire(entrepôt);
+        itinéraires.add(itinéraire);
+
+        int indexAléatoire = r.nextInt(clients.size());
+        Client firstClient = clients.get(indexAléatoire);
+        //ajouter le premier client
+        itinéraires.get(itinéraires.size() - 1).ajouterClient(clients.get(indexAléatoire));
+        clients.remove(indexAléatoire);
+        Client lastAddedClient = firstClient;
+        while(clients.size() > 0)
+        {
+            // trouver le client le plus proche du dernier client ajouté
+            Client closest = null;
+            double distMin = Double.MAX_VALUE;
+            for(Client c:clients)
+            {
+                double distanceEntreLesDeuxClients = Utilitaire.distanceEuclidienne(
+                        c.getPositionX(),
+                        c.getPositionY(),
+                        lastAddedClient.getPositionX(),
+                        lastAddedClient.getPositionY()
+                );
+
+                if(distanceEntreLesDeuxClients < distMin)
+                {
+                    closest = c;
+                    distMin = distanceEntreLesDeuxClients;
+                }
+            }
+
+            // ajouter le client le plus proche du dernier client ajouté
+            if(itinéraires.get(itinéraires.size() - 1).ajouterClient(closest))
+            {
+                lastAddedClient = closest;
+                clients.remove(closest);
+            }
+            else
+            {
+                Itinéraire nouvelItinéraire = new Itinéraire(entrepôt);
+                nouvelItinéraire.getListeClientsÀLivrer().add(closest);
+                clients.remove(closest);
+                itinéraires.add(nouvelItinéraire);
+            }
+        }
+        return new Solution(itinéraires);
     }
 
     /**

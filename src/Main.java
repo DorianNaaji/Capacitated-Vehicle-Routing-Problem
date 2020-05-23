@@ -1,5 +1,6 @@
 import algorithms.*;
 import gui.CVRPWindow;
+import gui.CVRPWindowController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import inout.Loader;
@@ -13,7 +14,6 @@ import java.util.List;
 
 public class Main extends Application
 {
-
     public static void main(String[] args)
     {
         launch(args);
@@ -33,10 +33,13 @@ public class Main extends Application
         /* ------------------------------ PARAMÈTRES ------------------------------ */
         /* les paramètres de bases relatifs à la génération et au fichier */
         Fichier fx = fichiers.get(0);
-        int nbSolutionsAléatoiresInitiales = 5;
-        Génération typeDeGénération = Génération.ALÉATOIRE;
-        int seuilCapacitéMaxItinéraireGénération = 70;
+        int nbSolutionsAléatoiresInitiales = 10;
+        Génération typeDeGénération = Génération.PROCHE_EN_PROCHE;
+        /* le seuil maximal qui ne devra pas être dépassé pour le nb de marchandises par véhicule en cas de génération aléatoire par SEUIL
+        * (Génération.ALEATOIRE_SEUIL) */
+        int seuilCapacitéMaxItinéraireGénération = 80;
         /* paramètres de transformation */
+        //Transformation typeDeTransformation = Transformation.Transformation2Opt;
         Transformation typeDeTransformation = Transformation.TransformationÉchange;
         boolean utilisationDeMétaTransformations = true;
         /* ------------------------------ PARAMÈTRES ------------------------------ */
@@ -55,29 +58,32 @@ public class Main extends Application
         /* ---------------- test avec recuitSimulé  ---------------- */
 
 
-        /*
+/*
         Solution best = testRecuit(fx,
                         nbSolutionsAléatoiresInitiales,
                         typeDeGénération,
                         seuilCapacitéMaxItinéraireGénération,
-                        200,
-                        500,
-                        0.99,
+                        100,
+                        400,
+                        0.8,
                         typeDeTransformation,
                         utilisationDeMétaTransformations);
-        */
+*/
 
         /* ---------- test avec recuitSimuléItinéraires -----------  */
 
+
+        /*
 
         Solution best = testRecuitItinéraire(fx,
                         nbSolutionsAléatoiresInitiales,
                         typeDeGénération,
                         seuilCapacitéMaxItinéraireGénération,
-                        200,
+                        5,
                         500,
                         0.99,
                         typeDeTransformation);
+*/
 
 
         /* ------------------- test avec tabou ------------------- */
@@ -88,17 +94,16 @@ public class Main extends Application
             typeDeRechercheVoisinage = TypeDeRechercheVoisinage.COMPLEXE;
         }
 
-        /*
+
         Solution best = testTabou(fx,
                         nbSolutionsAléatoiresInitiales,
                         typeDeGénération,
                         seuilCapacitéMaxItinéraireGénération,
-                        200,
-                        10000,
-                        50,
+                        1200,
+                        2000,
+                        400,
                         typeDeTransformation,
                         typeDeRechercheVoisinage);
-        */
 
 
 
@@ -182,10 +187,11 @@ public class Main extends Application
             for (int j = 0; j < solutionCourante.getItinéraires().size(); j++) {
 
                 Itinéraire itinéraireOptimisé = RecuitSimulé.recuitSimuléItinéraire(solutionCourante.getItinéraires().get(j),
-                                                200,
+                                                températureInitiale,
+                                                //todo
                                                 100,
-                                                500,
-                                                0.95,
+                                                nombreDeVoisinsParTempérature,
+                                                coefficientDeDiminutionTempérature,
                                                 typeDeTransformation);
                                                 solutionOptimisée.ajouterTournée(itinéraireOptimisé);
             }

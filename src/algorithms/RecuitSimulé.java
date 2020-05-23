@@ -61,8 +61,20 @@ public class RecuitSimulé
                {
                    case TransformationÉchange:
                        if (isMétaTransformation) {
-                           TransformateurEntreItinéraires.transformationÉchange(solutionBase.getItinéraires().get(indexAléatoire1),
-                                   solutionBase.getItinéraires().get(indexAléatoire2));
+                           // Du méta couplé à du 2-opt pour optimiser au maximum (une chance sur 2)
+                           if(random.nextBoolean())
+                           {
+//                               TransformateurEntreItinéraires.transformationÉchange(solutionBase.getItinéraires().get(indexAléatoire1),
+//                                   solutionBase.getItinéraires().get(indexAléatoire2));
+                               TransformateurEntreItinéraires.métaTransformationÉchange(solutionBase.getItinéraires().get(indexAléatoire1),
+                                       solutionBase.getItinéraires().get(indexAléatoire2), 40);
+                           }
+                           else
+                           {
+                               solutionBase.getItinéraires().set(indexAléatoire1,
+                                       TransformateurItinéraire.transformation2opt(solutionBase.getItinéraires().get(indexAléatoire1), Transformation.TransformationÉchange));
+                           }
+
                        }
                        else {
                            TransformateurItinéraire.transformationÉchange(solutionBase.getItinéraires().get(indexAléatoire1));
@@ -71,8 +83,17 @@ public class RecuitSimulé
                        break;
                    case InsertionDécalage:
                        if (isMétaTransformation) {
-                           TransformateurEntreItinéraires.insertionDécalage(solutionBase.getItinéraires().get(indexAléatoire1),
-                                   solutionBase.getItinéraires().get(indexAléatoire2));
+                           // Du méta couplé à du 2-opt pour optimiser au maximum (une chance sur 2)
+                           if(random.nextBoolean())
+                           {
+                               TransformateurEntreItinéraires.insertionDécalage(solutionBase.getItinéraires().get(indexAléatoire1),
+                                       solutionBase.getItinéraires().get(indexAléatoire2));
+                           }
+                           else
+                           {
+                               solutionBase.getItinéraires().set(indexAléatoire1,
+                                       TransformateurItinéraire.transformation2opt(solutionBase.getItinéraires().get(indexAléatoire1), Transformation.TransformationÉchange));
+                           }
                        }
                        else {
                            TransformateurItinéraire.insertionDécalage(solutionBase.getItinéraires().get(indexAléatoire1));
@@ -173,7 +194,6 @@ public class RecuitSimulé
                 {
                     case TransformationÉchange:
                         TransformateurItinéraire.transformationÉchange(itinéraireBase);
-
                         break;
                     case InsertionDécalage:
                         TransformateurItinéraire.insertionDécalage(itinéraireBase);

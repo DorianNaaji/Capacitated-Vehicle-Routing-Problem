@@ -18,7 +18,7 @@ public class TransformateurEntreItinéraires {
      * @param itinéraire2 l'itinéraire au sein duquel la transformation sera effectuée
      * @throws VehiculeCapacityOutOfBoundsException
      */
-    public static void transformationLocale(Itinéraire itinéraire1, Itinéraire itinéraire2) throws VehiculeCapacityOutOfBoundsException {
+    public static void transformationÉchange(Itinéraire itinéraire1, Itinéraire itinéraire2) throws VehiculeCapacityOutOfBoundsException {
         // nombre de clients dans l'itinéraire1
         int nbClientsItinéraire1 = itinéraire1.getListeClientsÀLivrer().size();
         // nombre de clients dans l'itinéraire2

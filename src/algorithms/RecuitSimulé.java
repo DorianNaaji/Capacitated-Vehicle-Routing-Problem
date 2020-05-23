@@ -61,7 +61,7 @@ public class RecuitSimulé
                {
                    case TransformationÉchange:
                        if (isMétaTransformation) {
-                           TransformateurEntreItinéraires.transformationLocale(solutionBase.getItinéraires().get(indexAléatoire1),
+                           TransformateurEntreItinéraires.transformationÉchange(solutionBase.getItinéraires().get(indexAléatoire1),
                                    solutionBase.getItinéraires().get(indexAléatoire2));
                        }
                        else {

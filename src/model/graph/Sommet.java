@@ -18,6 +18,15 @@ public class Sommet
         this.positionY = posY;
     }
 
+    /**
+     * Constructeur sans paramètre
+     */
+    public Sommet()
+    {
+        this.positionX = 0;
+        this.positionY = 0;
+    }
+
     public double CalculCoût(Sommet voisin)
     {
         // Le coût est la distance entre deux sommets voisins.

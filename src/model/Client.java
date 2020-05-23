@@ -28,6 +28,16 @@ public class Client extends Sommet
     }
 
     /**
+     * Constructeur sans paramètre
+     */
+    public Client()
+    {
+        super();
+        this.numeroClient = 0;
+        this.quantite = 0;
+    }
+
+    /**
      * Récupère le numéro de client.
      * @return le numéro de client.
      */

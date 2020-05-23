@@ -49,6 +49,7 @@ public class Itinéraire
             this.listeClientsÀLivrer.add(new Client(c.getNumeroClient(), c.getPositionX(), c.getPositionY(), c.getNbMarchandisesÀLivrer()));
         }
         this.recalculerDistanceEtNbMarchandises();
+        this.véhicule = new Véhicule();
         //this.longueurTotale = itinéraire.getLongueurTotale();
         //this.nbMarchandisesALivrer = itinéraire.getNbMarchandisesALivrer();
 
@@ -130,6 +131,24 @@ public class Itinéraire
      * @throws VehiculeCapacityOutOfBoundsException
      */
     public boolean ajouterClient(Client c) throws VehiculeCapacityOutOfBoundsException {
+      if (this.getListeClientsÀLivrer().size() == 0) {
+          return this.ajouterClientAUnIndex(c, 0);
+      }
+      else {
+          return this.ajouterClientAUnIndex(c, this.getListeClientsÀLivrer().size() - 1);
+      }
+
+    }
+
+    /**
+     * Méthode permettant d'ajouter un client à un itinéraire et à un index donné.
+     * Elle permet également de recalculer la longueur totale de l'itinérair et le nombre total de marchandises à livrer.
+     * @param c le client à ajouter.
+     * @param i l'index où nous voulons ajouter le client
+     * @return true si la quantité de marchandises totale ne dépasse pas la capacité maximum d'un véhicule, false sinon
+     * @throws VehiculeCapacityOutOfBoundsException
+     */
+    public boolean ajouterClientAUnIndex(Client c, int i) throws VehiculeCapacityOutOfBoundsException {
 
         // quantité de marchandises totale à livrer avant l'ajout du nouveau client
         int quantiteDeMarchandisesTotale  = listeClientsÀLivrer.stream().mapToInt(Client::getNbMarchandisesÀLivrer).sum();
@@ -138,8 +157,8 @@ public class Itinéraire
         // est inférieure ou égale à la capacité totale d'un véhicule
         if (quantiteDeMarchandisesTotale + c.getNbMarchandisesÀLivrer() <= véhicule.getCapacité())
         {
-            // on ajoute alors le client à la liste chaînée
-            this.listeClientsÀLivrer.add(c);
+            // on ajoute alors le client à la liste chaînée à un index i
+            this.listeClientsÀLivrer.add(i, c);
             // on recalcul alors la longueur d'un itinéraire et le nombre de marchandises à livrer
             this.recalculerDistanceEtNbMarchandises();
             return true;

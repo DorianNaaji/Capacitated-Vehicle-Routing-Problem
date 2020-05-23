@@ -11,7 +11,21 @@ import java.util.Random;
 public class RecuitSimulé
 {
 
-    public static Solution recuitSimulé(Solution solutionInitiale, double températureInitiale, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation) throws VehiculeCapacityOutOfBoundsException, ItinéraireTooSmallException, ListOfClientsIsEmptyException
+    /**
+     * Méthode de recuit simulé permettant de sortir des minima locaux en acceptant des solutions moins bonnes
+     * @param solutionInitiale solution initiale
+     * @param températureInitiale température iniale
+     * @param nombreVoisinsParTempérature nombre de voisins généré par température
+     * @param coefficientDeDiminuationTempérature coefficient de diminution de la température
+     * @param transformation
+     * @param isMétaTransformation booléen indiquant si des méthodes de transformations entre itinéraires d'une solution
+     *                             sont opérées (true) ou non (false)
+     * @return une solution optimisée
+     * @throws VehiculeCapacityOutOfBoundsException
+     * @throws ItinéraireTooSmallException
+     * @throws ListOfClientsIsEmptyException
+     */
+    public static Solution recuitSimulé(Solution solutionInitiale, double températureInitiale, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation, boolean isMétaTransformation) throws VehiculeCapacityOutOfBoundsException, ItinéraireTooSmallException, ListOfClientsIsEmptyException
     {
 
         Random random = new Random();
@@ -40,26 +54,42 @@ public class RecuitSimulé
                 }*/
 
                 // On choisit un itinéraire aléatoirement.
-                int indexAléatoire = random.nextInt(solutionBase.getItinéraires().size());
+                int indexAléatoire1 = random.nextInt(solutionBase.getItinéraires().size());
+                // On choisit un deuxième itinéraire aléatoirement.
+                int indexAléatoire2 = random.nextInt(solutionBase.getItinéraires().size());
                 switch(transformation)
                {
                    case TransformationLocale:
-                       TransformateurItinéraire.transformationLocale(solutionBase.getItinéraires().get(indexAléatoire));
+                       if (isMétaTransformation) {
+                           TransformateurEntreItinéraires.transformationLocale(solutionBase.getItinéraires().get(indexAléatoire1),
+                                   solutionBase.getItinéraires().get(indexAléatoire2));
+                       }
+                       else {
+                           TransformateurItinéraire.transformationLocale(solutionBase.getItinéraires().get(indexAléatoire1));
+                       }
+
                        break;
                    case InsertionDécalage:
-                       TransformateurItinéraire.insertionDécalage(solutionBase.getItinéraires().get(indexAléatoire));
+                       if (isMétaTransformation) {
+                           TransformateurEntreItinéraires.insertionDécalage(solutionBase.getItinéraires().get(indexAléatoire1),
+                                   solutionBase.getItinéraires().get(indexAléatoire2));
+                       }
+                       else {
+                           TransformateurItinéraire.insertionDécalage(solutionBase.getItinéraires().get(indexAléatoire1));
+                       }
+
                        break;
                    case Inversion:
-                       TransformateurItinéraire.inversion(solutionBase.getItinéraires().get(indexAléatoire));
+                       TransformateurItinéraire.inversion(solutionBase.getItinéraires().get(indexAléatoire1));
                        break;
                    case Transformation2Opt:
                        try
                        {
-                           solutionBase.getItinéraires().set(indexAléatoire, TransformateurItinéraire.transformation2opt(solutionBase.getItinéraires().get(indexAléatoire)));
+                           solutionBase.getItinéraires().set(indexAléatoire1, TransformateurItinéraire.transformation2opt(solutionBase.getItinéraires().get(indexAléatoire1)));
                        }
                        catch(ItinéraireTooSmallException e)
                        {
-                           TransformateurItinéraire.insertionDécalage(solutionBase.getItinéraires().get(indexAléatoire));
+                           TransformateurItinéraire.insertionDécalage(solutionBase.getItinéraires().get(indexAléatoire1));
                        }
                        break;
                }
@@ -98,7 +128,7 @@ public class RecuitSimulé
         return meilleureSolution;
     }
 
-    public static Itinéraire recuitSimuléIt(Itinéraire itinéraireInitial, double températureInitiale, int changementDeTempérature, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation) throws VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException
+    public static Itinéraire recuitSimuléItinéraire(Itinéraire itinéraireInitial, double températureInitiale, int changementDeTempérature, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation) throws VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException
     {
 
         Random random = new Random();
@@ -183,4 +213,5 @@ public class RecuitSimulé
         //System.out.println(meilleurItinéraire.getLongueurTotale());
         return meilleurItinéraire;
     }
+
 }

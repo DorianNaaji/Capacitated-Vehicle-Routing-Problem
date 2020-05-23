@@ -23,7 +23,7 @@ import java.util.Random;
 public class TransformateurItinéraire
 {
     /**
-     * Transforme localement une solution, en échangeant de place deux clients choisis arbitrairement parmi i1.
+     * Transforme localement une solution, en échangeant de place deux clients choisis arbitrairement parmi itinéraire.
      * @param itinéraire l'itinéraire au sein duquel la transformation sera effectuée.
      */
     public static void transformationLocale(Itinéraire itinéraire)
@@ -46,7 +46,7 @@ public class TransformateurItinéraire
 
     /**
      * Effectue une opération d'insertion décalage d'un client sur un itinéraire.
-     * Un client à une position i est pioché aléatoirement dans i1, retiré de i1, puis ajouté
+     * Un client à une position i est pioché aléatoirement dans itinéraire, retiré de itinéraire, puis ajouté
      * à une position i+delta ou i-delta, delta étant aléatoirement généré.
      * @param itinéraire l'itinéraire sur lequel sera effectué l'insertion décalage.
      */

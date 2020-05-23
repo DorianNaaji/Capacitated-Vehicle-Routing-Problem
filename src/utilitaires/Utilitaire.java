@@ -4,7 +4,6 @@ import model.Client;
 
 public class Utilitaire {
 
-    //todo : SOMMET
 
     /**
      * Méthode permettant de calculer la distance euclidienne entre deux éléments

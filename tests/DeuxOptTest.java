@@ -41,11 +41,11 @@ public class DeuxOptTest extends Application
         for(int i = 0; i < bound; i ++)
         {
             Itinéraire itinéraire = this.constructItinéraire();
-            Itinéraire newItinéraire = TransformateurItinéraire.transformation2opt(itinéraire);
+            Itinéraire newItinéraire = TransformateurItinéraire.transformation2opt(itinéraire, null);
             String itinéraireString = this.convertItinéraireToString(newItinéraire);
             Assert.assertTrue(Stream.of(this.cheminsPossibles).anyMatch(s -> s.equals(itinéraireString)));
         }
-        System.out.println("== transformation2OptTest passed ✅ ==");
+        System.out.println("= transformation2OptTest passed ✅ =");
     }
 
 
@@ -105,7 +105,7 @@ public class DeuxOptTest extends Application
         // affichage de la fenêtre principale
         secondGui.show();
         System.out.println();
-        Itinéraire newItinéraire = TransformateurItinéraire.transformation2opt(i);
+        Itinéraire newItinéraire = TransformateurItinéraire.transformation2opt(i, null);
         System.out.println();
         secondGui.getController().drawItinéraire(newItinéraire, Color.CORAL);
 

@@ -135,7 +135,7 @@ public class Itinéraire
           return this.ajouterClientAUnIndex(c, 0);
       }
       else {
-          return this.ajouterClientAUnIndex(c, this.getListeClientsÀLivrer().size() - 1);
+          return this.ajouterClientAUnIndex(c, this.getListeClientsÀLivrer().size());
       }
 
     }

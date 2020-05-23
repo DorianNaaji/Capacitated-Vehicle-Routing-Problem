@@ -105,8 +105,7 @@ public class DeuxOptTest extends Application
         // affichage de la fenêtre principale
         secondGui.show();
         System.out.println();
-        TransformateurItinéraire tds = new TransformateurItinéraire();
-        Itinéraire newItinéraire = tds.transformation2opt(i);
+        Itinéraire newItinéraire = TransformateurItinéraire.transformation2opt(i);
         System.out.println();
         secondGui.getController().drawItinéraire(newItinéraire, Color.CORAL);
 

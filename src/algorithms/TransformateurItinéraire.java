@@ -81,7 +81,7 @@ public class TransformateurItinéraire
     }
 
     /**
-     * Inverse une portion entière de k éléments appartenant à l'itinéraire i1.
+     * Inverse une portion entière de k éléments appartenant à l'itinéraire.
      * Par exemple, soit ABCDEFG un itinéraire, et les k éléments = BCDE, alors k inversé = EDCB et
      * l'itinéraire inversé devient AEDCBFG.
      * @param itinéraire l'itinéraire sur lequel effectuer l'inversion
@@ -135,8 +135,6 @@ public class TransformateurItinéraire
         }
     }
 
-
-    /**
      /**
      * Effectue une transformation 2-opt sur un itinéraire donné.
      * La transformation 2-opt échange deux arêtes disjointes.
@@ -148,6 +146,7 @@ public class TransformateurItinéraire
      */
     public static Itinéraire transformation2opt(Itinéraire _itinéraire, Transformation backUpTransformation) throws ItinéraireTooSmallException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException
     {
+        //todo : enlever les bouts de code commentés
         // s'il y a 3 clients ou moins dans la liste, ce ne sera pas possible
         if(_itinéraire.getListeClientsÀLivrer().size() < 4)
         {

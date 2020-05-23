@@ -27,6 +27,10 @@ public class GénérateurDeSolutions
 {
     private Fichier fichierConcerné;
 
+    /**
+     * Constructeur prenant en paramètre un Fichier.
+     * @param fichier le fichier sur lequel nous allons générer des solutions.
+     */
     public GénérateurDeSolutions(Fichier fichier)
     {
         this.fichierConcerné = fichier;

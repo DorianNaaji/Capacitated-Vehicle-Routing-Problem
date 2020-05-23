@@ -10,9 +10,18 @@ import org.junit.Test;
 
 import java.util.List;
 
+/**
+ * Classe de test pour la génération de solutions.
+ */
 public class GénérateurDeSolutionsTest
 {
 
+    /**
+     * Méthode permettant de tester la génération de solutions aléatoires.
+     * @throws EntrepôtNotFoundException lorsqu'il n'y a pas d'entrepôt dans l'itinéraire.
+     * @throws VehiculeCapacityOutOfBoundsException lorsque la capacité maximale des véhicules est dépassée pendant les transformations.
+     * @throws ListOfClientsIsEmptyException en cas de génération de liste de clients vide lors des transformations.
+     */
     @Test
     public void testGénérateurSolutionsAléatoire() throws EntrepôtNotFoundException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException {
 
@@ -42,6 +51,12 @@ public class GénérateurDeSolutionsTest
     }
 
 
+    /**
+     * todo
+     * @throws EntrepôtNotFoundException lorsqu'il n'y a pas d'entrepôt dans l'itinéraire.
+     * @throws VehiculeCapacityOutOfBoundsException lorsque la capacité maximale des véhicules est dépassée pendant les transformations.
+     * @throws ListOfClientsIsEmptyException en cas de génération de liste de clients vide lors des transformations.
+     */
     @Test
     public void testGénérerUneSolutionAléatoireLimite() throws EntrepôtNotFoundException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException
     {
@@ -73,6 +88,10 @@ public class GénérateurDeSolutionsTest
         System.out.println();
     }
 
+    /**
+     * todo
+     * @throws VehiculeCapacityOutOfBoundsException lorsque la capacité maximale des véhicules est dépassée pendant les transformations.
+     */
     @Test
     public void testGénérerUneSolutionProcheEnProche() throws VehiculeCapacityOutOfBoundsException
     {

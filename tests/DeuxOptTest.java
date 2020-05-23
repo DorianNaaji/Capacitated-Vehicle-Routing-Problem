@@ -12,6 +12,9 @@ import org.junit.Test;
 
 import java.util.stream.Stream;
 
+/**
+ * Classe de test pour la transformation 2-opt
+ */
 public class DeuxOptTest extends Application
 {
 

@@ -11,7 +11,7 @@ import java.util.Comparator;
 import java.util.Random;
 
 /**
- * Classe contenant des algorithmes liés à la recherche tabou
+ * Classe contenant des algorithmes liés à la recherche Tabou
  */
 public class Tabou
 {

@@ -8,8 +8,17 @@ import org.junit.Test;
 
 import java.util.LinkedList;
 
+/**
+ * Classe de test pour la gérération d'un itinéraire
+ */
 public class ItinéraireTest {
 
+    /**
+     * Méthode permettant de vérifier si la longueur totale d'un itinéraire et le nombre total de marchandises sont
+     * correctement calculés.
+     * @throws VehiculeCapacityOutOfBoundsException lorsque la capacité maximale des véhicules est dépassée pendant les transformations.
+     * @throws ListOfClientsIsEmptyException en cas de génération de liste de clients vide lors des transformations.
+     */
     @Test
     public void TestLongueurTotaleEtNbMarchandises() throws VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException {
 

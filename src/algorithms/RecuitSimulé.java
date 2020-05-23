@@ -9,22 +9,25 @@ import model.Solution;
 
 import java.util.Random;
 
+/**
+ * Classe contenant les algorithmes liés à la méthode du recuit simulé.
+ */
 public class RecuitSimulé
 {
 
     /**
-     * Méthode de recuit simulé permettant de sortir des minima locaux en acceptant des solutions moins bonnes
-     * @param solutionInitiale solution initiale
-     * @param températureInitiale température iniatiale
-     * @param nombreVoisinsParTempérature nombre de voisins généré par température
-     * @param coefficientDeDiminuationTempérature coefficient de diminution de la température
-     * @param transformation transformation que l'on souhaite opérer dans le recuit
+     * Méthode de recuit simulé permettant de sortir des minima locaux en acceptant des solutions moins bonnes.
+     * @param solutionInitiale la solution initiale, de départ, qui sera optimisée puis retournée.
+     * @param températureInitiale la température iniatiale, de départ.
+     * @param nombreVoisinsParTempérature nombre de solutions voisines généré par température.
+     * @param coefficientDeDiminuationTempérature le coefficient de diminution de la température.
+     * @param transformation le type de transformation à appliquer lors de la recherche de nouveaux voisins.
      * @param isMétaTransformation booléen indiquant si des méthodes de transformations entre itinéraires d'une solution
-     *                             sont opérées (true) ou non (false)
-     * @return une solution optimisée
-     * @throws VehiculeCapacityOutOfBoundsException
-     * @throws ItinéraireTooSmallException
-     * @throws ListOfClientsIsEmptyException
+     *                             sont opérées (true) ou non (false).
+     * @return la solution initiale optimisée.
+     * @throws VehiculeCapacityOutOfBoundsException lorsque la capacité maximale des véhicules est dépassée pendant les transformations.
+     * @throws ItinéraireTooSmallException en cas d'itinéraire trop petit pour du 2-opt.
+     * @throws ListOfClientsIsEmptyException en cas de génération de liste de clients vide lors des transformations.
      */
     public static Solution recuitSimulé(Solution solutionInitiale, double températureInitiale, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation, boolean isMétaTransformation) throws VehiculeCapacityOutOfBoundsException, ItinéraireTooSmallException, ListOfClientsIsEmptyException, UnhandledTransformationException
     {
@@ -60,13 +63,11 @@ public class RecuitSimulé
                {
                    // dans le cas où la transformation est une transformation échange...
                    case TransformationÉchange:
-                           // s'il s'agit d'une transformation entre deux itinéraires...
+                       // s'il s'agit d'une transformation entre deux itinéraires...
                        if (isMétaTransformation) {
                            // Du méta couplé à du 2-opt pour optimiser au maximum (une chance sur 2)
                            if(random.nextBoolean())
                            {
-//                               TransformateurEntreItinéraires.transformationÉchange(solutionBase.getItinéraires().get(indexAléatoire1),
-//                                   solutionBase.getItinéraires().get(indexAléatoire2));
                                TransformateurEntreItinéraires.métaTransformationÉchange(solutionBase.getItinéraires().get(indexAléatoire1),
                                        solutionBase.getItinéraires().get(indexAléatoire2), 40);
                            }
@@ -183,16 +184,16 @@ public class RecuitSimulé
 
     /**
      * Méthode de recuit simulé sur chaque itinéraire permettant de sortir des minima locaux en acceptant des solutions moins bonnes
-     * @param itinéraireInitial itinéraire initial
-     * @param températureInitiale température initiale
-     * @param nombreVoisinsParTempérature nombre de voisins généré par température
-     * @param coefficientDeDiminuationTempérature coefficient de diminution de la température
-     * @param transformation transformation que l'on souhaite opérer dans le recuit
-     * @return un itinéraire optimisé
-     * @throws VehiculeCapacityOutOfBoundsException
-     * @throws ListOfClientsIsEmptyException
-     * @throws ItinéraireTooSmallException
-     * @throws UnhandledTransformationException
+     * @param itinéraireInitial l'itinéraire initial, de départ, qui sera optimisé puis retourné.
+     * @param températureInitiale la température initiale, de départ.
+     * @param nombreVoisinsParTempérature nombre de solutions voisines généré par température.
+     * @param coefficientDeDiminuationTempérature le coefficient de diminution de la température.
+     * @param transformation le type de transformation à appliquer lors de la recherche de nouveaux voisins.
+     * @return l'itinéraire initial optimisé.
+     * @throws VehiculeCapacityOutOfBoundsException lorsque la capacité maximale des véhicules est dépassée pendant les transformations.
+     * @throws ListOfClientsIsEmptyException en cas de génération de liste de clients vide lors des transformations.
+     * @throws ItinéraireTooSmallException en cas d'itinéraire trop petit pour du 2-opt.
+     * @throws UnhandledTransformationException en cas de transformation non gérée.
      */
     public static Itinéraire recuitSimuléItinéraire(Itinéraire itinéraireInitial, double températureInitiale, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation) throws VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException, ItinéraireTooSmallException, UnhandledTransformationException
     {

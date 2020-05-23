@@ -234,7 +234,6 @@ public class TransformateurEntreItinéraires {
         itinéraire1.ajouterClientAUnIndex(clientAInsérerDansItinéraire1, troisièmeIndexAléatoire);
         itinéraire2.ajouterClientAUnIndex(clientAInsérerDansItinéraire2, quatrièmeIndexAléatoire);
 
-
     }
 
 

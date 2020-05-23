@@ -40,14 +40,11 @@ public class Itinéraire
      */
     private Véhicule véhicule;
 
-    public Véhicule getVéhicule()
-    {
-        return véhicule;
-    }
-
+    /**
+     * Constructeur de copie. Il permet de créer une copie d'un Itinéraire
+     * @param itinéraire l'itinéraire que nous voulons copier
+     */
     public Itinéraire(Itinéraire itinéraire) {
-       // this.longueurTotale = itinéraire.longueurTotale;
-        //this.nbMarchandisesALivrer = itinéraire.nbMarchandisesALivrer;
         this.listeClientsÀLivrer = new LinkedList<Client>();
         this.entrepôt = new Entrepôt(itinéraire.getEntrepôt().getPositionX(), itinéraire.getEntrepôt().getPositionY());
         for (Client c : itinéraire.getListeClientsÀLivrer()) {
@@ -55,11 +52,6 @@ public class Itinéraire
         }
         this.recalculerDistanceEtNbMarchandises();
         this.véhicule = new Véhicule();
-        //this.longueurTotale = itinéraire.getLongueurTotale();
-        //this.nbMarchandisesALivrer = itinéraire.getNbMarchandisesALivrer();
-
-        //this.recalculerDistanceEtNbMarchandises();
-        //this.longueurTotale = itinéraire.longueurTotale;
     }
 
     /**
@@ -251,6 +243,11 @@ public class Itinéraire
     public LinkedList<Client> getListeClientsÀLivrer()
     {
         return this.listeClientsÀLivrer;
+    }
+
+    public Véhicule getVéhicule()
+    {
+        return véhicule;
     }
 
     @Override

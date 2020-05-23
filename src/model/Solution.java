@@ -31,25 +31,29 @@ public class Solution
         this.recalculerLongueurGlobale();
     }
 
+    /**
+     * Constructeur vide
+     */
     public Solution() {
         this.itinéraires = new ArrayList<>();
         this.optimisationGlobale = 0;
     }
 
+    /**
+     * Constructeur de copie. Il permet de créer une copie d'une Solution.
+     * @param s Solution que l'on veut copier.
+     */
     public Solution(Solution s) {
         this.itinéraires = new ArrayList<Itinéraire>();
         for(Itinéraire i: s.getItinéraires()) {
             this.itinéraires.add(new Itinéraire(i));
-            //this.optimisationGlobale += i.getLongueurTotale();
         }
-        //this.recalculerLongueurGlobale();
-
         this.optimisationGlobale = s.getOptimisationGlobale();
     }
 
     /**
-     * Ajoute une tournée à l'ensemble des solutions
-     * @param t la tournée à ajouter
+     * Ajoute une tournée à l'ensemble des solutions.
+     * @param t la tournée à ajouter.
      */
     public void ajouterTournée(Itinéraire t)
     {
@@ -69,7 +73,11 @@ public class Solution
     }
 
 
-    public void retirnerTournée(Itinéraire t)
+    /**
+     * Retire une tournée de l'ensemble des solutions.
+     * @param t la tournée à retirer.
+     */
+    public void retirerTournée(Itinéraire t)
     {
         // si l'ensemble contient bien la tournée à retirer
         if(this.itinéraires.contains(t))
@@ -82,7 +90,7 @@ public class Solution
     }
 
     /**
-     * Calcule la longueur globale de l'ensemble des itinéraires
+     * Calcule la longueur globale de l'ensemble des itinéraires.
      * @return la longueur totale des itinéraires de l'ensemble.
      */
     public void recalculerLongueurGlobale()

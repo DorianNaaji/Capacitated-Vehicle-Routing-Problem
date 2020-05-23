@@ -13,6 +13,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Classe de test du transformateur de solutions.
+ */
 public class TransformateurDeSolutionsTest extends Application {
 
     private Itinéraire itinéraire;
@@ -20,8 +23,8 @@ public class TransformateurDeSolutionsTest extends Application {
     /**
      * Méthode permettant de charger les données de test
      * @return une liste d'itinéraires
-     * @throws VehiculeCapacityOutOfBoundsException
-     * @throws ListOfClientsIsEmptyException
+     * @throws VehiculeCapacityOutOfBoundsException lorsque la capacité maximale des véhicules est dépassée pendant les transformations.
+     * @throws ListOfClientsIsEmptyException en cas de génération de liste de clients vide lors des transformations.
      */
     public ArrayList<Itinéraire> donnéesDeTest() throws VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException {
 

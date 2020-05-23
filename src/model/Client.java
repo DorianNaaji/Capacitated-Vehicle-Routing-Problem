@@ -28,7 +28,7 @@ public class Client extends Sommet
     }
 
     /**
-     * Constructeur sans paramètre
+     * Constructeur vide
      */
     public Client()
     {

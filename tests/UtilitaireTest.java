@@ -1,8 +1,14 @@
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Classe de test des méthodes utilitaires.
+ */
 public class UtilitaireTest {
 
+    /**
+     * Test de la distance euclidienne.
+     */
     @Test
     public void testDistanceEuclidienne() {
 

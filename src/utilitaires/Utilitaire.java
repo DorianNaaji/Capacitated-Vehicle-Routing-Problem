@@ -4,14 +4,13 @@ import model.Client;
 
 public class Utilitaire {
 
-
     /**
-     * Méthode permettant de calculer la distance euclidienne entre deux éléments
-     * @param positionX1
-     * @param positionX2
-     * @param positionY1
-     * @param positionY2
-     * @return  la distance euclidienne entre deux éléments
+     * Méthode permettant de calculer la distance euclidienne entre deux éléments.
+     * @param positionX1 la position x du premier élément.
+     * @param positionX2 la position x du deuxiième élément.
+     * @param positionY1 la position y du premier élément.
+     * @param positionY2 la position y du deuxième élément.
+     * @return  la distance euclidienne entre les deux éléments.
      */
     public static double distanceEuclidienne(int positionX1, int positionY1, int positionX2, int positionY2) {
 

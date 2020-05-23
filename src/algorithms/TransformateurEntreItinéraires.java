@@ -86,8 +86,18 @@ public class TransformateurEntreItinéraires {
         // Les copies servaient à vérifier si nous pouvons échanger les deux clients tirés aléatoirement.
         itinéraire1.retirerClient(clientAInsérerDansItinéraire2);
         itinéraire2.retirerClient(clientAInsérerDansItinéraire1);
-        itinéraire1.ajouterClientAUnIndex(clientAInsérerDansItinéraire1, premierIndexAléatoire);
-        itinéraire2.ajouterClientAUnIndex(clientAInsérerDansItinéraire2, deuxièmeIndexAléatoire);
+        if (premierIndexAléatoire > itinéraire1.getListeClientsÀLivrer().size()) {
+            itinéraire1.ajouterClientAUnIndex(clientAInsérerDansItinéraire1, premierIndexAléatoire - 1);
+        }
+        else {
+            itinéraire1.ajouterClientAUnIndex(clientAInsérerDansItinéraire1, premierIndexAléatoire);
+        }
+        if (deuxièmeIndexAléatoire > itinéraire2.getListeClientsÀLivrer().size()) {
+            itinéraire2.ajouterClientAUnIndex(clientAInsérerDansItinéraire2, deuxièmeIndexAléatoire - 1);
+        }
+        else {
+            itinéraire2.ajouterClientAUnIndex(clientAInsérerDansItinéraire2, deuxièmeIndexAléatoire);
+        }
 
         }
 

@@ -55,7 +55,7 @@ public class Main extends Application
         /* ---------------- test avec recuitSimulé  ---------------- */
 
 
-
+        /*
         Solution best = testRecuit(fx,
                         nbSolutionsAléatoiresInitiales,
                         typeDeGénération,
@@ -65,12 +65,11 @@ public class Main extends Application
                         0.99,
                         typeDeTransformation,
                         utilisationDeMétaTransformations);
-
+        */
 
         /* ---------- test avec recuitSimuléItinéraires -----------  */
 
 
-        /*
         Solution best = testRecuitItinéraire(fx,
                         nbSolutionsAléatoiresInitiales,
                         typeDeGénération,
@@ -79,7 +78,6 @@ public class Main extends Application
                         500,
                         0.99,
                         typeDeTransformation);
-         */
 
 
         /* ------------------- test avec tabou ------------------- */

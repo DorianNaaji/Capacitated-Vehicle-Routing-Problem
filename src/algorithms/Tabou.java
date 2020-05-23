@@ -8,6 +8,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Random;
 
 /**
  * Classe contenant des algorithmes liés à la recherche tabou
@@ -23,6 +24,11 @@ public class Tabou
      * @param transfo le type de transformation à appliquer lors de la recherche de nouveaux voisins.
      * @param typeDeRechercheVoisinage le type de recherche de voisinage à appliquer.
      * @return la solution initiale optimisée.
+     * @throws ItinéraireTooSmallException en cas d'itinéraire trop petit pour du 2-opt.
+     * @throws VehiculeCapacityOutOfBoundsException lorsque la capacité maximale des véhicules est dépassée pendant les transformations.
+     * @throws UnhandledTransformationException en cas de transformation non gérée.
+     * @throws ListOfClientsIsEmptyException en cas de génération de liste de clients vide lors des transformations.
+     * @throws UnhandledTypeDeRechercheVoisinageException en cas de type de recherche de voisinage non géré.
      */
     public static Solution tabouSearch(Solution solutionInitiale, int tailleMaximaleListeTabou, int nbIterMax, int nbSolutionsVoisinesChaqueIter, Transformation transfo, TypeDeRechercheVoisinage typeDeRechercheVoisinage) throws ItinéraireTooSmallException, VehiculeCapacityOutOfBoundsException, UnhandledTransformationException, ListOfClientsIsEmptyException, UnhandledTypeDeRechercheVoisinageException
     {
@@ -30,10 +36,11 @@ public class Tabou
         double fitnessMinimale = solutionMin.getOptimisationGlobale();
         ArrayList<Solution> listeTabou = new ArrayList<Solution>();
         //System.out.println("Fitness minimales (Tabou) : ");
+        Solution solutionSwap = null;
         for(int i = 0; i < nbIterMax; i++)
         {
             // on récupère le voisinage
-            ArrayList<Solution> voisinage = Tabou.getSolutionsVoisines(solutionMin, transfo, typeDeRechercheVoisinage, nbSolutionsVoisinesChaqueIter);
+            ArrayList<Solution> voisinage = Tabou.getSolutionsVoisines(solutionMin, transfo, typeDeRechercheVoisinage, nbSolutionsVoisinesChaqueIter, solutionSwap);
             // duquel on enlève l'ensemble des transformations (solutions) interdites
             voisinage.removeAll(listeTabou);
 
@@ -70,6 +77,8 @@ public class Tabou
             {
                 solutionMin = meilleureSolutionVoisine;
                 fitnessMinimale = fitnessCourante;
+                // copie de la meilleure solution voisine
+                solutionSwap = new Solution(meilleureSolutionVoisine);
                 //System.out.println("Itération " + i + " : " + fitnessMinimale);
             }
         }
@@ -83,23 +92,31 @@ public class Tabou
      * @param solutionInitiale la solutionInitiale.
      * @param transfo le type de transformation à appliquer.
      * @param typeDeRechercheVoisinage le type de recherche de voisinage à appliquer.
-     * @param nbSolutionsVoisines le nombre de solutions voisines à trouver
+     * @param nbSolutionsVoisines le nombre de solutions voisines à trouver.
+     * @param previousBestSolution Une COPIE de la dernière meilleure solution voisine. Laisser à null si aucune meilleure solution trouvée.
      * @return les solutions voisines de la solution initiale.
+     * @throws UnhandledTypeDeRechercheVoisinageException en cas de type de recherche de voisinage non géré.
+     * @throws UnhandledTransformationException en cas de transformation non gérée.
+     * @throws VehiculeCapacityOutOfBoundsException lorsque la capacité maximale des véhicules est dépassée pendant les transformations.
+     * @throws ListOfClientsIsEmptyException en cas de génération de liste de clients vide lors des transformations.
+     * @throws ItinéraireTooSmallException en cas d'itinéraire trop petit pour du 2-opt.
+     *
      */
-    public static ArrayList<Solution> getSolutionsVoisines(Solution solutionInitiale, Transformation transfo, TypeDeRechercheVoisinage typeDeRechercheVoisinage,int nbSolutionsVoisines) throws NotImplementedException, UnhandledTypeDeRechercheVoisinageException, UnhandledTransformationException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException, ItinéraireTooSmallException
+    public static ArrayList<Solution> getSolutionsVoisines(Solution solutionInitiale, Transformation transfo, TypeDeRechercheVoisinage typeDeRechercheVoisinage,int nbSolutionsVoisines, Solution previousBestSolution) throws UnhandledTypeDeRechercheVoisinageException, UnhandledTransformationException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException, ItinéraireTooSmallException
     {
         switch(typeDeRechercheVoisinage)
         {
             case BASIQUE:
                 return Tabou.getSolutionsVoisinesBasicSearch(solutionInitiale, transfo, nbSolutionsVoisines);
             case COMPLEXE:
-                throw new NotImplementedException();
+                return Tabou.getSolutionsVoisinesComplexSearch(solutionInitiale, previousBestSolution, transfo, nbSolutionsVoisines);
             default:
                 throw new UnhandledTypeDeRechercheVoisinageException(typeDeRechercheVoisinage, Tabou.class);
         }
     }
 
     /**
+     *
      * Algorithme permettant de trouver les solutions voisines d'une solution voisine avec un type de recherche basique.
      * Une transformation "transfo" sera appliquée sur l'ensemble des itinéraires de la solutionInitiale afin de trouver
      * ses voisins proches.
@@ -110,6 +127,7 @@ public class Tabou
      * @throws UnhandledTransformationException Si un type de transformation donné n'est pas géré.
      * @throws VehiculeCapacityOutOfBoundsException Si une transformation a donné lieu à un dépassement de la capacité maximale des véhicules.
      * @throws ListOfClientsIsEmptyException Si la transformation 2-opt a tenté de créer un itinéraire avec une liste de clients vide.
+     * @throws ItinéraireTooSmallException en cas d'itinéraire trop petit pour du 2-opt.
      */
     private static ArrayList<Solution> getSolutionsVoisinesBasicSearch(Solution solutionInitiale, Transformation transfo, int nbSolutionsVoisines) throws UnhandledTransformationException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException, ItinéraireTooSmallException
     {
@@ -144,6 +162,65 @@ public class Tabou
                 voisin.recalculerLongueurGlobale();
             }
             solutionsVoisines.add(voisin);
+        }
+        return solutionsVoisines;
+    }
+
+    /**
+     *
+     * Réalise une recherche de solutions voisines complexe, avec des échanges de clients entre itinéraires. Réalise
+     * avec une probabilité 1/2 un échange entre itinéraires, sinon un 2-opt a lieu.
+     *
+     * @param solutionInitiale la solution à partir de laquelle chercher les solutions voisines.
+     * @param transfo le type de transformation à appliquer sur la solution initiale.
+     * @param nbSolutionsVoisines le nombre de solutions voisines à trouver.
+     * @return les solutions voisines proches de la solutionInitiale avec une méthode de recherche de voisinage basique.
+     * @throws UnhandledTransformationException Si un type de transformation donné n'est pas géré.
+     * @throws VehiculeCapacityOutOfBoundsException Si une transformation a donné lieu à un dépassement de la capacité maximale des véhicules.
+     * @throws ListOfClientsIsEmptyException Si la transformation 2-opt a tenté de créer un itinéraire avec une liste de clients vide.
+     * @throws ItinéraireTooSmallException en cas d'itinéraire trop petit pour du 2-opt.
+     * @throws UnsupportedOperationException en cas de méta transformation non gérée.
+     */
+    private static ArrayList<Solution> getSolutionsVoisinesComplexSearch(Solution solutionInitiale, Solution solutionSwap, Transformation transfo, int nbSolutionsVoisines) throws UnhandledTransformationException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException, ItinéraireTooSmallException, UnsupportedOperationException
+    {
+        Random r = new Random();
+        ArrayList<Solution> solutionsVoisines = new ArrayList<Solution>();
+        for(int i = 0; i < nbSolutionsVoisines; i++)
+        {
+            Solution voisin = new Solution(solutionInitiale);
+            for (Itinéraire itinéraireVoisin : voisin.getItinéraires())
+            {
+                if(transfo == Transformation.TransformationÉchange || transfo == Transformation.InsertionDécalage)
+                {
+                    if(r.nextBoolean() && solutionSwap != null)
+                    {
+                        boolean isÉchange = (transfo == Transformation.TransformationÉchange);
+                        for(Itinéraire itinéraireSwap:solutionSwap.getItinéraires())
+                        {
+                            if(isÉchange)
+                            {
+                                TransformateurEntreItinéraires.transformationÉchange(itinéraireVoisin, itinéraireSwap);
+                            }
+                            else
+                            {
+                                TransformateurEntreItinéraires.insertionDécalage(itinéraireVoisin, itinéraireSwap);
+                            }
+                        }
+                    }
+                    // sinon, 2 opt en backup
+                    else
+                    {
+                        int  indexOfitinéraireModif = voisin.getItinéraires().indexOf(itinéraireVoisin);
+                        Itinéraire itinéraireModif = voisin.getItinéraires().get(indexOfitinéraireModif);
+                        itinéraireModif = TransformateurItinéraire.transformation2opt(itinéraireModif, Transformation.TransformationÉchange);
+                        voisin.getItinéraires().set(indexOfitinéraireModif, itinéraireModif);
+                    }
+                }
+                else
+                {
+                    throw new UnsupportedOperationException();
+                }
+            }
         }
         return solutionsVoisines;
     }

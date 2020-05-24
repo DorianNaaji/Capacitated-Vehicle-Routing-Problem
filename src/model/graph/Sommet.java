@@ -2,6 +2,9 @@ package model.graph;
 
 import java.util.Objects;
 
+/**
+ * Représente un sommet et ses positions X, Y dans le plan
+ */
 public class Sommet
 {
     private int positionX;

@@ -1,4 +1,4 @@
-package algorithms;
+package customexceptions;
 
 public class InvalidParameterForTabuSearchWithItinéraireUnique extends Exception
 {

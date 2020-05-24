@@ -13,6 +13,8 @@ import java.util.Random;
 public class RecuitSimulé
 {
 
+    private static Random random = new Random();
+
     /**
      * Méthode de recuit simulé permettant de sortir des minima locaux en acceptant des solutions moins bonnes.
      * @param solutionInitiale la solution initiale, de départ, qui sera optimisée puis retournée.
@@ -29,7 +31,6 @@ public class RecuitSimulé
      */
     public static Solution recuitSimulé(Solution solutionInitiale, double températureInitiale, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation, boolean isMétaTransformation, Génération typeDeGénération) throws VehiculeCapacityOutOfBoundsException, ItinéraireTooSmallException, ListOfClientsIsEmptyException, UnhandledTransformationException, SubdivisionAlgorithmException
     {
-        Random random = new Random();
 
         double température = températureInitiale;
 
@@ -51,95 +52,8 @@ public class RecuitSimulé
             // on boucle sur le nombre de voisins par température que l'on veut générer
             for (int l = 0; l < nombreVoisinsParTempérature; l++) {
 
-                // On choisit un itinéraire aléatoirement.
-                int indexAléatoire1 = random.nextInt(solutionBase.getItinéraires().size());
-                // On choisit un deuxième itinéraire aléatoirement.
-                int indexAléatoire2 = random.nextInt(solutionBase.getItinéraires().size());
-
-                // condition sur la transformation à opérer
-                switch(transformation)
-               {
-                   // dans le cas où la transformation est une transformation échange...
-                   case TransformationÉchange:
-                       // s'il s'agit d'une transformation entre deux itinéraires...
-                       if (isMétaTransformation) {
-                           // Du méta couplé à du 2-opt pour optimiser au maximum (une chance sur 2)
-                           if(random.nextBoolean())
-                           {
-                               TransformateurEntreItinéraires.métaTransformationÉchange(solutionBase.getItinéraires().get(indexAléatoire1),
-                                       solutionBase.getItinéraires().get(indexAléatoire2), 40);
-                           }
-                           else
-                           {
-                               solutionBase.getItinéraires().set(indexAléatoire1,
-                                       TransformateurItinéraire.transformation2opt(solutionBase.getItinéraires().get(indexAléatoire1), Transformation.TransformationÉchange));
-                           }
-
-                       }
-                       // sinon (s'il s'agit d'une transformation sur un itinéraire)...
-                       else {
-                           TransformateurItinéraire.transformationÉchange(solutionBase.getItinéraires().get(indexAléatoire1));
-                       }
-
-                       break;
-
-                   // dans le cas où la transformation est une insertion décalage...
-                   case InsertionDécalage:
-                       // s'il s'agit d'une transformation entre deux itinéraires...
-                       if (isMétaTransformation) {
-                           // Du méta couplé à du 2-opt pour optimiser au maximum (une chance sur 2)
-                           if(random.nextBoolean())
-                           {
-                               TransformateurEntreItinéraires.insertionDécalage(solutionBase.getItinéraires().get(indexAléatoire1),
-                                       solutionBase.getItinéraires().get(indexAléatoire2));
-                           }
-                           else
-                           {
-                               solutionBase.getItinéraires().set(indexAléatoire1,
-                                       TransformateurItinéraire.transformation2opt(solutionBase.getItinéraires().get(indexAléatoire1), Transformation.TransformationÉchange));
-                           }
-                       }
-                       // sinon (s'il s'agit d'une transformation sur un itinéraire)...
-                       else {
-                           TransformateurItinéraire.insertionDécalage(solutionBase.getItinéraires().get(indexAléatoire1));
-                       }
-
-                       break;
-
-                    // dans le cas où la transformation est une inversion...
-                   case Inversion:
-                       // s'il s'agit d'une transformation sur itinéraire
-                       if (!isMétaTransformation) {
-                           TransformateurItinéraire.inversion(solutionBase.getItinéraires().get(indexAléatoire1));
-
-                       }
-                       // sinon (s'agit d'une transformation entre deux itinéraires) : opération pas possible entre deux itinéraires...
-                       else
-                       {
-                           throw new UnsupportedOperationException();
-                       }
-                       break;
-
-                       // dans le cas où la transformation est une transformation 2-opt
-                       case Transformation2Opt:
-                       // En backup du 2-opt, on utilise une transformation échange
-                       if(!isMétaTransformation)
-                       {
-                           solutionBase.getItinéraires().set(indexAléatoire1,
-                                   TransformateurItinéraire.transformation2opt(solutionBase.getItinéraires().get(indexAléatoire1), Transformation.TransformationÉchange));
-                       }
-                       // sinon (s'agit d'une transformation entre deux itinéraires) : opération pas possible entre deux itinéraires...
-                       else
-                       {
-                           throw new UnsupportedOperationException();
-                       }
-                       break;
-
-                   // si la transformation n'est aucune des précédentes...
-                   default:
-                       throw new UnhandledTransformationException(transformation, RecuitSimulé.class);
-
-               }
+                // on transforme la solution
+                RecuitSimulé.transformeRecuit(solutionBase, transformation, isMétaTransformation);
 
                 // création d'une solution voisine à partir de solutionBase
                 solutionBase.recalculerLongueurGlobale();
@@ -162,6 +76,8 @@ public class RecuitSimulé
                         // alors la solution voisine devient la meilleure solution
                         meilleureSolution = solutionVoisine;
                         fitnessMinimale = fitnessSolutionVoisine;
+                        //display
+                        //System.out.println("Nouvelle fitness recuit : " + fitnessMinimale);
                     }
                 }
                 //sinon...
@@ -202,7 +118,6 @@ public class RecuitSimulé
      */
     public static Itinéraire recuitSimuléItinéraire(Itinéraire itinéraireInitial, double températureInitiale, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation) throws VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException, ItinéraireTooSmallException, UnhandledTransformationException
     {
-        Random random = new Random();
 
         double température = températureInitiale;
 
@@ -225,29 +140,29 @@ public class RecuitSimulé
             // on boucle sur le nombre de voisins par température que l'on veut générer
             for (int l = 0; l < nombreVoisinsParTempérature; l++) {
 
+                //RecuitSimulé.transformeRecuitItinéraire(transformation, itinéraireBase);
                 // condition sur la transformation à opérer
                 switch(transformation)
                 {
                     // dans le cas où la transformation est une transformation échange...
-                    case TransformationÉchange:
+                    case TRANSFORMATION_ÉCHANGE:
                         TransformateurItinéraire.transformationÉchange(itinéraireBase);
                         break;
 
                     // dans le cas où la transformation est une insertion décalage..
-                    case InsertionDécalage:
+                    case INSERTION_DÉCALAGE:
                         TransformateurItinéraire.insertionDécalage(itinéraireBase);
                         break;
 
                     // dans le cas où la transformation est une inversion...
-                    case Inversion:
+                    case INVERSION:
                         TransformateurItinéraire.inversion(itinéraireBase);
                         break;
 
                     // dans le cas où la transformation est une transformation 2-opt...
-                    case Transformation2Opt:
+                    case TRANSFORMATION_2_OPT:
                         // En backup du 2-opt, on utilise une insertion décalage
-                        //todo : décider de la meilleure transfo après le 2-opt
-                        itinéraireBase = TransformateurItinéraire.transformation2opt(itinéraireBase, Transformation.TransformationÉchange);
+                        itinéraireBase = TransformateurItinéraire.transformation2opt(itinéraireBase, Transformation.TRANSFORMATION_ÉCHANGE);
                         break;
                     default:
                         throw new UnhandledTransformationException(transformation, RecuitSimulé.class);
@@ -270,6 +185,7 @@ public class RecuitSimulé
                         // alors l'itinéraire voisin devient le meilleur itinéraire
                         meilleurItinéraire = itinéraireVoisin;
                         fitnessMinimale = fitnessItinéraireVoisin;
+                        //System.out.println("Nouvelle fitness locale recuit itinéraires : " + fitnessMinimale);
                     }
                 }
                 // sinon...
@@ -287,5 +203,98 @@ public class RecuitSimulé
 
         }
         return meilleurItinéraire;
+    }
+
+    /**
+     * Transforme une solution en gérant les différents cas possibles, en fonction de la transformation donnée en paramètre.
+     * @param base la solution sur laquelle effectuer la transformation.
+     * @param transformation la transformation à effectuer.
+     * @param isMéta si méta transformation ou pas.
+     * @throws VehiculeCapacityOutOfBoundsException exception 2opt.
+     * @throws ItinéraireTooSmallException exception 2opt.
+     * @throws ListOfClientsIsEmptyException exception 2opt.
+     * @throws UnhandledTransformationException exception 2opt.
+     */
+    private static void transformeRecuit(Solution base, Transformation transformation, boolean isMéta) throws VehiculeCapacityOutOfBoundsException, ItinéraireTooSmallException, ListOfClientsIsEmptyException, UnhandledTransformationException
+    {
+        // On choisit un itinéraire aléatoirement.
+        int indexAléatoire1 = random.nextInt(base.getItinéraires().size());
+        // On choisit un deuxième itinéraire aléatoirement.
+        int indexAléatoire2 = random.nextInt(base.getItinéraires().size());
+
+        // condition sur la transformation à opérer
+        switch(transformation)
+        {
+            // dans le cas où la transformation est une transformation échange...
+            case TRANSFORMATION_ÉCHANGE:
+                // s'il s'agit d'une transformation entre deux itinéraires...
+                if (isMéta) {
+                    // Du méta couplé à du 2-opt pour optimiser au maximum (une chance sur 2)
+                    if(random.nextBoolean())
+                    {
+                        TransformateurEntreItinéraires.métaTransformationÉchange(base.getItinéraires().get(indexAléatoire1),
+                                base.getItinéraires().get(indexAléatoire2), 40);
+                    }
+                    else
+                    {
+                        base.getItinéraires().set(indexAléatoire1,
+                                TransformateurItinéraire.transformation2opt(base.getItinéraires().get(indexAléatoire1), Transformation.TRANSFORMATION_ÉCHANGE));
+                    }
+
+                }
+                // sinon (s'il s'agit d'une transformation sur un itinéraire)...
+                else {
+                    TransformateurItinéraire.transformationÉchange(base.getItinéraires().get(indexAléatoire1));
+                }
+
+                break;
+
+            // dans le cas où la transformation est une insertion décalage...
+            case INSERTION_DÉCALAGE:
+                // s'il s'agit d'une transformation entre deux itinéraires...
+                if (isMéta) {
+                    throw new UnsupportedOperationException();
+                }
+                // sinon (s'il s'agit d'une transformation sur un itinéraire)...
+                else {
+                    TransformateurItinéraire.insertionDécalage(base.getItinéraires().get(indexAléatoire1));
+                }
+
+                break;
+
+            // dans le cas où la transformation est une inversion...
+            case INVERSION:
+                // (s'agit d'une transformation entre deux itinéraires) : opération pas possible entre deux itinéraires...
+                if (isMéta) {
+                    throw new UnsupportedOperationException();
+                }
+                // s'il s'agit d'une transformation sur itinéraire
+                else
+                {
+                    TransformateurItinéraire.inversion(base.getItinéraires().get(indexAléatoire1));
+                }
+                break;
+
+            // dans le cas où la transformation est une transformation 2-opt
+            case TRANSFORMATION_2_OPT:
+                //s'agit d'une transformation entre deux itinéraires) : opération pas possible entre deux itinéraires..
+                if(isMéta)
+                {
+                    throw new UnsupportedOperationException();
+
+                }
+                else
+                {
+                    // En backup du 2-opt, on utilise une transformation échange
+                    base.getItinéraires().set(indexAléatoire1,
+                            TransformateurItinéraire.transformation2opt(base.getItinéraires().get(indexAléatoire1), Transformation.TRANSFORMATION_ÉCHANGE));
+                }
+                break;
+
+            // si la transformation n'est aucune des précédentes...
+            default:
+                throw new UnhandledTransformationException(transformation, RecuitSimulé.class);
+
+        }
     }
 }

@@ -3,12 +3,9 @@ package algorithms;
 import customexceptions.*;
 import model.Itinéraire;
 import model.Solution;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import utilitaires.Utilitaire;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Random;
 
 /**
@@ -94,29 +91,73 @@ public class Tabou
                 // copie de la meilleure solution voisine
                 solutionSwap = new Solution(meilleureSolutionVoisine);
                 // display console
-                if(camionÀcapacitéInfinie)
+                if(!camionÀcapacitéInfinie)
                 {
-                    System.out.println("Itération " + i + " : " + fitnessMinimale);
+                    //System.out.println("Itération " + i + ", nouvelle fitness tabou : " + fitnessMinimale);
+                }
+                else
+                {
+                    //System.out.println("Itération " + i + ", nouvelle fitness globale avant découpage tabou : " + fitnessMinimale);
                 }
             }
+        }
+        // display
+        if(camionÀcapacitéInfinie)
+        {
+            //System.out.println("---Fin du tabou sur itinéraire unique.---");
+        }
+        else
+        {
+            //System.out.println("---Fin du tabou sur itinéraires normaux---");
         }
         return solutionMin;
     }
 
+    /**
+     * Cette méthode permet de gérer les solutions à itinéraires unique, dans le cas d'une génération ALÉATOIRE_UNIQUE.
+     * Il faut donc l'utiliser lorsque la solution contient un itinéraire unique. Cette méthode est appelée dans le main
+     * uniquement lorsque le type de génération est passé à ALÉATOIRE_UNIQUE.
+     *
+     * @param solutionInitiale la solution initiale constituée d'un itinéraire unique.
+     * @param tailleMaximaleListeTabou la taille maximale que prendra la liste de tabou.
+     * @param nbIterMax le nombre d'itérations maximal de l'algorithme.
+     * @param nbSolutionsVoisinesChaqueIter le nombre de solutions voisines devant être trouvées à chaque itération.
+     * @param transfo le type de transformation à appliquer lors de la recherche de nouveaux voisins.
+     * @param typeDeRechercheVoisinage le type de recherche de voisinage à appliquer.
+     * @param doubleTabou si un tabou doit être effectué après avoir recoupé l'itinéraire unique en plusieurs itinéraires (true) ou non (false)
+     * @return la solution initiale optimisée.
+     * @throws InvalidParameterForTabuSearchWithItinéraireUnique en cas de paramètre invalide pour le tabou search avec itinéraire unique.
+     * @throws UnhandledTypeDeRechercheVoisinageException si le type de recherche de voisinage n'est pas géré.
+     * @throws ItinéraireTooSmallException si itinéraire trop petit (2-opt).
+     * @throws UnhandledTransformationException si transformation non gérée.
+     * @throws ListOfClientsIsEmptyException si liste de clients vide.
+     * @throws VehiculeCapacityOutOfBoundsException si véhicule dépasse la capacité en deuxième phase de 2opt.
+     * @throws SubdivisionAlgorithmException si problème dans la subdivision en itinéraires plus petits.
+     */
     public static Solution tabouSearchAvecItinéraireUnique(Solution solutionInitiale, int tailleMaximaleListeTabou, int nbIterMax, int nbSolutionsVoisinesChaqueIter, Transformation transfo, TypeDeRechercheVoisinage typeDeRechercheVoisinage, boolean doubleTabou) throws InvalidParameterForTabuSearchWithItinéraireUnique, UnhandledTypeDeRechercheVoisinageException, ItinéraireTooSmallException, UnhandledTransformationException, ListOfClientsIsEmptyException, VehiculeCapacityOutOfBoundsException, SubdivisionAlgorithmException
     {
+        // on check si la solution est bien constituée d'un itinéraire unique. Sinon, exception et impossible de continuer car cas non attendu.
         if(solutionInitiale.getItinéraires().size() == 1)
         {
+            // la capacité des camions est infinie car on est en génération aléatoire unique
             camionÀcapacitéInfinie = true;
 
             //solutionInitiale.getItinéraires().get(0).getVéhicule().switchCapacitéInfinie();
             Solution solAvecUniqueItinéraire = Tabou.tabouSearch(solutionInitiale, tailleMaximaleListeTabou, nbIterMax, nbSolutionsVoisinesChaqueIter, transfo, typeDeRechercheVoisinage);
             // on découpe la solution en itinéraires respectant les règles métiers.
             Solution nouvelleSolutionRespectantLesRègles = Utilitaire.subdiviserSolutionItinéraireUniqueEnPlusieursItinéraires(solAvecUniqueItinéraire);
+
+            // on passe ce booléen à false une fois que notre solution respecte les règles métier.
+            camionÀcapacitéInfinie = false;
+
+            // Si on effectue un double tabou, cela signifie que l'on effectue une nouvelle fois une recherche tabou
+            // après avoir découpé l'itinéraire unique de la solution initiales en plus petits itinéraires qui respectent
+            // les règles métier.
             if(doubleTabou)
             {
                 return Tabou.tabouSearch(nouvelleSolutionRespectantLesRègles, tailleMaximaleListeTabou, nbIterMax, nbSolutionsVoisinesChaqueIter, transfo, typeDeRechercheVoisinage);
             }
+            // on retourne la solution.
             return nouvelleSolutionRespectantLesRègles;
         }
         else
@@ -182,18 +223,18 @@ public class Tabou
                 Itinéraire it = voisin.getItinéraires().get(j);
                 switch(transfo)
                 {
-                    case TransformationÉchange:
+                    case TRANSFORMATION_ÉCHANGE:
                         TransformateurItinéraire.transformationÉchange(it);
                         break;
-                    case InsertionDécalage:
+                    case INSERTION_DÉCALAGE:
                         TransformateurItinéraire.insertionDécalage(it);
                         break;
-                    case Inversion:
+                    case INVERSION:
                         TransformateurItinéraire.inversion(it);
                         break;
-                    case Transformation2Opt:
+                    case TRANSFORMATION_2_OPT:
                         // En backup du 2-opt, on utilise une insertion décalage
-                        voisin.getItinéraires().set(voisin.getItinéraires().indexOf(it), TransformateurItinéraire.transformation2opt(it, Transformation.TransformationÉchange));
+                        voisin.getItinéraires().set(voisin.getItinéraires().indexOf(it), TransformateurItinéraire.transformation2opt(it, Transformation.TRANSFORMATION_ÉCHANGE));
                         break;
                     default:
                         throw new UnhandledTransformationException(transfo, Tabou.class);
@@ -230,8 +271,9 @@ public class Tabou
             for (Itinéraire itinéraireVoisin : voisin.getItinéraires())
             {
                 // Uniquement la méta-transformation échange est supportée pour l'instant...
-                if(transfo == Transformation.TransformationÉchange)
+                if(transfo == Transformation.TRANSFORMATION_ÉCHANGE)
                 {
+                    // On fait de la méta
                     if(r.nextBoolean() && solutionSwap != null)
                     {
                         for(Itinéraire itinéraireSwap:solutionSwap.getItinéraires())
@@ -239,21 +281,21 @@ public class Tabou
                             TransformateurEntreItinéraires.métaTransformationÉchange(itinéraireVoisin, itinéraireSwap, 40);
                         }
                     }
-                    // sinon, 2 opt en backup
+                    // Couplé à du 2-opt.
                     else
                     {
                         int  indexOfitinéraireModif = voisin.getItinéraires().indexOf(itinéraireVoisin);
                         Itinéraire itinéraireModif = voisin.getItinéraires().get(indexOfitinéraireModif);
-                        itinéraireModif = TransformateurItinéraire.transformation2opt(itinéraireModif, Transformation.TransformationÉchange);
+                        itinéraireModif = TransformateurItinéraire.transformation2opt(itinéraireModif, Transformation.TRANSFORMATION_ÉCHANGE);
                         voisin.getItinéraires().set(indexOfitinéraireModif, itinéraireModif);
                     }
                     voisin.recalculerLongueurGlobale();
                 }
                 else
                 {
-                    throw new UnhandledTransformationException(transfo, Tabou.class, "La méthode 2opt n'est pas disponible " +
+                    throw new UnhandledTransformationException(transfo, Tabou.class, "Le type de transformation " + transfo.toString()  +" n'est pas disponible " +
                             " pour la méthode getSolutionsVoisinesComplexSearch(). La recherche complexe effectue des méta transformations." +
-                            " Utiliser plutôt TransformationÉchange en paramètre.");
+                            " Utiliser plutôt TRANSFORMATION_ÉCHANGE en paramètre.");
                 }
             }
             solutionsVoisines.add(voisin);

@@ -1,15 +1,11 @@
 package algorithms;
 
 import customexceptions.*;
-import javafx.util.Pair;
 import model.Client;
 import model.Entrepôt;
 import model.Itinéraire;
-import model.Solution;
 import model.graph.Sommet;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import javax.management.relation.RelationNotFoundException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
@@ -146,20 +142,18 @@ public class TransformateurItinéraire
      */
     public static Itinéraire transformation2opt(Itinéraire _itinéraire, Transformation backUpTransformation) throws ItinéraireTooSmallException, VehiculeCapacityOutOfBoundsException, ListOfClientsIsEmptyException
     {
-        //todo : enlever les bouts de code commentés
-        // s'il y a 3 clients ou moins dans la liste, ce ne sera pas possible
         if(_itinéraire.getListeClientsÀLivrer().size() < 4)
         {
             //throw new ItinéraireTooSmallException(_itinéraire);
             switch(backUpTransformation)
             {
-                case Inversion:
+                case INVERSION:
                     TransformateurItinéraire.inversion(_itinéraire);
                     return _itinéraire;
-                case InsertionDécalage:
+                case INSERTION_DÉCALAGE:
                     TransformateurItinéraire.insertionDécalage(_itinéraire);
                     return _itinéraire;
-                case TransformationÉchange:
+                case TRANSFORMATION_ÉCHANGE:
                     TransformateurItinéraire.transformationÉchange(_itinéraire);
                     return _itinéraire;
                 default:

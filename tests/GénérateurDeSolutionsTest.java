@@ -52,7 +52,10 @@ public class GénérateurDeSolutionsTest
 
 
     /**
-     * todo
+     * Permet de tester la génération d'une solution aléatoire avec un seuil fixé sur la quantité maximale de marchandises
+     * à transporter pour chaque itinéraire.
+     * Ici, on teste avec 80.
+     *
      * @throws EntrepôtNotFoundException lorsqu'il n'y a pas d'entrepôt dans l'itinéraire.
      * @throws VehiculeCapacityOutOfBoundsException lorsque la capacité maximale des véhicules est dépassée pendant les transformations.
      * @throws ListOfClientsIsEmptyException en cas de génération de liste de clients vide lors des transformations.
@@ -89,7 +92,9 @@ public class GénérateurDeSolutionsTest
     }
 
     /**
-     * todo
+     * Teste la génération de solution proche en proche : on prend un itinéraire aléatoire, puis on récupère les plus proches,
+     * jusqu'à remplir les itinéraires au max ou presque.
+     *
      * @throws VehiculeCapacityOutOfBoundsException lorsque la capacité maximale des véhicules est dépassée pendant les transformations.
      */
     @Test

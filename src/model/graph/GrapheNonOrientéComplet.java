@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
  * sommets et arêtes.
  * @deprecated N'est pas utile dans le projet.
  */
+@Deprecated
 public class GrapheNonOrientéComplet
 {
     /**

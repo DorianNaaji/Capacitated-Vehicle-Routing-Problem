@@ -5,6 +5,9 @@ import model.graph.Sommet;
 import java.util.ArrayList;
 import java.util.Set;
 
+/**
+ * Représente une solution, constituée d'itinéraires.
+ */
 public class Solution
 {
     /**

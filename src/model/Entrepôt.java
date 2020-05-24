@@ -2,6 +2,9 @@ package model;
 
 import model.graph.Sommet;
 
+/**
+ * Représente un entrepôt.
+ */
 public class Entrepôt extends Sommet
 {
     /**

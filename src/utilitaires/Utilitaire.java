@@ -9,6 +9,9 @@ import model.Solution;
 
 import java.util.ArrayList;
 
+/**
+ * Différentes méthodes utilitaires.
+ */
 public class Utilitaire
 {
 

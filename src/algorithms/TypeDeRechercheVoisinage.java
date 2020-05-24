@@ -1,7 +1,8 @@
 package algorithms;
 
 /**
- * Enum  qui décrit les différents types de recherche de voisinage possibles.
+ * Enum  qui décrit les différents types de recherche de voisinage possibles :
+ * Basique ou complexe.
  */
 public enum TypeDeRechercheVoisinage
 {

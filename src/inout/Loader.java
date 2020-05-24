@@ -13,10 +13,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+/**
+ * Classe permettant de charger les fichiers.
+ */
 public class Loader {
 
     private Path workPath;
 
+    /**
+     * Constructeur d'un loader.
+     * @param _workPath le répertoire duquel charger les fichiers (dans lequel sont situés les fichiers).
+     */
     public Loader(Path _workPath)
     {
         this.workPath = _workPath;

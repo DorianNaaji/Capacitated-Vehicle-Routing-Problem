@@ -35,7 +35,7 @@ public class TransformateurItinéraire
         int deuxièmeIndexAléatoire = random.nextInt(nbClients);
 
         // si la liste contient un unique client, on n'apporte aucune modification.
-        if(itinéraire.getListeClientsÀLivrer().size() != 1)
+        if(itinéraire.getListeClientsÀLivrer().size() > 1)
         {
             // tant que les deux index aléatoires sont identiques...
             while (premierIndexAléatoire == deuxièmeIndexAléatoire) {
@@ -67,7 +67,7 @@ public class TransformateurItinéraire
         // génération d'un deuxième index aléatoire (de 0 à nbClients-1)
         int deuxièmeIndexAléatoire = random.nextInt(nbClients);
         // si la liste contient un unique client, on n'apporte aucune modification.
-        if(itinéraire.getListeClientsÀLivrer().size() != 1)
+        if(itinéraire.getListeClientsÀLivrer().size() > 1)
         {
             // tant que les deux index aléatoires sont identiques...
             while (premierIndexAléatoire == deuxièmeIndexAléatoire)
@@ -98,7 +98,7 @@ public class TransformateurItinéraire
 
 
         // si la liste contient un unique client, on n'apporte aucune modification.
-        if(itinéraire.getListeClientsÀLivrer().size() != 1)
+        if(itinéraire.getListeClientsÀLivrer().size() > 1)
         {
             // tant que les deux index aléatoires sont identiques...
             while (premierIndexAléatoire == deuxièmeIndexAléatoire) {

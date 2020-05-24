@@ -37,8 +37,10 @@ public class Main extends Application
 
         /* ------------------------------ PARAMÈTRES ------------------------------ */
         /* les paramètres de bases relatifs à la génération et au fichier */
-        Fichier fx = fichiers.get(0);
-        int nbSolutionsAléatoiresInitiales = 5;
+        //todo : doc sur les paramètres, les valeurs qu'ils peuvent prendre
+
+        Fichier fx = fichiers.get(16);
+        int nbSolutionsAléatoiresInitiales = 1;
         Génération typeDeGénération = Génération.ALÉATOIRE_UNIQUE;
         /* le seuil maximal qui ne devra pas être dépassé pour le nb de marchandises par véhicule en cas de génération aléatoire par SEUIL
         * (Génération.ALEATOIRE_SEUIL) */
@@ -67,29 +69,28 @@ public class Main extends Application
         /* ---------------- test avec recuitSimulé  ---------------- */
 
 
-/*
+
         Solution best = testRecuit(fx,
                         nbSolutionsAléatoiresInitiales,
                         typeDeGénération,
                         seuilCapacitéMaxItinéraireGénération,
-                        100,
-                        400,
-                        0.8,
+                        1000,
+                        1000,
+                        0.99,
                         typeDeTransformation,
                         utilisationDeMétaTransformations);
-*/
+
 
         /* ---------- test avec recuitSimuléItinéraires -----------  */
 
 
-        /*
-
+/*
         Solution best = testRecuitItinéraire(fx,
                         nbSolutionsAléatoiresInitiales,
                         typeDeGénération,
                         seuilCapacitéMaxItinéraireGénération,
-                        5,
-                        500,
+                        100,
+                        1000,
                         0.99,
                         typeDeTransformation);
 */
@@ -103,18 +104,17 @@ public class Main extends Application
             typeDeRechercheVoisinage = TypeDeRechercheVoisinage.COMPLEXE;
         }
 
-
+/*
         Solution best = testTabou(fx,
                         nbSolutionsAléatoiresInitiales,
                         typeDeGénération,
                         seuilCapacitéMaxItinéraireGénération,
-                        60,
+                        200,
                         500,
-                        20,
+                        150,
                         typeDeTransformation,
                         typeDeRechercheVoisinage);
-
-
+*/
 
         /*                             FIN ZONE DE TESTS                                  */
         /* ------------------------------------------------------------------------------ */
@@ -145,10 +145,6 @@ public class Main extends Application
     private static Solution testRecuit(Fichier fichier, int nbSolutionsInitiales, Génération typeGénération, int seuil, double températureInitiale, double nombreDeVoisinsParTempérature, double coefficientDeDiminutionTempérature, Transformation typeDeTransformation,  boolean isMétaTransformations) throws Exception
     {
         System.out.println("-RECUIT-");
-        if(typeGénération == Génération.ALÉATOIRE_UNIQUE)
-        {
-            throw new UnhandledGénérationException("La génération ALÉATOIRE_UNIQUE n'est pas gérée avec le recuit.");
-        }
         Solution best = new Solution();
         best.setOptimisationGlobale(Double.MAX_VALUE);
 
@@ -162,7 +158,8 @@ public class Main extends Application
                                         nombreDeVoisinsParTempérature,
                                         coefficientDeDiminutionTempérature,
                                         typeDeTransformation,
-                                        isMétaTransformations);
+                                        isMétaTransformations,
+                                        typeGénération);
 
             if(solutionOptimisée.getOptimisationGlobale() < best.getOptimisationGlobale())
             {

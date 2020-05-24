@@ -1,11 +1,9 @@
 package algorithms;
 
-import customexceptions.ItinéraireTooSmallException;
-import customexceptions.ListOfClientsIsEmptyException;
-import customexceptions.UnhandledTransformationException;
-import customexceptions.VehiculeCapacityOutOfBoundsException;
+import customexceptions.*;
 import model.Itinéraire;
 import model.Solution;
+import utilitaires.Utilitaire;
 
 import java.util.Random;
 
@@ -29,7 +27,7 @@ public class RecuitSimulé
      * @throws ItinéraireTooSmallException en cas d'itinéraire trop petit pour du 2-opt.
      * @throws ListOfClientsIsEmptyException en cas de génération de liste de clients vide lors des transformations.
      */
-    public static Solution recuitSimulé(Solution solutionInitiale, double températureInitiale, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation, boolean isMétaTransformation) throws VehiculeCapacityOutOfBoundsException, ItinéraireTooSmallException, ListOfClientsIsEmptyException, UnhandledTransformationException
+    public static Solution recuitSimulé(Solution solutionInitiale, double températureInitiale, double nombreVoisinsParTempérature, double coefficientDeDiminuationTempérature, Transformation transformation, boolean isMétaTransformation, Génération typeDeGénération) throws VehiculeCapacityOutOfBoundsException, ItinéraireTooSmallException, ListOfClientsIsEmptyException, UnhandledTransformationException, SubdivisionAlgorithmException
     {
         Random random = new Random();
 
@@ -178,7 +176,14 @@ public class RecuitSimulé
                 }
             }
         }
-        return meilleureSolution;
+        if(typeDeGénération == Génération.ALÉATOIRE_UNIQUE)
+        {
+            return Utilitaire.subdiviserSolutionItinéraireUniqueEnPlusieursItinéraires(meilleureSolution);
+        }
+        else
+        {
+            return meilleureSolution;
+        }
     }
 
 

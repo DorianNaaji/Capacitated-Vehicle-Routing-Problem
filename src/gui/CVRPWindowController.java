@@ -233,7 +233,7 @@ public class CVRPWindowController
         for(int indexItinéraire = 0, indexCouleur = 0 ; indexItinéraire < nbCouleursÀUtiliser; indexItinéraire++, indexCouleur++)
         {
             // on dessine l'itinéraire à l'index i, avec la ième couleur du tableau de couleurs
-            this.drawItinéraire((Itinéraire)s.getItinéraires().toArray()[indexItinéraire], this.couleursDisponibles[indexItinéraire]);
+            this.drawItinéraire((Itinéraire)s.getItinéraires().toArray()[indexItinéraire], this.couleursDisponibles[indexCouleur]);
             // si on n'a pas assez de couleurs disponibles (+ de 10 itinéraires), on reset les couleurs
             // -> il faudra des itinéraires avec potentiellement deux fois la même couleur.
             if(indexCouleur == nbCouleursÀUtiliser - 1)

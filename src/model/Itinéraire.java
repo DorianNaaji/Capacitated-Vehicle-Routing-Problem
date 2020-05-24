@@ -287,10 +287,6 @@ public class Itinéraire
         return this.listeClientsÀLivrer;
     }
 
-    public Véhicule getVéhicule()
-    {
-        return véhicule;
-    }
 
     @Override
     public boolean equals(Object o)

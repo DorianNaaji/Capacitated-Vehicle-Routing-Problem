@@ -80,6 +80,7 @@ public class TransformateurEntreItinéraires {
     }
 
 
+    //TODO A ENLEVER SI PAS CORRIGE
     /**
      * todo : voir ce qui plante / enlever du code pour ne pas que le prof le test et trouve un bug
      * Transforme une solution, en échangeant de place un client choisis arbitrairement parmi itinéraire1 et

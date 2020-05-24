@@ -218,6 +218,6 @@ public class TransformateurItinéraire
                 nouvelleListeClients.add(_itinéraire.getListeClientsÀLivrer().get(j));
             }
         }
-        return new Itinéraire(nouvelleListeClients , (Entrepôt) entrepôt);
+        return new Itinéraire(nouvelleListeClients , (Entrepôt) entrepôt, true);
     }
 }

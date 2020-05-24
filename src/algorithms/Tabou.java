@@ -4,6 +4,7 @@ import customexceptions.*;
 import model.Itinéraire;
 import model.Solution;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import utilitaires.Utilitaire;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +16,17 @@ import java.util.Random;
  */
 public class Tabou
 {
+    /**
+     * Un booléen qui permet de définir si les nouvelles solutions
+     * créées au sein de cette classe sont instanciées avec un véhicule
+     * à capacité infinie (true) ou non (false).
+     * Notamment utile pour la génération GÉNÉRATION.ALÉATOIRE_UNIQUE
+     * et le tabouSearchAvecItinéraireUnique.
+     * @see Génération
+     * @see Tabou
+     */
+    private static boolean camionÀcapacitéInfinie = false;
+
     /**
      * Effectue un tabou search sur une solution initiale donnée.
      * @param solutionInitiale la solution initiale, de départ, qui sera optimisée puis retournée.
@@ -80,11 +92,38 @@ public class Tabou
                 solutionMin = meilleureSolutionVoisine;
                 fitnessMinimale = fitnessCourante;
                 // copie de la meilleure solution voisine
-                //solutionSwap = new Solution(meilleureSolutionVoisine);
-                System.out.println("Itération " + i + " : " + fitnessMinimale);
+                solutionSwap = new Solution(meilleureSolutionVoisine);
+                // display console
+                if(camionÀcapacitéInfinie)
+                {
+                    System.out.println("Itération " + i + " : " + fitnessMinimale);
+                }
             }
         }
         return solutionMin;
+    }
+
+    public static Solution tabouSearchAvecItinéraireUnique(Solution solutionInitiale, int tailleMaximaleListeTabou, int nbIterMax, int nbSolutionsVoisinesChaqueIter, Transformation transfo, TypeDeRechercheVoisinage typeDeRechercheVoisinage, boolean doubleTabou) throws InvalidParameterForTabuSearchWithItinéraireUnique, UnhandledTypeDeRechercheVoisinageException, ItinéraireTooSmallException, UnhandledTransformationException, ListOfClientsIsEmptyException, VehiculeCapacityOutOfBoundsException, SubdivisionAlgorithmException
+    {
+        if(solutionInitiale.getItinéraires().size() == 1)
+        {
+            camionÀcapacitéInfinie = true;
+
+            //solutionInitiale.getItinéraires().get(0).getVéhicule().switchCapacitéInfinie();
+            Solution solAvecUniqueItinéraire = Tabou.tabouSearch(solutionInitiale, tailleMaximaleListeTabou, nbIterMax, nbSolutionsVoisinesChaqueIter, transfo, typeDeRechercheVoisinage);
+            // on découpe la solution en itinéraires respectant les règles métiers.
+            Solution nouvelleSolutionRespectantLesRègles = Utilitaire.subdiviserSolutionItinéraireUniqueEnPlusieursItinéraires(solAvecUniqueItinéraire);
+            if(doubleTabou)
+            {
+                return Tabou.tabouSearch(nouvelleSolutionRespectantLesRègles, tailleMaximaleListeTabou, nbIterMax, nbSolutionsVoisinesChaqueIter, transfo, typeDeRechercheVoisinage);
+            }
+            return nouvelleSolutionRespectantLesRègles;
+        }
+        else
+        {
+            throw new InvalidParameterForTabuSearchWithItinéraireUnique("La solution ne contient pas un unique itinéraire pour cette méthode de recherche" +
+                    " tabou très spécifique. Utiliser tabuSearch à la place.");
+        }
     }
 
     /**
@@ -116,6 +155,7 @@ public class Tabou
                 throw new UnhandledTypeDeRechercheVoisinageException(typeDeRechercheVoisinage, Tabou.class);
         }
     }
+
 
     /**
      *

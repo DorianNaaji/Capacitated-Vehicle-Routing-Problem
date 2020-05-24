@@ -6,6 +6,7 @@ package algorithms;
  */
 public enum Transformation
 {
+    //todo documenter chacune des enum
     TransformationÉchange,
     InsertionDécalage,
     Inversion,

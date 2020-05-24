@@ -45,6 +45,10 @@ public class Itinéraire
         return véhicule;
     }
 
+    /**
+     * Constructeur permettant de cloner un itinéraire.
+     * @param itinéraire l'itinéraire à cloner.
+     */
     public Itinéraire(Itinéraire itinéraire) {
        // this.longueurTotale = itinéraire.longueurTotale;
         //this.nbMarchandisesALivrer = itinéraire.nbMarchandisesALivrer;
@@ -54,12 +58,23 @@ public class Itinéraire
             this.listeClientsÀLivrer.add(new Client(c.getNumeroClient(), c.getPositionX(), c.getPositionY(), c.getNbMarchandisesÀLivrer()));
         }
         this.recalculerDistanceEtNbMarchandises();
-        this.véhicule = new Véhicule();
+        this.véhicule = new Véhicule(itinéraire.getVéhicule());
         //this.longueurTotale = itinéraire.getLongueurTotale();
         //this.nbMarchandisesALivrer = itinéraire.getNbMarchandisesALivrer();
 
         //this.recalculerDistanceEtNbMarchandises();
         //this.longueurTotale = itinéraire.longueurTotale;
+    }
+
+    /**
+     * Constructeur d'un itinéraire avec véhicule personnalisé.
+     * @param v le véhicule.
+     * @param e l'entrepôt.
+     */
+    public Itinéraire(Véhicule v, Entrepôt e)
+    {
+        this(e);
+        this.véhicule = v;
     }
 
     /**
@@ -71,7 +86,7 @@ public class Itinéraire
      * @throws VehiculeCapacityOutOfBoundsException dans le cas où le nombre de marchandises à livrer pour l'itinéraire
      * dépasse la capacité totale du véhicule.
      */
-    public Itinéraire(LinkedList<Client> clients, Entrepôt e) throws ListOfClientsIsEmptyException, VehiculeCapacityOutOfBoundsException
+    public Itinéraire(LinkedList<Client> clients, Entrepôt e, boolean hasVehicleInfiniteCapacity) throws ListOfClientsIsEmptyException, VehiculeCapacityOutOfBoundsException
     {
         if(clients.isEmpty())
         {
@@ -79,14 +94,25 @@ public class Itinéraire
         }
 
         // on initialise le véhicule
-        this.véhicule = new Véhicule();
+        if(hasVehicleInfiniteCapacity)
+        {
+            this.véhicule = new Véhicule(true);
+        }
+        else
+        {
+            this.véhicule = new Véhicule();
+        }
         this.listeClientsÀLivrer = clients;
         this.entrepôt = e;
 
         int quantiteDeMarchandisesTotale  = listeClientsÀLivrer.stream().mapToInt(Client::getNbMarchandisesÀLivrer).sum();
-        if (quantiteDeMarchandisesTotale > véhicule.getCapacité()) {
-            throw new VehiculeCapacityOutOfBoundsException("La capacité du véhicule est dépassée. (" + quantiteDeMarchandisesTotale + ")");
+        if(!this.véhicule.isInfinite())
+        {
+            if (quantiteDeMarchandisesTotale > véhicule.getCapacité()) {
+                throw new VehiculeCapacityOutOfBoundsException("La capacité du véhicule est dépassée. (" + quantiteDeMarchandisesTotale + ")");
+            }
         }
+
 
         //Calcul de la longueur totale et du nombre de marchandises.
         this.recalculerDistanceEtNbMarchandises();
@@ -160,18 +186,31 @@ public class Itinéraire
 
         // si la quantité de marchandises totale à livrer en tenant également compte de celle du nouveau client
         // est inférieure ou égale à la capacité totale d'un véhicule
-        if (quantiteDeMarchandisesTotale + c.getNbMarchandisesÀLivrer() <= véhicule.getCapacité())
+
+        // si on respecte les règles métiers (car véhicule n'est pas à capacité infinie)
+        if(!this.véhicule.isInfinite())
+        {
+            if (quantiteDeMarchandisesTotale + c.getNbMarchandisesÀLivrer() <= véhicule.getCapacité())
+            {
+                // on ajoute alors le client à la liste chaînée à un index i
+                this.listeClientsÀLivrer.add(i, c);
+                // on recalcul alors la longueur d'un itinéraire et le nombre de marchandises à livrer
+                this.recalculerDistanceEtNbMarchandises();
+                return true;
+            }
+            // sinon...
+            else
+            {
+                return false;
+            }
+        }
+        else
         {
             // on ajoute alors le client à la liste chaînée à un index i
             this.listeClientsÀLivrer.add(i, c);
             // on recalcul alors la longueur d'un itinéraire et le nombre de marchandises à livrer
             this.recalculerDistanceEtNbMarchandises();
             return true;
-        }
-        // sinon...
-        else
-        {
-            return false;
         }
     }
 
@@ -245,7 +284,8 @@ public class Itinéraire
     }
 
     /**
-     * Récupère la liste des clients à livrer.
+     * Récupère la liste des clients à livrer. Attention, l'ajout sur cette liste ne fera aucune vérification métier.
+     * Passer par la méthode "ajouterClient" plutôt. Sinon, les règles métier peuvent potentiellement être violées !
      * @return la liste chaînée des clients à livrer.
      */
     public LinkedList<Client> getListeClientsÀLivrer()
@@ -272,6 +312,19 @@ public class Itinéraire
         return Objects.hash(listeClientsÀLivrer, entrepôt, longueurTotale, nbMarchandisesALivrer, véhicule);
     }
 
+    /**
+     *
+     * ATTENTION, À UTILISER AVEC PRÉCAUTION. Ce setter force directement une LinkedList de clients dans
+     * l'attribut clients, sans aucune vérification préalable des règles métier (notamment du dépassement de la
+     * capacité du véhicule pour l'itinéraire courant).
+     *
+     * Cette méthode est utile pour générer des itinéraires uniques pour une solution, mais elle ne doit absolument
+     * pas être utilisée à un autre endroit.
+     * @param clients les clients à force set.
+     */
+    public void setForceListeDeClients(LinkedList<Client> clients)
+    {
+        this.listeClientsÀLivrer = clients;
+        this.recalculerDistanceEtNbMarchandises();
+    }
 }
-
-

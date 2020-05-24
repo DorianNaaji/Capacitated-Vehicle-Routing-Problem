@@ -74,12 +74,38 @@ public class GénérateurDeSolutions
                 // on ajoute le nouvel itinéraire à la liste d'itinéraires
                 itinéraires.add(nouvelItinéraire);
             }
-
         }
-
         // création d'une solution générée aléatoirement contenant les itinéraires
         return new Solution(itinéraires);
     }
+
+    /**
+     * Génère une solution aléatoire comprenant un itinéraire unique et la retourne.
+     * @see Tabou
+     * @see Utilitaire
+     * @return une solution aléatoire composée d'un seul et unique itinéraire.
+     */
+    public Solution générerSolutionAléatoireAvecItinéraireUnique()
+    {
+        Random random = new Random();
+        ArrayList<Client> tousLesClients = new ArrayList<>(this.fichierConcerné.getClients());
+        LinkedList<Client> clientsSolutionUnique = new LinkedList<Client>();
+        Entrepôt entrepôt = this.fichierConcerné.getEntrepôt();
+        Itinéraire itinéraire = new Itinéraire(new Véhicule(true), entrepôt);
+        ArrayList<Itinéraire> itinéraires = new ArrayList<>();
+        itinéraires.add(itinéraire);
+
+        while (tousLesClients.size() > 0)
+        {
+            int indexAléatoire = random.nextInt(tousLesClients.size());
+            clientsSolutionUnique.add(tousLesClients.get(indexAléatoire));
+            tousLesClients.remove(indexAléatoire);
+
+        }
+        itinéraire.setForceListeDeClients(clientsSolutionUnique);
+        return new Solution(itinéraires);
+    }
+
 
     /**
      * Génère une solution aléatoire qui ne dépasse pas une limite fixée pour le nombre de marchandises à livrer
@@ -193,6 +219,9 @@ public class GénérateurDeSolutions
                     break;
                 case ALÉATOIRE_SEUIL:
                     solutionsAléatoires.add(this.générerUneSolutionAléatoire(seuil));
+                    break;
+                case ALÉATOIRE_UNIQUE:
+                    solutionsAléatoires.add(this.générerSolutionAléatoireAvecItinéraireUnique());
                     break;
                 case PROCHE_EN_PROCHE:
                     solutionsAléatoires.add(this.générerUneSolutionProcheEnProche());

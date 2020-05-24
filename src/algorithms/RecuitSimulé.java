@@ -52,17 +52,17 @@ public class RecuitSimulé
             // on boucle sur le nombre de voisins par température que l'on veut générer
             for (int l = 0; l < nombreVoisinsParTempérature; l++) {
 
-                // on transforme la solution
-                RecuitSimulé.transformeRecuit(solutionBase, transformation, isMétaTransformation);
-
-                // création d'une solution voisine à partir de solutionBase
-                solutionBase.recalculerLongueurGlobale();
-
-                // on copie le contenu de solutionBase dans solutionVoisine
+                // on crée une copie de solutionBase
                 Solution solutionVoisine = new Solution(solutionBase);
+
+                // on transforme la solution
+                RecuitSimulé.transformeRecuit(solutionVoisine, transformation, isMétaTransformation);
+
+                // on recalcule la longeure totale de la solution
                 solutionVoisine.recalculerLongueurGlobale();
                 double fitnessSolutionVoisine = solutionVoisine.getOptimisationGlobale();
 
+                //on calcule la différence entre la différence de fitness
                 différenceFitness = fitnessSolutionVoisine - fitnessSolution;
 
                 // si la différence de fitness entre la solution voisine et la solution courante est inférieur ou

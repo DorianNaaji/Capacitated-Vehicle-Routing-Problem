@@ -38,7 +38,7 @@ public class TransformateurDeSolutionsTest extends Application {
         clients.add(deuxièmeClient);
         clients.add(troisiemeClient);
         clients.add(quatrièmeClient);
-        this.itinéraire = new Itinéraire(clients, entrepôt);
+        this.itinéraire = new Itinéraire(clients, entrepôt, false);
 
         ArrayList<Itinéraire> itinéraires = new ArrayList<>();
         itinéraires.add(itinéraire);

@@ -1,10 +1,13 @@
 import algorithms.*;
+import customexceptions.UnhandledGénérationException;
+import customexceptions.UnhandledTypeDeRechercheVoisinageException;
 import gui.CVRPWindow;
 import gui.CVRPWindowController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import inout.Loader;
 import model.*;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -18,6 +21,8 @@ public class Main extends Application
     {
         launch(args);
     }
+
+    private static boolean doubleTabou = false;
 
     @Override
     public void start(final Stage primaryStage) throws Exception
@@ -33,15 +38,19 @@ public class Main extends Application
         /* ------------------------------ PARAMÈTRES ------------------------------ */
         /* les paramètres de bases relatifs à la génération et au fichier */
         Fichier fx = fichiers.get(0);
-        int nbSolutionsAléatoiresInitiales = 10;
-        Génération typeDeGénération = Génération.PROCHE_EN_PROCHE;
+        int nbSolutionsAléatoiresInitiales = 5;
+        Génération typeDeGénération = Génération.ALÉATOIRE_UNIQUE;
         /* le seuil maximal qui ne devra pas être dépassé pour le nb de marchandises par véhicule en cas de génération aléatoire par SEUIL
         * (Génération.ALEATOIRE_SEUIL) */
         int seuilCapacitéMaxItinéraireGénération = 80;
         /* paramètres de transformation */
-        //Transformation typeDeTransformation = Transformation.Transformation2Opt;
-        Transformation typeDeTransformation = Transformation.TransformationÉchange;
-        boolean utilisationDeMétaTransformations = true;
+        Transformation typeDeTransformation = Transformation.Transformation2Opt;
+        //Transformation typeDeTransformation = Transformation.TransformationÉchange;
+        boolean utilisationDeMétaTransformations = false;
+
+        // double tabou dans le cas d'une génération aléatoire unique (ne pas tenir compte de ce paramètre si la
+        // génération n'est pas aléatoire unique.
+        doubleTabou = true;
         /* ------------------------------ PARAMÈTRES ------------------------------ */
 
 
@@ -99,9 +108,9 @@ public class Main extends Application
                         nbSolutionsAléatoiresInitiales,
                         typeDeGénération,
                         seuilCapacitéMaxItinéraireGénération,
-                        1200,
-                        2000,
-                        400,
+                        60,
+                        500,
+                        20,
                         typeDeTransformation,
                         typeDeRechercheVoisinage);
 
@@ -135,6 +144,11 @@ public class Main extends Application
      */
     private static Solution testRecuit(Fichier fichier, int nbSolutionsInitiales, Génération typeGénération, int seuil, double températureInitiale, double nombreDeVoisinsParTempérature, double coefficientDeDiminutionTempérature, Transformation typeDeTransformation,  boolean isMétaTransformations) throws Exception
     {
+        System.out.println("-RECUIT-");
+        if(typeGénération == Génération.ALÉATOIRE_UNIQUE)
+        {
+            throw new UnhandledGénérationException("La génération ALÉATOIRE_UNIQUE n'est pas gérée avec le recuit.");
+        }
         Solution best = new Solution();
         best.setOptimisationGlobale(Double.MAX_VALUE);
 
@@ -161,6 +175,7 @@ public class Main extends Application
 
     /**
      * Permet de tester le recuit mais sur des itinéraires.
+     * Ne gère pas la Génération de type ALÉATOIRE_UNIQUE.
      * @param fichier le fichier sur lequel appliquer le recuit.
      * @param nbSolutionsInitiales le nombre de solutions initiales = le nombre de solutions aléatoires à générer.
      * @param typeGénération le type de génération utilisé pour la génération de solutions de base.
@@ -173,6 +188,10 @@ public class Main extends Application
      */
     private static Solution testRecuitItinéraire(Fichier fichier, int nbSolutionsInitiales, Génération typeGénération, int seuil, double températureInitiale, double nombreDeVoisinsParTempérature, double coefficientDeDiminutionTempérature, Transformation typeDeTransformation) throws Exception
     {
+        if(typeGénération == Génération.ALÉATOIRE_UNIQUE)
+        {
+            throw new UnhandledGénérationException("La génération ALÉATOIRE_UNIQUE n'est pas gérée avec le recuit itinéraire.");
+        }
         System.out.println("-RECUIT SUR ITINÉRAIRES-");
 
         Solution best = new Solution();
@@ -218,6 +237,7 @@ public class Main extends Application
      */
     private static Solution testTabou(Fichier fichier, int nbSolutionsInitiales, Génération typeGénération, int seuil, int tailleMaximaleListeTabou, int nbIterMax, int nbSolutionsVoisinesChaqueIter, Transformation typeDeTransformation, TypeDeRechercheVoisinage typeDeRechercheVoisinage) throws Exception
     {
+
         System.out.println("-TABOU SEARCH-");
 
         Solution best = new Solution();
@@ -227,7 +247,18 @@ public class Main extends Application
         ArrayList<Solution> solutionsAléatoires = générateurDeSolutions.générerXSolutionsAléatoire(nbSolutionsInitiales, typeGénération, seuil);
         for(Solution s:solutionsAléatoires)
         {
-            Solution solutionOptimisée = Tabou.tabouSearch(s, tailleMaximaleListeTabou, nbIterMax, nbSolutionsVoisinesChaqueIter, typeDeTransformation, typeDeRechercheVoisinage);
+            Solution solutionOptimisée;
+            // tabou en mode solution unique
+            if(typeGénération == Génération.ALÉATOIRE_UNIQUE)
+            {
+                solutionOptimisée = Tabou.tabouSearchAvecItinéraireUnique(s, tailleMaximaleListeTabou, nbIterMax, nbSolutionsVoisinesChaqueIter, typeDeTransformation, typeDeRechercheVoisinage, doubleTabou);
+            }
+            // tabou en mode classique
+            else
+            {
+                solutionOptimisée = Tabou.tabouSearch(s, tailleMaximaleListeTabou, nbIterMax, nbSolutionsVoisinesChaqueIter, typeDeTransformation, typeDeRechercheVoisinage);
+            }
+
             if(solutionOptimisée.getOptimisationGlobale() < best.getOptimisationGlobale())
             {
                 System.out.println("Solution optimisée n° " + solutionsAléatoires.indexOf(s) + " : " + solutionOptimisée.getOptimisationGlobale());

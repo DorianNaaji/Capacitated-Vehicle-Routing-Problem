@@ -26,7 +26,7 @@ public class ItinéraireTest {
         Entrepôt entrepôt = new Entrepôt(3,3);
         Client premierClient = new Client(0, 1, 2, 4);
         clients.add(premierClient);
-        Itinéraire itinéraire = new Itinéraire(clients, entrepôt);
+        Itinéraire itinéraire = new Itinéraire(clients, entrepôt, false);
         Client deuxiemeClient = new Client(2, 4, 5, 9);
         itinéraire.ajouterClient(deuxiemeClient);
         Client troisiemeClient = new Client(2, 1, 8, 12);

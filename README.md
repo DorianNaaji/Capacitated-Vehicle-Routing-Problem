@@ -1,5 +1,5 @@
 # Capacitated Vehicle Routing Problem
-**Méthodes à base de Voisinage**
+
 * tabou search
 * Simulated annealing
 * Polytech Lyon - 4A - Optimisation Discrète

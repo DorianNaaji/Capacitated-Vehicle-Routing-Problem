@@ -1,6 +1,6 @@
 # Capacitated Vehicle Routing Problem
 
-* tabou search
+* tabou search 
 * Simulated annealing
 * Polytech Lyon — Discrete Optimization
 * Myriam BENALI & Dorian NAAJI

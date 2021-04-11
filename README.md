@@ -2,7 +2,7 @@
 
 * tabou search
 * Simulated annealing
-* Polytech Lyon - 4A - Optimisation Discrète
+* Polytech Lyon — Discrete Optimization
 * Myriam BENALI & Dorian NAAJI
 
 ![intro](doc/img/11.%20Hit%20apply%20and%20start%20the%20app.%20You're%20good%20to%20go..png)
